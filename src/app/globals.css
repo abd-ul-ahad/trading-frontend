@@ -8,7 +8,7 @@
   --card-foreground: 15 23 42;
   --popover: 255 255 255;
   --popover-foreground: 15 23 42;
-  --primary: 43 230 182;         /* #2be6b6 - Bright teal primary */
+  --primary: 26 138 109;         /* #1a8a6d - Darker teal for light mode */
   --primary-foreground: 255 255 255;
   --secondary: 241 245 249;
   --secondary-foreground: 15 23 42;
@@ -20,7 +20,7 @@
   --destructive-foreground: 255 255 255;
   --border: 226 232 240;
   --input: 226 232 240;
-  --ring: 43 230 182;            /* #2be6b6 - Bright teal ring */
+  --ring: 26 138 109;            /* #1a8a6d - Darker teal ring for light mode */
   --radius: 0.5rem;
 
   /* Brand Colors - Bright Teal/Green Theme from ApexCopy */

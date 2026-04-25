@@ -23,7 +23,7 @@ export function HeroSection() {
         className="relative z-10 mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs text-muted-foreground"
       >
         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-        Real-time MT5 data — fully transparent
+        Live performance data · Verified on MT5
       </motion.div>
 
       {/* Headline */}
@@ -33,9 +33,9 @@ export function HeroSection() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="relative z-10 max-w-3xl text-5xl font-bold leading-tight tracking-tight text-foreground md:text-6xl lg:text-7xl"
       >
-        Copy-trading
+        Where capital
         <br />
-        performance,{' '}
+        meets{' '}
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -44,7 +44,7 @@ export function HeroSection() {
         >
           verified
           <br />
-          live.
+          performance.
         </motion.span>
       </motion.h1>
 
@@ -53,11 +53,9 @@ export function HeroSection() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="relative z-10 mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+        className="relative z-10 mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
       >
-        A read-only client portal streaming real-time equity, drawdown and trade
-        data straight from connected MetaTrader 5 accounts. No promises. Just
-        numbers.
+        Oroviax connects serious investors with independently verified trading strategies — every equity curve sourced live from MT5, unfiltered and unadjusted. Choose your risk. Track your returns. No black boxes.
       </motion.p>
 
       {/* CTA Buttons */}
@@ -72,7 +70,7 @@ export function HeroSection() {
           whileTap={{ scale: 0.97 }}
           className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          View live dashboard
+          Open account — it's free
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -90,7 +88,7 @@ export function HeroSection() {
           whileTap={{ scale: 0.97 }}
           className="rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition-colors"
         >
-          Explore strategies
+          Explore strategies →
         </motion.button>
       </motion.div>
     </section>

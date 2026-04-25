@@ -3,6 +3,7 @@ import { CapitalChartSection } from './components/CapitalChartSection'
 import { StatsBar } from './components/StatsBar'
 import { StrategiesSection } from './components/StrategiesSection'
 import { TrustSection } from './components/TrustSection'
+import { FaqSection } from './components/FaqSection'
 import { CtaSection } from './components/CtaSection'
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <StatsBar />
       <StrategiesSection />
       <TrustSection />
+      <FaqSection />
       <CtaSection />
     </main>
   )

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks'
 import { toggleSidebar } from '@/lib/redux/features/navbar/navbarSlice'
@@ -14,17 +15,34 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { label: 'Performance', href: '#performance' },
-  { label: 'Strategies', href: '#strategies' },
-  { label: 'Transparency', href: '#transparency' }
+  { label: 'Performance', href: '/#performance' },
+  { label: 'Strategies', href: '/strategies' },
+  { label: 'Transparency', href: '/#transparency' },
+  { label: 'FAQ', href: '/#faq' }
 ]
 
 export function Navbar() {
   const isSidebarOpen = useAppSelector((state) => state.navbar.isSidebarOpen)
   const dispatch = useAppDispatch()
+  const pathname = usePathname()
 
   const handleToggle = () => {
     dispatch(toggleSidebar())
+  }
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Handle FAQ navigation
+    if (href === '/#faq') {
+      if (pathname === '/') {
+        // On homepage, smooth scroll to FAQ
+        e.preventDefault()
+        const faqSection = document.getElementById('faq')
+        if (faqSection) {
+          faqSection.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+      // If not on homepage, let the link navigate normally (will go to /#faq)
+    }
   }
 
   return (
@@ -39,11 +57,12 @@ export function Navbar() {
         <div className="hidden md:flex container mx-auto px-4 h-16 items-center justify-between relative">
           {/* Logo - Left */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <Link href="/" className="text-xl font-bold text-foreground">
-              Brand
+            <Link href="/" className="flex flex-col">
+              <span className="text-xl font-bold text-foreground">Oroviax</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Verified performance
+              </span>
             </Link>
           </motion.div>
 
@@ -59,6 +78,7 @@ export function Navbar() {
               >
                 <Link
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   {link.label}
@@ -100,8 +120,11 @@ export function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link href="/" className="text-xl font-bold text-foreground">
-              Brand
+            <Link href="/" className="flex flex-col">
+              <span className="text-xl font-bold text-foreground">Oroviax</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Verified performance
+              </span>
             </Link>
           </motion.div>
           <motion.div

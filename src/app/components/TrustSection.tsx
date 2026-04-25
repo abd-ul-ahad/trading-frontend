@@ -11,7 +11,7 @@ const items = [
       </svg>
     ),
     title: 'Read-only by design',
-    description: 'No trading, no withdrawals, no control. The portal is a window — never a lever.',
+    description: 'No trading, no withdrawals, no control. The portal is a window never a lever.',
   },
   {
     icon: (
@@ -31,7 +31,7 @@ const items = [
       </svg>
     ),
     title: 'Fully auditable',
-    description: 'Equity curves, drawdowns and trade history are sourced — not manually entered.',
+    description: 'Equity curves, drawdowns and trade history are sourced not manually entered.',
   },
 ]
 
