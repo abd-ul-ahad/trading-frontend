@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import StoreProvider from "@/lib/redux/StoreProvider";
 import { ThemeProvider } from "@/lib/theme";
+import { Navbar } from "@/components/Navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +33,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <StoreProvider>{children}</StoreProvider>
+          <StoreProvider>
+            <Navbar />
+            {children}
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

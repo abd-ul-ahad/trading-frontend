@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from './features/counter/counterSlice'
+import navbarReducer from './features/navbar/navbarSlice'
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       counter: counterReducer,
+      navbar: navbarReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

@@ -5,19 +5,19 @@
  */
 
 export const colors = {
-  // Primary Brand Colors
+  // Primary Brand Colors - Bright Teal/Green Theme (from ApexCopy design)
   primary: {
-    50: '#eff6ff',
-    100: '#dbeafe',
-    200: '#bfdbfe',
-    300: '#93c5fd',
-    400: '#60a5fa',
-    500: '#3b82f6',
-    600: '#2563eb',
-    700: '#1d4ed8',
-    800: '#1e40af',
-    900: '#1e3a8a',
-    950: '#172554',
+    50: '#e6fef9',
+    100: '#ccfdf3',
+    200: '#99fbe7',
+    300: '#66f9db',
+    400: '#33f7cf',
+    500: '#2be6b6',
+    600: '#22b891',
+    700: '#1a8a6d',
+    800: '#115c48',
+    900: '#092e24',
+    950: '#041712',
   },
 
   // Secondary Colors
@@ -35,19 +35,19 @@ export const colors = {
     950: '#020617',
   },
 
-  // Accent Colors
+  // Accent Colors - Bright Teal/Cyan Theme
   accent: {
-    50: '#fdf4ff',
-    100: '#fae8ff',
-    200: '#f5d0fe',
-    300: '#f0abfc',
-    400: '#e879f9',
-    500: '#d946ef',
-    600: '#c026d3',
-    700: '#a21caf',
-    800: '#86198f',
-    900: '#701a75',
-    950: '#4a044e',
+    50: '#e6fef9',
+    100: '#ccfdf3',
+    200: '#99fbe7',
+    300: '#66f9db',
+    400: '#33f7cf',
+    500: '#2be6b6',
+    600: '#22b891',
+    700: '#1a8a6d',
+    800: '#115c48',
+    900: '#092e24',
+    950: '#041712',
   },
 
   // Success Colors
@@ -140,19 +140,19 @@ export const colors = {
     ring: '#3b82f6',
   },
 
-  // Semantic Colors (Dark Mode)
+  // Semantic Colors (Dark Mode) - Extracted from ApexCopy design
   dark: {
-    background: '#0f172a',
-    foreground: '#f8fafc',
-    card: '#1e293b',
-    cardForeground: '#f8fafc',
-    popover: '#1e293b',
-    popoverForeground: '#f8fafc',
-    muted: '#334155',
-    mutedForeground: '#94a3b8',
-    border: '#334155',
-    input: '#334155',
-    ring: '#60a5fa',
+    background: '#0c0e13',      // Deep dark background
+    foreground: '#e0f2f1',      // Light cyan-white text
+    card: '#14161d',            // Slightly lighter dark for cards
+    cardForeground: '#e0f2f1',  // Light cyan-white text on cards
+    popover: '#14161d',         // Same as card
+    popoverForeground: '#e0f2f1',
+    muted: '#1a1d26',           // Muted dark gray
+    mutedForeground: '#80cbc4', // Muted cyan-gray text
+    border: '#1a1d26',          // Dark gray border
+    input: '#1a1d26',           // Dark gray input border
+    ring: '#2be6b6',            // Bright teal accent for focus rings
   },
 } as const
 

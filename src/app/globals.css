@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* Light Mode Colors */
+  /* Light Mode Colors - From colors.ts */
   --background: 255 255 255;
   --foreground: 15 23 42;
   --card: 255 255 255;
   --card-foreground: 15 23 42;
   --popover: 255 255 255;
   --popover-foreground: 15 23 42;
-  --primary: 59 130 246;
+  --primary: 43 230 182;         /* #2be6b6 - Bright teal primary */
   --primary-foreground: 255 255 255;
   --secondary: 241 245 249;
   --secondary-foreground: 15 23 42;
@@ -20,31 +20,96 @@
   --destructive-foreground: 255 255 255;
   --border: 226 232 240;
   --input: 226 232 240;
-  --ring: 59 130 246;
+  --ring: 43 230 182;            /* #2be6b6 - Bright teal ring */
   --radius: 0.5rem;
+
+  /* Brand Colors - Bright Teal/Green Theme from ApexCopy */
+  --primary-50: 230 254 249;
+  --primary-100: 204 253 243;
+  --primary-200: 153 251 231;
+  --primary-300: 102 249 219;
+  --primary-400: 51 247 207;
+  --primary-500: 43 230 182;
+  --primary-600: 34 184 145;
+  --primary-700: 26 138 109;
+  --primary-800: 17 92 72;
+  --primary-900: 9 46 36;
+  --primary-950: 4 23 18;
+
+  /* Success Colors */
+  --success-50: 240 253 244;
+  --success-100: 220 252 231;
+  --success-200: 187 247 208;
+  --success-300: 134 239 172;
+  --success-400: 74 222 128;
+  --success-500: 34 197 94;
+  --success-600: 22 163 74;
+  --success-700: 21 128 61;
+  --success-800: 22 101 52;
+  --success-900: 20 83 45;
+  --success-950: 5 46 22;
+
+  /* Warning Colors */
+  --warning-50: 255 251 235;
+  --warning-100: 254 243 199;
+  --warning-200: 253 230 138;
+  --warning-300: 252 211 77;
+  --warning-400: 251 191 36;
+  --warning-500: 245 158 11;
+  --warning-600: 217 119 6;
+  --warning-700: 180 83 9;
+  --warning-800: 146 64 14;
+  --warning-900: 120 53 15;
+  --warning-950: 69 26 3;
+
+  /* Error Colors */
+  --error-50: 254 242 242;
+  --error-100: 254 226 226;
+  --error-200: 254 202 202;
+  --error-300: 252 165 165;
+  --error-400: 248 113 113;
+  --error-500: 239 68 68;
+  --error-600: 220 38 38;
+  --error-700: 185 28 28;
+  --error-800: 153 27 27;
+  --error-900: 127 29 29;
+  --error-950: 69 10 10;
+
+  /* Accent Colors - Bright Teal/Cyan Theme */
+  --accent-50: 230 254 249;
+  --accent-100: 204 253 243;
+  --accent-200: 153 251 231;
+  --accent-300: 102 249 219;
+  --accent-400: 51 247 207;
+  --accent-500: 43 230 182;
+  --accent-600: 34 184 145;
+  --accent-700: 26 138 109;
+  --accent-800: 17 92 72;
+  --accent-900: 9 46 36;
+  --accent-950: 4 23 18;
 }
 
 .dark {
-  /* Dark Mode Colors */
-  --background: 15 23 42;
-  --foreground: 248 250 252;
-  --card: 30 41 59;
-  --card-foreground: 248 250 252;
-  --popover: 30 41 59;
-  --popover-foreground: 248 250 252;
-  --primary: 96 165 250;
-  --primary-foreground: 15 23 42;
-  --secondary: 51 65 85;
-  --secondary-foreground: 248 250 252;
-  --muted: 51 65 85;
-  --muted-foreground: 148 163 184;
-  --accent: 51 65 85;
-  --accent-foreground: 248 250 252;
+  /* Dark Mode Colors - ApexCopy Design Theme */
+  --background: 12 14 19;        /* #0c0e13 - Deep dark background */
+  --foreground: 224 242 241;     /* #e0f2f1 - Light cyan-white */
+  --card: 20 22 29;              /* #14161d - Slightly lighter dark */
+  --card-foreground: 224 242 241;
+  --popover: 20 22 29;
+  --popover-foreground: 224 242 241;
+  --primary: 43 230 182;         /* #2be6b6 - Bright teal accent */
+  --primary-foreground: 12 14 19;
+  --secondary: 26 29 38;         /* #1a1d26 - Muted dark gray */
+  --secondary-foreground: 224 242 241;
+  --muted: 26 29 38;
+  --muted-foreground: 128 203 196; /* #80cbc4 - Muted cyan-gray */
+  --accent: 26 29 38;
+  --accent-foreground: 224 242 241;
   --destructive: 220 38 38;
-  --destructive-foreground: 248 250 252;
-  --border: 51 65 85;
-  --input: 51 65 85;
-  --ring: 96 165 250;
+  --destructive-foreground: 224 242 241;
+  --border: 26 29 38;            /* #1a1d26 - Dark gray border */
+  --input: 26 29 38;
+  --ring: 43 230 182;            /* #2be6b6 - Bright teal focus ring */
 }
 
 @theme inline {
@@ -67,6 +132,68 @@
   --color-border: rgb(var(--border));
   --color-input: rgb(var(--input));
   --color-ring: rgb(var(--ring));
+  
+  /* Brand Color Scales */
+  --color-primary-50: rgb(var(--primary-50));
+  --color-primary-100: rgb(var(--primary-100));
+  --color-primary-200: rgb(var(--primary-200));
+  --color-primary-300: rgb(var(--primary-300));
+  --color-primary-400: rgb(var(--primary-400));
+  --color-primary-500: rgb(var(--primary-500));
+  --color-primary-600: rgb(var(--primary-600));
+  --color-primary-700: rgb(var(--primary-700));
+  --color-primary-800: rgb(var(--primary-800));
+  --color-primary-900: rgb(var(--primary-900));
+  --color-primary-950: rgb(var(--primary-950));
+
+  --color-success-50: rgb(var(--success-50));
+  --color-success-100: rgb(var(--success-100));
+  --color-success-200: rgb(var(--success-200));
+  --color-success-300: rgb(var(--success-300));
+  --color-success-400: rgb(var(--success-400));
+  --color-success-500: rgb(var(--success-500));
+  --color-success-600: rgb(var(--success-600));
+  --color-success-700: rgb(var(--success-700));
+  --color-success-800: rgb(var(--success-800));
+  --color-success-900: rgb(var(--success-900));
+  --color-success-950: rgb(var(--success-950));
+
+  --color-warning-50: rgb(var(--warning-50));
+  --color-warning-100: rgb(var(--warning-100));
+  --color-warning-200: rgb(var(--warning-200));
+  --color-warning-300: rgb(var(--warning-300));
+  --color-warning-400: rgb(var(--warning-400));
+  --color-warning-500: rgb(var(--warning-500));
+  --color-warning-600: rgb(var(--warning-600));
+  --color-warning-700: rgb(var(--warning-700));
+  --color-warning-800: rgb(var(--warning-800));
+  --color-warning-900: rgb(var(--warning-900));
+  --color-warning-950: rgb(var(--warning-950));
+
+  --color-error-50: rgb(var(--error-50));
+  --color-error-100: rgb(var(--error-100));
+  --color-error-200: rgb(var(--error-200));
+  --color-error-300: rgb(var(--error-300));
+  --color-error-400: rgb(var(--error-400));
+  --color-error-500: rgb(var(--error-500));
+  --color-error-600: rgb(var(--error-600));
+  --color-error-700: rgb(var(--error-700));
+  --color-error-800: rgb(var(--error-800));
+  --color-error-900: rgb(var(--error-900));
+  --color-error-950: rgb(var(--error-950));
+
+  --color-accent-50: rgb(var(--accent-50));
+  --color-accent-100: rgb(var(--accent-100));
+  --color-accent-200: rgb(var(--accent-200));
+  --color-accent-300: rgb(var(--accent-300));
+  --color-accent-400: rgb(var(--accent-400));
+  --color-accent-500: rgb(var(--accent-500));
+  --color-accent-600: rgb(var(--accent-600));
+  --color-accent-700: rgb(var(--accent-700));
+  --color-accent-800: rgb(var(--accent-800));
+  --color-accent-900: rgb(var(--accent-900));
+  --color-accent-950: rgb(var(--accent-950));
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -79,4 +206,29 @@ body {
   background: rgb(var(--background));
   color: rgb(var(--foreground));
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0c0e13;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2be6b6;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22b891;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2be6b6 #0c0e13;
 }
