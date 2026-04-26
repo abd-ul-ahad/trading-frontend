@@ -23,18 +23,18 @@
   --ring: 26 138 109;            /* #1a8a6d - Darker teal ring for light mode */
   --radius: 0.5rem;
 
-  /* Brand Colors - Bright Teal/Green Theme from ApexCopy */
-  --primary-50: 230 254 249;
-  --primary-100: 204 253 243;
-  --primary-200: 153 251 231;
-  --primary-300: 102 249 219;
-  --primary-400: 51 247 207;
-  --primary-500: 43 230 182;
-  --primary-600: 34 184 145;
-  --primary-700: 26 138 109;
-  --primary-800: 17 92 72;
-  --primary-900: 9 46 36;
-  --primary-950: 4 23 18;
+  /* Brand Colors - Gold/Amber Theme */
+  --primary-50: 254 252 232;
+  --primary-100: 254 249 195;
+  --primary-200: 254 240 138;
+  --primary-300: 253 224 71;
+  --primary-400: 250 204 21;
+  --primary-500: 212 175 55;
+  --primary-600: 202 138 4;
+  --primary-700: 161 98 7;
+  --primary-800: 133 77 14;
+  --primary-900: 113 63 18;
+  --primary-950: 66 32 6;
 
   /* Success Colors */
   --success-50: 240 253 244;
@@ -90,26 +90,26 @@
 }
 
 .dark {
-  /* Dark Mode Colors - ApexCopy Design Theme */
-  --background: 12 14 19;        /* #0c0e13 - Deep dark background */
-  --foreground: 224 242 241;     /* #e0f2f1 - Light cyan-white */
-  --card: 20 22 29;              /* #14161d - Slightly lighter dark */
-  --card-foreground: 224 242 241;
-  --popover: 20 22 29;
-  --popover-foreground: 224 242 241;
-  --primary: 43 230 182;         /* #2be6b6 - Bright teal accent */
-  --primary-foreground: 12 14 19;
-  --secondary: 26 29 38;         /* #1a1d26 - Muted dark gray */
-  --secondary-foreground: 224 242 241;
-  --muted: 26 29 38;
-  --muted-foreground: 128 203 196; /* #80cbc4 - Muted cyan-gray */
-  --accent: 26 29 38;
-  --accent-foreground: 224 242 241;
+  /* Dark Mode Colors - Gold/Amber Theme from Image */
+  --background: 10 10 10;           /* #0a0a0a - Pure black background */
+  --foreground: 250 250 250;        /* #fafafa - White text */
+  --card: 18 18 18;                 /* #121212 - Dark card background */
+  --card-foreground: 250 250 250;
+  --popover: 18 18 18;
+  --popover-foreground: 250 250 250;
+  --primary: 212 175 55;            /* #d4af37 - Gold accent */
+  --primary-foreground: 10 10 10;
+  --secondary: 30 30 30;            /* #1e1e1e - Dark gray */
+  --secondary-foreground: 250 250 250;
+  --muted: 30 30 30;
+  --muted-foreground: 163 163 163;  /* #a3a3a3 - Gray text */
+  --accent: 30 30 30;
+  --accent-foreground: 250 250 250;
   --destructive: 220 38 38;
-  --destructive-foreground: 224 242 241;
-  --border: 26 29 38;            /* #1a1d26 - Dark gray border */
-  --input: 26 29 38;
-  --ring: 43 230 182;            /* #2be6b6 - Bright teal focus ring */
+  --destructive-foreground: 250 250 250;
+  --border: 38 38 38;               /* #262626 - Dark border */
+  --input: 38 38 38;
+  --ring: 212 175 55;               /* #d4af37 - Gold focus ring */
 }
 
 @theme inline {
@@ -194,8 +194,8 @@
   --color-accent-900: rgb(var(--accent-900));
   --color-accent-950: rgb(var(--accent-950));
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-crimson);
+  --font-mono: var(--font-inter);
 }
 
 * {
@@ -205,7 +205,7 @@
 body {
   background: rgb(var(--background));
   color: rgb(var(--foreground));
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-crimson), Georgia, 'Times New Roman', serif;
 }
 
 /* ── Custom Scrollbar ── */
@@ -215,20 +215,34 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0c0e13;
+  background: #0a0a0a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2be6b6;
+  background: #d4af37;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22b891;
+  background: #ca9c2e;
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2be6b6 #0c0e13;
+  scrollbar-color: #d4af37 #0a0a0a;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }

@@ -87,7 +87,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
         transition={{ duration: 0.7, delay: 0.2 }}
         className="w-full"
         style={{
-          filter: 'drop-shadow(0 0 60px rgba(43,230,182,0.10)) drop-shadow(0 32px 80px rgba(0,0,0,0.6))',
+          filter: 'drop-shadow(0 0 60px rgba(212,175,55,0.10)) drop-shadow(0 32px 80px rgba(0,0,0,0.6))',
         }}
       >
         <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
@@ -118,8 +118,8 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
               <AreaChart data={data} margin={{ top: 10, right: 0, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2be6b6" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#2be6b6" stopOpacity={0.01} />
+                    <stop offset="0%" stopColor="#d4af37" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="#d4af37" stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
 
@@ -133,7 +133,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                   dataKey="date"
                   ticks={tickDates}
                   tickFormatter={formatDate}
-                  tick={{ fill: '#80cbc4', fontSize: 11 }}
+                  tick={{ fill: '#a3a3a3', fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   dy={8}
@@ -141,7 +141,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
 
                 <YAxis
                   tickFormatter={formatYAxis}
-                  tick={{ fill: '#80cbc4', fontSize: 11 }}
+                  tick={{ fill: '#a3a3a3', fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   width={60}
@@ -150,20 +150,20 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
 
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ stroke: 'rgba(43,230,182,0.3)', strokeWidth: 1 }}
+                  cursor={{ stroke: 'rgba(212,175,55,0.3)', strokeWidth: 1 }}
                 />
 
                 <Area
                   type="monotone"
                   dataKey="equity"
-                  stroke="#2be6b6"
+                  stroke="#d4af37"
                   strokeWidth={2}
                   fill="url(#equityGradient)"
                   dot={false}
                   activeDot={{
                     r: 5,
-                    fill: '#2be6b6',
-                    stroke: '#0c0e13',
+                    fill: '#d4af37',
+                    stroke: '#0a0a0a',
                     strokeWidth: 2,
                   }}
                   isAnimationActive={false}

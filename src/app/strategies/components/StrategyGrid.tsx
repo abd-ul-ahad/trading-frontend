@@ -119,14 +119,14 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
           <AreaChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id={`grad-${strategy.id}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2be6b6" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#2be6b6" stopOpacity={0.01} />
+                <stop offset="0%" stopColor="#d4af37" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#d4af37" stopOpacity={0.01} />
               </linearGradient>
             </defs>
             <Area
               type="monotone"
               dataKey="equity"
-              stroke="#2be6b6"
+              stroke="#d4af37"
               strokeWidth={1.5}
               fill={`url(#grad-${strategy.id})`}
               dot={false}

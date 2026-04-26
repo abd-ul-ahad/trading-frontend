@@ -13,7 +13,7 @@ export const CtaSection = memo(function CtaSection() {
         transition={{ duration: 0.5 }}
         className="relative overflow-hidden rounded-2xl border border-border bg-card px-8 py-16 text-center"
         style={{
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(43,230,182,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.08) 0%, transparent 70%)',
         }}
       >
         {/* Teal trending-up icon */}
