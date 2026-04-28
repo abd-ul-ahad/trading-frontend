@@ -26,6 +26,8 @@ export function Navbar() {
   const dispatch = useAppDispatch()
   const pathname = usePathname()
 
+  const isAdminPortal = pathname?.startsWith('/me')
+
   const handleToggle = () => {
     dispatch(toggleSidebar())
   }
@@ -43,6 +45,40 @@ export function Navbar() {
       }
       // If not on homepage, let the link navigate normally (will go to /#faq)
     }
+  }
+
+  if (isAdminPortal) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-300 h-[68px] flex items-center justify-between px-4 md:px-8 lg:px-16 bg-[rgba(0,0,0,0.94)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)]">
+        <Link href="/" className="flex flex-col shrink-0">
+          <span className="font-display text-[22px] font-medium tracking-[0.04em] leading-none gold-text">
+            Oroviax
+          </span>
+          <span className="font-mono text-[8px] tracking-[0.22em] uppercase text-[#8a847c] block mt-0.5">
+            Client Portal
+          </span>
+        </Link>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.14em] uppercase text-[#8a847c] px-3 py-1 border border-[rgba(255,255,255,0.05)] rounded-full bg-[rgba(126,255,168,0.03)]">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#7effa8] shadow-[0_0_7px_rgba(126,255,168,0.8)] animate-pulse shrink-0" />
+            Live · MT5 verified
+          </div>
+          <div className="flex items-center gap-2.5">
+            <div className="text-right">
+              <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] block">
+                Signed in as
+              </span>
+              <span className="font-ui text-[13px] font-semibold text-[#d8d3ca] block mt-0.5">
+                Sarah Mitchell
+              </span>
+            </div>
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#9a7b1a] to-[#e8c84a] flex items-center justify-center text-xs font-bold text-black shrink-0">
+              SM
+            </div>
+          </div>
+        </div>
+      </nav>
+    )
   }
 
   return (
@@ -101,13 +137,15 @@ export function Navbar() {
             >
               Sign in
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
-            >
-              Open dashboard
-            </motion.button>
+            <Link href="/me/portfolio">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                Open dashboard
+              </motion.button>
+            </Link>
             <ThemeToggle />
           </motion.div>
         </div>

@@ -23,7 +23,7 @@ export default function StrategiesPage() {
 
   return (
     <div className="min-h-screen bg-black text-[#e8e2da]">      
-      <div className="pt-[110px] px-16 max-w-[1360px] mx-auto flex items-end justify-between gap-10 max-lg:px-8 max-md:flex-col max-md:items-start max-md:gap-7">
+      <div className="pt-[110px] px-4 md:px-8 lg:px-16 max-w-7xl mx-auto flex items-end justify-between gap-10 max-lg:px-8 max-md:flex-col max-md:items-start max-md:gap-7">
         <div>
           <div className="font-mono text-[13px] tracking-[0.22em] uppercase text-[#c9a44a] mb-3.5 opacity-90">
             Available strategies
@@ -63,7 +63,7 @@ export default function StrategiesPage() {
         </div>
       </div>
 
-      <div className="pt-8 px-16 max-w-[1360px] mx-auto flex items-center justify-between gap-5 max-lg:px-8 max-md:px-5">
+      <div className="pt-8 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto flex items-center justify-between gap-5 max-lg:px-8 max-md:px-5">
         <div className="flex gap-1.5 flex-wrap">
           <button
             onClick={() => setFilter('all')}
@@ -144,7 +144,7 @@ export default function StrategiesPage() {
         </div>
       </div>
 
-      <div className="max-w-[1360px] mx-auto mt-7 px-16 pb-24 grid grid-cols-2 gap-5 max-lg:px-8 max-md:grid-cols-1 max-md:px-5 max-md:pb-16">
+      <div className="max-w-7xl mx-auto mt-7 px-4 md:px-8 lg:px-16 pb-24 grid grid-cols-2 gap-5 max-lg:px-8 max-md:grid-cols-1 max-md:px-5 max-md:pb-16">
         {sortedStrategies.map((strategy, idx) => (
           <StrategyCard key={strategy.id} strategy={strategy} index={idx} />
         ))}
