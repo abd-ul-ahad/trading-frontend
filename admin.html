@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Oroviax — Portfolio Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #000000;
+  --surface:  #080808;
+  --card:     #0c0c0c;
+  --card2:    #101010;
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.05);
+
+  --white:    #ffffff;
+  --off-white:#e8e4dc;
+  --text:     #d8d3ca;
+  --muted:    #8a847c;
+
+  --gold-1:   #9a7b1a;
+  --gold-2:   #c9a44a;
+  --gold-3:   #e8c84a;
+  --gold-4:   #f5e090;
+  --gold-mid: #d4a830;
+
+  --silver-1: #6e7080;
+  --silver-2: #a8a9b8;
+  --silver-3: #d4d5e0;
+  --silver-4: #eeeff5;
+
+  --green:    #7effa8;
+  --blue:     #9ec8ff;
+  --lavender: #c8b4ff;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-ui:      'Outfit', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --nav-h:  68px;
+  --tab-h:  50px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── METALLIC TEXT ── */
+.gold-text {
+  background: linear-gradient(105deg, var(--gold-1) 0%, var(--gold-mid) 20%, var(--gold-3) 42%, var(--gold-4) 50%, var(--gold-3) 58%, var(--gold-mid) 80%, var(--gold-1) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 5s linear infinite;
+}
+.silver-text {
+  background: linear-gradient(105deg, var(--silver-1) 0%, var(--silver-2) 25%, var(--silver-3) 42%, var(--silver-4) 50%, var(--silver-3) 58%, var(--silver-2) 75%, var(--silver-1) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: silverShimmer 5s linear infinite;
+}
+@keyframes goldShimmer   { 0%{ background-position:0% center }   100%{ background-position:220% center } }
+@keyframes silverShimmer { 0%{ background-position:220% center } 100%{ background-position:0% center }   }
+
+/* ── PORTAL NAV ── */
+.portal-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 300;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 52px;
+  background: rgba(0,0,0,0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border2);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.nav-logo-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+  -webkit-text-fill-color: var(--muted);
+}
+
+.nav-right { display: flex; align-items: center; gap: 16px; }
+
+.nav-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 5px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  background: rgba(126,255,168,0.03);
+}
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 7px rgba(126,255,168,0.8);
+  animation: pulseDot 2.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulseDot {
+  0%,100% { opacity:1; box-shadow:0 0 7px rgba(126,255,168,0.8); }
+  50%      { opacity:0.4; box-shadow:0 0 3px rgba(126,255,168,0.3); }
+}
+
+.nav-user { display: flex; align-items: center; gap: 10px; }
+.nav-user-info { text-align: right; }
+.nav-user-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+}
+.nav-user-name {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  margin-top: 1px;
+}
+.nav-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  flex-shrink: 0;
+  font-family: var(--font-ui);
+}
+
+/* ── TAB BAR ── */
+.tab-bar {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  z-index: 200;
+  height: var(--tab-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: stretch;
+  padding: 0 52px;
+}
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  position: relative;
+  top: 1px;
+}
+.tab-item:hover { color: var(--text); }
+.tab-item.active { color: var(--gold-3); border-bottom-color: var(--gold-3); }
+.tab-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(232,200,74,0.08);
+  color: var(--gold-2);
+  border: 1px solid rgba(232,200,74,0.18);
+}
+
+/* ── PAGE BODY ── */
+.page-body {
+  padding-top: calc(var(--nav-h) + var(--tab-h) + 44px);
+  padding-bottom: 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 52px;
+  padding-right: 52px;
+}
+
+/* ── GREETING ── */
+.greeting-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.55s ease 0.05s both;
+}
+.greeting-text {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.greeting-text em { font-style: italic; }
+.greeting-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.greeting-timestamp {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── MAIN CHART CARD ── */
+.chart-card {
+  background: var(--card);
+  border: 1px solid rgba(200,160,60,0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.1s both;
+  box-shadow: 0 0 0 1px rgba(200,160,60,0.05) inset, 0 24px 60px rgba(0,0,0,0.5);
+}
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,160,60,0.45) 50%, transparent);
+  pointer-events: none;
+}
+
+/* chart header: value + change left, pills right */
+.chart-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 32px;
+  padding: 32px 36px 24px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.chart-head-left {}
+
+.ch-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+.ch-value-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.ch-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.ch-changes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+
+.ch-change-usd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+.ch-change-pct {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.change-pos-usd { color: var(--gold-3); background: rgba(232,200,74,0.08); border: 1px solid rgba(232,200,74,0.2); }
+.change-pos-pct { color: rgba(232,200,74,0.85); background: rgba(232,200,74,0.05); border: 1px solid rgba(232,200,74,0.15); }
+.change-neg-usd { color: #ff9090; background: rgba(255,144,144,0.08); border: 1px solid rgba(255,144,144,0.2); }
+.change-neg-pct { color: rgba(255,144,144,0.85); background: rgba(255,144,144,0.05); border: 1px solid rgba(255,144,144,0.15); }
+
+.ch-period-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 6px;
+}
+
+/* period pills */
+.chart-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+
+.period-pills {
+  display: flex;
+  gap: 3px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 4px;
+}
+.period-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.period-pill:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.period-pill.active {
+  color: var(--gold-3);
+  background: rgba(232,200,74,0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* custom date inputs */
+.custom-date-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.25s, max-height 0.25s;
+}
+.custom-date-row.visible { opacity: 1; max-height: 44px; }
+.date-input {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  color-scheme: dark;
+}
+.date-input:focus { border-color: rgba(200,160,60,0.4); }
+.date-sep { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+/* SVG chart area */
+.chart-svg-wrap {
+  position: relative;
+  cursor: crosshair;
+  user-select: none;
+}
+.chart-svg-wrap svg { display: block; width: 100%; }
+
+.c-cline {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(200,160,60,0.65) 0%, rgba(200,160,60,0.05) 100%);
+  display: none;
+  pointer-events: none;
+}
+.c-cdot {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--gold-3);
+  border: 2px solid #000;
+  box-shadow: 0 0 10px rgba(232,200,74,0.9);
+  transform: translate(-50%,-50%);
+  display: none;
+  pointer-events: none;
+}
+.c-tip {
+  position: absolute;
+  top: 10px;
+  background: rgba(10,10,10,0.97);
+  border: 1px solid rgba(200,160,60,0.3);
+  border-radius: 9px;
+  padding: 10px 15px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.1s;
+  white-space: nowrap;
+  z-index: 10;
+}
+.c-tip-val  { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); }
+.c-tip-chg  { font-family: var(--font-mono); font-size: 10px; color: var(--gold-3); margin-top: 1px; }
+.c-tip-date { font-family: var(--font-mono); font-size: 9.5px; color: var(--muted); margin-top: 2px; }
+
+.y-grid line { stroke: rgba(255,255,255,0.035); }
+.y-grid text {
+  fill: rgba(138,132,124,0.4);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+}
+
+/* chart footer stats */
+.chart-foot {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border2);
+  border-top: 1px solid var(--border2);
+}
+.cf-cell {
+  background: var(--card);
+  padding: 16px 22px;
+  transition: background 0.2s;
+}
+.cf-cell:hover { background: var(--card2); }
+.cf-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.cf-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.cf-value.pos { color: var(--gold-3); }
+.cf-value.neg { color: #ff9090; }
+.cf-value.blue { color: var(--blue); }
+.cf-value.lav  { color: var(--lavender); }
+.cf-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.06em;
+}
+
+/* ── STRATEGY BREAKDOWN ── */
+.breakdown-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp 0.55s ease 0.25s both;
+}
+
+.strategy-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.sb-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.sb-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.sb-card:hover { border-color: rgba(200,160,60,0.18); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.sb-card:hover::before { opacity: 1; }
+.sb-card.metals::before  { background: linear-gradient(90deg, transparent, rgba(200,160,60,0.5), transparent); }
+.sb-card.forex::before   { background: linear-gradient(90deg, transparent, rgba(158,200,255,0.5), transparent); }
+.sb-card.indices::before { background: linear-gradient(90deg, transparent, rgba(200,180,255,0.5), transparent); }
+
+.sb-left {}
+.sb-tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+
+.strategy-tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.tag-metals  { background: rgba(200,160,60,0.1);  color: var(--gold-2); border: 1px solid rgba(200,160,60,0.2); }
+.tag-forex   { background: rgba(158,200,255,0.08); color: #9ec8ff;       border: 1px solid rgba(158,200,255,0.18); }
+.tag-indices { background: rgba(200,180,255,0.08); color: #c8b4ff;       border: 1px solid rgba(200,180,255,0.18); }
+
+.sb-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.sb-alloc {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.sb-right { text-align: right; }
+.sb-equity {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.sb-pnl-usd {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold-3);
+}
+.sb-pnl-pct {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(232,200,74,0.7);
+  margin-top: 1px;
+}
+.sb-sparkline { margin-top: 12px; grid-column: 1 / -1; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- PORTAL NAV -->
+<nav class="portal-nav">
+  <a class="nav-logo" href="#">
+    <span class="gold-text">Oroviax</span>
+    <span class="nav-logo-sub">Client Portal</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-live-badge">
+      <div class="live-dot"></div>
+      Live · MT5 verified
+    </div>
+    <div class="nav-user">
+      <div class="nav-user-info">
+        <span class="nav-user-label">Signed in as</span>
+        <span class="nav-user-name">Sarah Mitchell</span>
+      </div>
+      <div class="nav-avatar">SM</div>
+    </div>
+  </div>
+</nav>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <a class="tab-item active" href="#">Portfolio</a>
+  <a class="tab-item" href="#">My Strategies <span class="tab-badge">3</span></a>
+  <a class="tab-item" href="#">Discover <span class="tab-badge">9</span></a>
+</div>
+
+<!-- PAGE BODY -->
+<main class="page-body">
+
+  <!-- GREETING -->
+  <div class="greeting-row">
+    <div>
+      <div class="greeting-text">Good morning, <em>Sarah.</em></div>
+      <div class="greeting-sub">Your portfolio is performing well across all 3 strategies.</div>
+    </div>
+    <div class="greeting-timestamp" id="ts"></div>
+  </div>
+
+  <!-- MAIN CHART CARD -->
+  <div class="chart-card">
+
+    <!-- HEADER: value + changes left · period pills right -->
+    <div class="chart-head">
+      <div class="chart-head-left">
+        <div class="ch-eyebrow">Total portfolio value · USD</div>
+        <div class="ch-value-row">
+          <div class="ch-value" id="ch-val">$352,840</div>
+          <div class="ch-changes">
+            <div class="ch-change-usd change-pos-usd" id="ch-usd">▲ +$8,200</div>
+            <div class="ch-change-pct change-pos-pct" id="ch-pct">+2.38%</div>
+            <div class="ch-period-label" id="ch-period-lbl">this week</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-head-right">
+        <div class="period-pills" id="period-pills">
+          <button class="period-pill" onclick="selectP(this,'1D')">1D</button>
+          <button class="period-pill active" onclick="selectP(this,'1W')">1W</button>
+          <button class="period-pill" onclick="selectP(this,'1M')">1M</button>
+          <button class="period-pill" onclick="selectP(this,'1Q')">1Q</button>
+          <button class="period-pill" onclick="selectP(this,'YTD')">YTD</button>
+          <button class="period-pill" onclick="selectP(this,'1Y')">1Y</button>
+          <button class="period-pill" onclick="selectP(this,'Max')">Max</button>
+          <button class="period-pill" onclick="selectP(this,'Custom')">Custom</button>
+        </div>
+        <div class="custom-date-row" id="custom-row">
+          <input type="date" class="date-input" id="date-from" value="2026-01-01"/>
+          <span class="date-sep">→</span>
+          <input type="date" class="date-input" id="date-to" value="2026-04-23"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG EQUITY CURVE -->
+    <div class="chart-svg-wrap" id="chart-wrap">
+      <div class="c-cline" id="cline"></div>
+      <div class="c-cdot"  id="cdot"></div>
+      <div class="c-tip"   id="ctip">
+        <div class="c-tip-val"  id="ctip-val"></div>
+        <div class="c-tip-chg"  id="ctip-chg"></div>
+        <div class="c-tip-date" id="ctip-date"></div>
+      </div>
+      <svg id="main-svg" viewBox="0 0 1180 240" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#9a7b1a"/>
+            <stop offset="30%"  stop-color="#d4a830"/>
+            <stop offset="58%"  stop-color="#e8c84a"/>
+            <stop offset="80%"  stop-color="#f0d868"/>
+            <stop offset="100%" stop-color="#c9a44a"/>
+          </linearGradient>
+          <linearGradient id="goldFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#d4a830" stop-opacity="0.20"/>
+            <stop offset="55%"  stop-color="#c9a44a" stop-opacity="0.05"/>
+            <stop offset="100%" stop-color="#c9a44a" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="chartclip">
+            <rect x="0" y="0" width="1180" height="240"/>
+          </clipPath>
+        </defs>
+        <g class="y-grid">
+          <line x1="0" y1="48"  x2="1180" y2="48"/>
+          <line x1="0" y1="96"  x2="1180" y2="96"/>
+          <line x1="0" y1="144" x2="1180" y2="144"/>
+          <line x1="0" y1="192" x2="1180" y2="192"/>
+          <text x="14" y="44"  id="gy4"></text>
+          <text x="14" y="92"  id="gy3"></text>
+          <text x="14" y="140" id="gy2"></text>
+          <text x="14" y="188" id="gy1"></text>
+        </g>
+        <path id="area-path" clip-path="url(#chartclip)" fill="url(#goldFill)"/>
+        <path id="line-path" fill="none" stroke="url(#goldLine)" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" clip-path="url(#chartclip)"/>
+      </svg>
+    </div>
+
+    <!-- FOOTER METRICS -->
+    <div class="chart-foot">
+      <div class="cf-cell">
+        <div class="cf-label">Total invested</div>
+        <div class="cf-value">$300,000</div>
+        <div class="cf-sub">Initial allocation</div>
+      </div>
+      <div class="cf-cell">
+        <div class="cf-label">Total PnL</div>
+        <div class="cf-value pos">+$52,840</div>
+        <div class="cf-sub">+17.6% all time</div>
+      </div>
+      <div class="cf-cell">
+        <div class="cf-label">YTD Return</div>
+        <div class="cf-value pos">+20.3%</div>
+        <div class="cf-sub">vs. 9.2% benchmark</div>
+      </div>
+      <div class="cf-cell">
+        <div class="cf-label">Max Drawdown</div>
+        <div class="cf-value neg">−7.1%</div>
+        <div class="cf-sub">Weighted portfolio</div>
+      </div>
+      <div class="cf-cell">
+        <div class="cf-label">Risk / Reward</div>
+        <div class="cf-value blue">1 : 2.4</div>
+        <div class="cf-sub">Across strategies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGY BREAKDOWN -->
+  <div class="breakdown-label">Allocation breakdown</div>
+
+  <div class="strategy-breakdown">
+
+    <!-- Strategy I -->
+    <div class="sb-card metals">
+      <div class="sb-left">
+        <div class="sb-tag-row">
+          <span class="strategy-tag tag-metals">Metals</span>
+        </div>
+        <div class="sb-name">Strategy I</div>
+        <div class="sb-alloc">$120,000 · 40% of portfolio</div>
+      </div>
+      <div class="sb-right">
+        <div class="sb-equity">$142,480</div>
+        <div class="sb-pnl-usd">+$22,480</div>
+        <div class="sb-pnl-pct">+18.7% total</div>
+      </div>
+      <div class="sb-sparkline">
+        <svg viewBox="0 0 340 44" fill="none">
+          <defs>
+            <linearGradient id="sp1f" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c9a44a" stop-opacity=".18"/>
+              <stop offset="100%" stop-color="#c9a44a" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,36 L28,30 L57,32 L85,20 L113,14 L142,18 L170,10 L198,8 L227,12 L255,6 L283,4 L311,2 L340,1 L340,44 L0,44 Z" fill="url(#sp1f)"/>
+          <polyline points="0,36 28,30 57,32 85,20 113,14 142,18 170,10 198,8 227,12 255,6 283,4 311,2 340,1" stroke="#c9a44a" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Strategy III -->
+    <div class="sb-card indices">
+      <div class="sb-left">
+        <div class="sb-tag-row">
+          <span class="strategy-tag tag-indices">Indices</span>
+        </div>
+        <div class="sb-name">Strategy III</div>
+        <div class="sb-alloc">$85,000 · 28% of portfolio</div>
+      </div>
+      <div class="sb-right">
+        <div class="sb-equity">$97,760</div>
+        <div class="sb-pnl-usd">+$12,760</div>
+        <div class="sb-pnl-pct">+15.0% total</div>
+      </div>
+      <div class="sb-sparkline">
+        <svg viewBox="0 0 340 44" fill="none">
+          <defs>
+            <linearGradient id="sp3f" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c8b4ff" stop-opacity=".15"/>
+              <stop offset="100%" stop-color="#c8b4ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,30 L28,32 L57,28 L85,26 L113,27 L142,22 L170,24 L198,18 L227,20 L255,16 L283,14 L311,12 L340,10 L340,44 L0,44 Z" fill="url(#sp3f)"/>
+          <polyline points="0,30 28,32 57,28 85,26 113,27 142,22 170,24 198,18 227,20 255,16 283,14 311,12 340,10" stroke="#c8b4ff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Strategy V -->
+    <div class="sb-card forex">
+      <div class="sb-left">
+        <div class="sb-tag-row">
+          <span class="strategy-tag tag-forex">Forex</span>
+        </div>
+        <div class="sb-name">Strategy V</div>
+        <div class="sb-alloc">$95,000 · 32% of portfolio</div>
+      </div>
+      <div class="sb-right">
+        <div class="sb-equity">$112,600</div>
+        <div class="sb-pnl-usd">+$17,600</div>
+        <div class="sb-pnl-pct">+18.5% total</div>
+      </div>
+      <div class="sb-sparkline">
+        <svg viewBox="0 0 340 44" fill="none">
+          <defs>
+            <linearGradient id="sp5f" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#9ec8ff" stop-opacity=".13"/>
+              <stop offset="100%" stop-color="#9ec8ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,32 L28,26 L57,30 L85,22 L113,16 L142,20 L170,12 L198,10 L227,14 L255,8 L283,6 L311,4 L340,2 L340,44 L0,44 Z" fill="url(#sp5f)"/>
+          <polyline points="0,32 28,26 57,30 85,22 113,16 142,20 170,12 198,10 227,14 255,8 283,6 311,4 340,2" stroke="#9ec8ff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+/* ─── Period data ─── */
+const W=1180, H=240, PAD=20;
+
+const periods = {
+  '1D': {
+    usd: '+$1,240', pct: '+0.35%', lbl: 'today', pos: true,
+    pts: [344200,344800,344100,345200,344900,345800,345600,346200,345900,346600,346300,347100,346800,347500,347200,348100,347800,348600,348300,349000,348700,349400,349100,349800,349500,350200,349900,350600,350300,351000,350700,351400,351100,351800,351500,352200,351900,352840],
+    dates: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00','Now'],
+  },
+  '1W': {
+    usd: '+$8,200', pct: '+2.38%', lbl: 'this week', pos: true,
+    pts: [344640,343800,345200,344100,346500,345400,347200,346300,348100,347200,349300,348000,350100,349200,351400,350100,352840],
+    dates: ['Mon 9am','Mon 5pm','Tue 9am','Tue 5pm','Wed 9am','Wed 5pm','Thu 9am','Thu 5pm','Fri 9am','Fri 5pm','Sat','Sat','Sun','Sun','Mon','Mon','Now'],
+  },
+  '1M': {
+    usd: '+$24,100', pct: '+7.34%', lbl: 'this month', pos: true,
+    pts: [328740,330200,329100,332500,331000,334800,333200,337100,335600,339400,337800,341600,340000,343800,342200,345600,344100,347200,345900,349100,347800,350600,349300,352840],
+    dates: ['1 Apr','2 Apr','3 Apr','4 Apr','5 Apr','7 Apr','8 Apr','9 Apr','10 Apr','11 Apr','12 Apr','13 Apr','14 Apr','15 Apr','16 Apr','17 Apr','18 Apr','19 Apr','20 Apr','21 Apr','22 Apr','23 Apr','Today','Now'],
+  },
+  '1Q': {
+    usd: '+$42,300', pct: '+13.6%', lbl: 'this quarter', pos: true,
+    pts: [310540,312000,311200,314800,313200,317400,315800,319600,318000,322000,320400,324200,322600,326800,325000,329200,327800,331600,330000,334200,332600,336400,335000,339200,337600,341400,340000,344200,342600,346400,345000,348800,347400,350600,349200,352840],
+    dates: ['1 Jan','8 Jan','15 Jan','22 Jan','29 Jan','5 Feb','12 Feb','19 Feb','26 Feb','5 Mar','12 Mar','19 Mar','26 Mar','1 Apr','8 Apr','15 Apr','23 Apr'],
+  },
+  'YTD': {
+    usd: '+$59,700', pct: '+20.3%', lbl: 'year to date', pos: true,
+    pts: [293140,295000,297200,299800,302400,305200,303600,307800,306000,310400,308600,313000,311200,316000,314400,319200,317600,322400,320800,325800,324200,329200,327600,332800,331200,336200,334600,339600,337800,342800,341200,346000,344400,349200,347600,352840],
+    dates: ['Jan','Jan','Jan','Jan','Feb','Feb','Feb','Feb','Mar','Mar','Mar','Mar','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Now'],
+  },
+  '1Y': {
+    usd: '+$68,200', pct: '+24.0%', lbl: 'past year', pos: true,
+    pts: [284640,286400,288600,291200,294000,292400,296600,294800,299200,297600,302200,300600,305400,303800,308600,307000,312000,310400,315400,313800,318800,317200,322400,320600,325800,324000,329400,327600,332800,331200,336400,334800,339800,338000,343400,341600,346000,344400,348800,347200,350800,349200,352840],
+    dates: ['Apr 25','May 25','May 25','Jun 25','Jun 25','Jul 25','Jul 25','Aug 25','Aug 25','Sep 25','Sep 25','Oct 25','Oct 25','Nov 25','Nov 25','Dec 25','Dec 25','Jan 26','Jan 26','Feb 26','Feb 26','Mar 26','Mar 26','Apr 26','Now'],
+  },
+  'Max': {
+    usd: '+$52,840', pct: '+17.6%', lbl: 'since start', pos: true,
+    pts: [300000,301200,299800,303400,302000,305800,304200,308000,306600,310400,309000,313000,311400,315400,313800,318000,316400,320600,319000,323400,321800,326200,324600,329200,327600,332200,330600,335400,333800,338400,336800,341600,340000,345000,343400,348000,346600,350800,349200,352840],
+    dates: ['Start','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','Now'],
+  },
+};
+
+let state = { pts: periods['1W'].pts, period: '1W', startVal: 344640 };
+
+function fmtUSD(v){ return '$'+Math.round(v).toLocaleString(); }
+function fmtK(v){
+  if(v>=1000000) return '$'+(v/1000000).toFixed(2)+'M';
+  if(v>=1000) return '$'+(v/1000).toFixed(0)+'k';
+  return '$'+v;
+}
+
+function buildSVGPath(pts){
+  const n=pts.length;
+  const mn=Math.min(...pts), mx=Math.max(...pts);
+  const rng=mx-mn||1;
+  const yOf=v=>PAD+(H-2*PAD)*(1-(v-mn)/rng);
+  const xOf=i=>i/(n-1)*W;
+  let line='M';
+  pts.forEach((v,i)=>{ line+=(i?'L':'')+xOf(i).toFixed(2)+','+yOf(v).toFixed(2)+' '; });
+  const area=line+'L'+W+','+(H-2)+' L0,'+(H-2)+' Z';
+  return { line, area };
+}
+
+function setYLabels(pts){
+  const mn=Math.min(...pts), mx=Math.max(...pts);
+  const rng=mx-mn||1;
+  [['gy1',0.1],['gy2',0.38],['gy3',0.65],['gy4',0.9]].forEach(([id,f])=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=fmtK(Math.round((mn+f*rng)/1000)*1000);
+  });
+}
+
+function drawChart(pts){
+  const { line, area }=buildSVGPath(pts);
+  document.getElementById('line-path').setAttribute('d',line);
+  document.getElementById('area-path').setAttribute('d',area);
+  setYLabels(pts);
+}
+
+function selectP(btn, period){
+  document.querySelectorAll('.period-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cr=document.getElementById('custom-row');
+  if(period==='Custom'){ cr.classList.add('visible'); return; }
+  cr.classList.remove('visible');
+  const d=periods[period];
+  if(!d) return;
+  /* header */
+  const isPos=d.pos;
+  const usdEl=document.getElementById('ch-usd');
+  const pctEl=document.getElementById('ch-pct');
+  usdEl.textContent=(isPos?'▲ ':'▼ ')+d.usd;
+  usdEl.className='ch-change-usd '+(isPos?'change-pos-usd':'change-neg-usd');
+  pctEl.textContent=d.pct;
+  pctEl.className='ch-change-pct '+(isPos?'change-pos-pct':'change-neg-pct');
+  document.getElementById('ch-period-lbl').textContent=d.lbl;
+  /* chart */
+  drawChart(d.pts);
+  state={ pts:d.pts, period, startVal:d.pts[0], dates:d.dates };
+}
+
+/* ─── Crosshair ─── */
+(function(){
+  const wrap=document.getElementById('chart-wrap');
+  const cline=document.getElementById('cline');
+  const cdot=document.getElementById('cdot');
+  const tip=document.getElementById('ctip');
+  const tval=document.getElementById('ctip-val');
+  const tchg=document.getElementById('ctip-chg');
+  const tdate=document.getElementById('ctip-date');
+
+  wrap.addEventListener('mousemove',e=>{
+    const { pts, startVal, dates }=state;
+    if(!pts||!pts.length) return;
+    const rect=wrap.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const pct=Math.max(0,Math.min(1,x/rect.width));
+    const idx=Math.min(pts.length-1,Math.round(pct*(pts.length-1)));
+    const v=pts[idx];
+    const mn=Math.min(...pts), mx=Math.max(...pts), rng=mx-mn||1;
+    const yPct=(1-(v-mn)/rng);
+    const yPx=(PAD+(H-2*PAD)*yPct)/H*rect.height;
+
+    cline.style.display='block'; cline.style.left=x+'px';
+    cdot.style.display='block'; cdot.style.left=x+'px'; cdot.style.top=yPx+'px';
+    tip.style.opacity='1';
+    const tipW=140;
+    const tipLeft=x+tipW/2>rect.width ? x-tipW/2 : x;
+    tip.style.left=tipLeft+'px';
+
+    tval.textContent=fmtUSD(v);
+    const diff=v-startVal;
+    const diffPct=((diff/startVal)*100).toFixed(2);
+    tchg.textContent=(diff>=0?'▲ +':' ▼ ')+fmtUSD(Math.abs(diff))+' ('+diffPct+'%)';
+    tchg.style.color=diff>=0?'var(--gold-3)':'#ff9090';
+    tdate.textContent=(dates&&dates[idx])||'';
+  });
+  wrap.addEventListener('mouseleave',()=>{
+    cline.style.display='none'; cdot.style.display='none'; tip.style.opacity='0';
+  });
+})();
+
+/* ─── Timestamp ─── */
+(function(){
+  const el=document.getElementById('ts');
+  if(!el) return;
+  const d=new Date();
+  el.textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+})();
+
+/* ─── Init 1W ─── */
+(function(){
+  const d=periods['1W'];
+  drawChart(d.pts);
+  state={ pts:d.pts, period:'1W', startVal:d.pts[0], dates:d.dates };
+})();
+</script>
+</body>
+</html>

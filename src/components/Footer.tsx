@@ -12,12 +12,6 @@ export const Footer = memo(function Footer() {
           <span className="text-foreground">Oroviax</span>
           
           {/* Links */}
-          <Link href="/strategies" className="uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground">
-            Platform
-          </Link>
-          <Link href="/strategies" className="uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground">
-            Strategies
-          </Link>
           <Link href="/privacy" className="uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground">
             Privacy
           </Link>

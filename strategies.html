@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Oroviax — Strategies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #000000;
+  --surface:  #080808;
+  --card:     #0c0c0c;
+  --card2:    #101010;
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.05);
+
+  --white:    #ffffff;
+  --off-white:#f2efe9;
+  --text:     #e8e2da;
+  --muted:    #a39b93;
+
+  --gold-1:   #9a7b1a;
+  --gold-2:   #c9a44a;
+  --gold-3:   #e8c84a;
+  --gold-4:   #f5e090;
+  --gold-mid: #d4a830;
+
+  --silver-1: #6e7080;
+  --silver-2: #a8a9b8;
+  --silver-3: #d4d5e0;
+  --silver-4: #eeeff5;
+
+  --green:    #7effa8;
+  --blue:     #9ec8ff;
+  --lavender: #c8b4ff;
+  --red:      #ff7e7e;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-ui:      'Outfit', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── METALLIC TEXT ── */
+.gold-text {
+  background: linear-gradient(105deg,
+    var(--gold-1) 0%, var(--gold-mid) 20%, var(--gold-3) 42%,
+    var(--gold-4) 50%, var(--gold-3) 58%, var(--gold-mid) 80%, var(--gold-1) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 5s linear infinite;
+}
+.silver-text {
+  background: linear-gradient(105deg,
+    var(--silver-1) 0%, var(--silver-2) 25%, var(--silver-3) 42%,
+    var(--silver-4) 50%, var(--silver-3) 58%, var(--silver-2) 75%, var(--silver-1) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: silverShimmer 5s linear infinite;
+}
+@keyframes goldShimmer   { 0% { background-position: 0% center; }   100% { background-position: 220% center; } }
+@keyframes silverShimmer { 0% { background-position: 220% center; } 100% { background-position: 0% center; } }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 64px;
+  height: 70px;
+  border-bottom: 1px solid var(--border2);
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  line-height: 1;
+}
+.nav-logo-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+  -webkit-text-fill-color: var(--muted);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--text); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-portfolio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.nav-portfolio-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.nav-portfolio-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.nav-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-2), var(--gold-3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(200,160,60,0.3);
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 110px 64px 0;
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.page-title em { font-style: italic; color: var(--off-white); }
+
+.page-subtitle {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 460px;
+  margin-top: 14px;
+}
+
+.header-stats {
+  display: flex;
+  gap: 36px;
+  flex-shrink: 0;
+  padding-bottom: 4px;
+}
+.hstat { text-align: right; }
+.hstat-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.hstat-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  padding: 32px 64px 0;
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.filter-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+
+.filter-chip.active                       { color: var(--gold-3);   border-color: rgba(232,200,74,0.4);   background: rgba(232,200,74,0.06); }
+.filter-chip.active.f-metals              { color: var(--gold-2);   border-color: rgba(200,160,60,0.4);   background: rgba(200,160,60,0.06); }
+.filter-chip.active.f-forex               { color: var(--blue);     border-color: rgba(158,200,255,0.4);  background: rgba(158,200,255,0.06); }
+.filter-chip.active.f-indices             { color: var(--lavender); border-color: rgba(200,180,255,0.4);  background: rgba(200,180,255,0.06); }
+.filter-chip.active.f-commodities         { color: var(--green);    border-color: rgba(126,255,168,0.4);  background: rgba(126,255,168,0.06); }
+.filter-chip.active.f-invested            { color: var(--silver-3); border-color: rgba(168,169,200,0.5);  background: rgba(168,169,200,0.06); }
+
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.sort-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sort-select {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+.sort-select:focus { border-color: rgba(200,160,60,0.4); }
+.sort-select option { background: #111; }
+
+.count-tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.count-tag strong { color: var(--text); font-weight: 500; }
+
+/* ── STRATEGY GRID ── */
+.strat-grid {
+  max-width: 1360px;
+  margin: 28px auto 0;
+  padding: 0 64px 100px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* ── STRATEGY CARD ── */
+.strat-card {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.strat-card:hover {
+  border-color: rgba(255,255,255,0.13);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+}
+
+/* asset-class top bar */
+.strat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+.strat-card.metals::before      { background: linear-gradient(90deg, transparent, rgba(200,160,60,0.7), transparent); }
+.strat-card.forex::before       { background: linear-gradient(90deg, transparent, rgba(158,200,255,0.65), transparent); }
+.strat-card.indices::before     { background: linear-gradient(90deg, transparent, rgba(200,180,255,0.65), transparent); }
+.strat-card.commodities::before { background: linear-gradient(90deg, transparent, rgba(126,255,168,0.6), transparent); }
+
+/* ── INVESTED HIGHLIGHT — OPTION 1: silver glow ring ── */
+.strat-card.is-invested {
+  border-color: rgba(212,213,228,0.32);
+  box-shadow:
+    0 0 0 1px rgba(168,169,200,0.14),
+    0 0 48px rgba(168,169,200,0.08),
+    0 12px 48px rgba(0,0,0,0.55);
+}
+.strat-card.is-invested:hover {
+  border-color: rgba(212,213,228,0.48);
+  box-shadow:
+    0 0 0 1px rgba(168,169,200,0.22),
+    0 0 60px rgba(168,169,200,0.12),
+    0 16px 56px rgba(0,0,0,0.6);
+}
+/* override top bar with animated silver shimmer */
+.strat-card.is-invested::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(110,112,128,0.4) 15%,
+    rgba(168,169,184,0.7) 35%,
+    rgba(212,213,224,1) 50%,
+    rgba(168,169,184,0.7) 65%,
+    rgba(110,112,128,0.4) 85%,
+    transparent 100%);
+  background-size: 200% auto;
+  animation: silverBarMove 3.5s linear infinite;
+  height: 2px;
+}
+@keyframes silverBarMove {
+  0%   { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+
+/* ── CARD HEADER ── */
+.card-header {
+  padding: 24px 28px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.card-header-left { display: flex; flex-direction: column; gap: 9px; }
+
+.card-top-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.strat-tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.tag-metals      { background: rgba(200,160,60,0.1);   color: var(--gold-2);   border: 1px solid rgba(200,160,60,0.2); }
+.tag-forex       { background: rgba(158,200,255,0.08); color: var(--blue);     border: 1px solid rgba(158,200,255,0.18); }
+.tag-indices     { background: rgba(200,180,255,0.08); color: var(--lavender); border: 1px solid rgba(200,180,255,0.18); }
+.tag-commodities { background: rgba(126,255,168,0.08); color: var(--green);    border: 1px solid rgba(126,255,168,0.18); }
+
+.strat-numeral {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.strat-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.strat-since {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 11px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.risk-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.risk-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.risk-pips { display: flex; gap: 3px; }
+.risk-pip {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+.risk-pip.on { background: rgba(200,160,60,0.65); }
+
+.invested-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--silver-3);
+  background: rgba(168,169,200,0.07);
+  border: 1px solid rgba(168,169,200,0.22);
+  border-radius: 6px;
+  padding: 5px 12px;
+}
+.invested-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--silver-3);
+  box-shadow: 0 0 7px rgba(212,213,224,0.7);
+  animation: idot 2.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes idot { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
+
+.invested-amount {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(212,213,224,0.6);
+  padding-left: 4px;
+  border-left: 1px solid rgba(168,169,200,0.2);
+  margin-left: 2px;
+}
+
+/* ── DESCRIPTION ── */
+.card-desc {
+  padding: 0 28px 20px;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+  border-bottom: 1px solid var(--border2);
+}
+
+/* ── CHART AREA ── */
+.card-chart {
+  padding: 20px 28px 18px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.chart-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.chart-left-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chart-eq-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chart-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.delta-pos { color: var(--gold-3); background: rgba(232,200,74,0.07); border: 1px solid rgba(232,200,74,0.2); }
+.delta-neg { color: var(--red);    background: rgba(255,126,126,0.07); border: 1px solid rgba(255,126,126,0.2); }
+
+.period-pills { display: flex; gap: 3px; }
+
+.period-pill {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.period-pill:hover { color: var(--text); border-color: var(--border); }
+.period-pill.active { color: var(--gold-3); border-color: rgba(232,200,74,0.3); background: rgba(232,200,74,0.06); }
+.strat-card.forex       .period-pill.active { color: var(--blue);     border-color: rgba(158,200,255,0.35); background: rgba(158,200,255,0.06); }
+.strat-card.indices     .period-pill.active { color: var(--lavender); border-color: rgba(200,180,255,0.35); background: rgba(200,180,255,0.06); }
+.strat-card.commodities .period-pill.active { color: var(--green);    border-color: rgba(126,255,168,0.3);  background: rgba(126,255,168,0.06); }
+
+.card-svg-wrap {
+  position: relative;
+  cursor: crosshair;
+}
+.card-svg-wrap svg { display: block; width: 100%; }
+
+.card-cline {
+  position: absolute; top: 0; bottom: 0;
+  width: 1px;
+  display: none;
+  pointer-events: none;
+}
+.card-cdot {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  transform: translate(-50%, -50%);
+  display: none;
+  pointer-events: none;
+}
+.card-hlabel {
+  position: absolute;
+  top: 6px;
+  background: rgba(8,8,8,0.96);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 12px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.12s;
+  white-space: nowrap;
+  z-index: 10;
+}
+.card-hlabel-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+.card-hlabel-idx {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+/* chart svg elements */
+.c-ygrid line { stroke: rgba(255,255,255,0.04); }
+.c-ygrid text {
+  fill: rgba(163,155,147,0.6);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+}
+
+/* ── METRICS ── */
+.card-metrics {
+  padding: 20px 28px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--border2);
+}
+
+.metrics-col {
+  padding-right: 20px;
+  border-right: 1px solid var(--border2);
+}
+.metrics-col:last-child { border-right: none; padding-right: 0; padding-left: 20px; }
+.metrics-col:nth-child(2) { padding-left: 20px; }
+.metrics-col:first-child  { padding-left: 0; }
+
+.metrics-col-head {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(163,155,147,0.7);
+  margin-bottom: 12px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.metric-row:last-child { margin-bottom: 0; }
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.metric-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.metric-val.pos { color: var(--gold-3); }
+.metric-val.neg { color: #ff9090; }
+.metric-val.neu { color: var(--silver-3); }
+
+/* ── CARD FOOTER ── */
+.card-footer {
+  padding: 17px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-invest {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #000;
+  background: linear-gradient(135deg, var(--gold-2) 0%, var(--gold-3) 50%, var(--gold-4) 75%, var(--gold-2) 100%);
+  background-size: 200% auto;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background-position 0.4s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+.btn-invest:hover {
+  background-position: right center;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(200,160,60,0.35);
+}
+
+.btn-manage {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--silver-3);
+  background: rgba(168,169,200,0.07);
+  border: 1px solid rgba(168,169,200,0.25);
+  border-radius: 8px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.btn-manage:hover {
+  background: rgba(168,169,200,0.12);
+  border-color: rgba(168,169,200,0.42);
+  transform: translateY(-1px);
+}
+
+.btn-view {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.btn-view:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border2);
+  padding: 40px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(163,155,147,0.6);
+  white-space: nowrap;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  nav { padding: 0 32px; }
+  .page-header, .filter-bar { padding-left: 32px; padding-right: 32px; }
+  .strat-grid { padding: 0 32px 80px; }
+  .page-title { font-size: 42px; }
+  .header-stats { gap: 24px; }
+  .hstat-val { font-size: 24px; }
+}
+
+@media (max-width: 860px) {
+  .strat-grid { grid-template-columns: 1fr; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 28px; }
+  .header-stats { flex-direction: row; gap: 28px; }
+  .hstat { text-align: left; }
+  .card-metrics { grid-template-columns: 1fr 1fr; }
+  .metrics-col:last-child { grid-column: 1 / -1; border-right: none; border-top: 1px solid var(--border2); padding: 14px 0 0; margin-top: 4px; }
+  .metrics-col:nth-child(2) { border-right: none; }
+}
+
+@media (max-width: 620px) {
+  nav { padding: 0 20px; height: 60px; }
+  .nav-links { display: none; }
+  .page-header, .filter-bar { padding-left: 20px; padding-right: 20px; }
+  .strat-grid { padding: 0 20px 60px; }
+  .page-title { font-size: 34px; }
+  .filter-chips { gap: 4px; }
+  .filter-chip { font-size: 12px; padding: 5px 12px; }
+  .card-header { padding: 18px 20px 14px; }
+  .card-desc { padding: 0 20px 16px; }
+  .card-chart { padding: 16px 20px 14px; }
+  .card-metrics { padding: 16px 20px; grid-template-columns: 1fr; gap: 16px; }
+  .metrics-col { border-right: none; padding: 0 !important; }
+  .metrics-col:last-child { border-top: 1px solid var(--border2); padding-top: 16px !important; }
+  .card-footer { padding: 14px 20px; }
+  .strat-name { font-size: 22px; }
+  .period-pills { gap: 2px; }
+  .period-pill { padding: 4px 8px; font-size: 12px; }
+  .chart-top-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .custom-range-row { flex-wrap: wrap; }
+  .cta-inner { padding: 40px 24px; grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 20px; padding: 28px 20px; }
+  .footer-disclaimer { text-align: left; }
+  #cal-popup { width: calc(100vw - 32px); }
+}
+
+/* card reveal animation */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CUSTOM DATE RANGE ROW ── */
+.custom-range-row {
+  display: none;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 0 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--border2);
+  flex-wrap: wrap;
+}
+.custom-range-row.visible { display: flex; }
+
+.date-field-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.date-btn {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  white-space: nowrap;
+  min-width: 108px;
+  text-align: left;
+}
+.date-btn:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); }
+.date-btn.cal-open { border-color: rgba(200,160,60,0.5); background: rgba(200,160,60,0.05); color: var(--gold-3); }
+.date-btn .placeholder { color: var(--muted); }
+
+.date-range-sep {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.apply-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #000;
+  background: linear-gradient(135deg, var(--gold-2), var(--gold-3));
+  border: none;
+  border-radius: 6px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  opacity: 0.4;
+  pointer-events: none;
+  margin-left: auto;
+}
+.apply-btn.ready { opacity: 1; pointer-events: auto; }
+.apply-btn.ready:hover { transform: translateY(-1px); }
+
+/* ── CALENDAR POPUP ── */
+#cal-popup {
+  position: fixed;
+  z-index: 9999;
+  background: #0d0d0d;
+  border: 1px solid rgba(200,160,60,0.22);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(200,160,60,0.05) inset;
+  display: none;
+  width: 264px;
+  user-select: none;
+}
+#cal-popup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,160,60,0.38), transparent);
+  border-radius: 14px 14px 0 0;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cal-nav {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  transition: color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.cal-nav:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+.cal-my {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--white);
+  text-align: center;
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.cal-field-ind {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding: 5px 0;
+  border-radius: 4px;
+  width: 100%;
+}
+.cal-field-ind.for-from { color: var(--gold-2); background: rgba(200,160,60,0.07); border: 1px solid rgba(200,160,60,0.18); }
+.cal-field-ind.for-to   { color: var(--silver-3); background: rgba(168,169,200,0.07); border: 1px solid rgba(168,169,200,0.2); }
+
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  margin-bottom: 4px;
+}
+.cal-dow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  padding: 3px 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 1px;
+}
+
+.cal-day {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  aspect-ratio: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  position: relative;
+}
+.cal-day:hover:not(.other-month):not(.disabled):not(.sel-from):not(.sel-to) {
+  background: rgba(255,255,255,0.07);
+}
+.cal-day.other-month { color: rgba(138,132,124,0.25); cursor: default; }
+.cal-day.disabled    { color: rgba(138,132,124,0.2);  cursor: not-allowed; }
+.cal-day.today::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(200,160,60,0.55);
+}
+.cal-day.sel-from,
+.cal-day.sel-to {
+  background: linear-gradient(135deg, var(--gold-2), var(--gold-3));
+  color: #000;
+  font-weight: 700;
+  border-radius: 5px;
+  z-index: 1;
+}
+.cal-day.in-range {
+  background: rgba(200,160,60,0.1);
+  border-radius: 0;
+  color: var(--gold-4);
+}
+.cal-day.sel-from + .in-range { border-radius: 0; }
+.cal-day.in-range:last-child,
+.cal-day.in-range + .sel-to { border-radius: 0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="gold-text">Oroviax</span>
+    <span class="nav-logo-sub">Verified performance</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Dashboard</a></li>
+    <li><a href="#" class="active">Strategies</a></li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#">Reports</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-portfolio">
+      <div class="nav-portfolio-label">My portfolio</div>
+      <div class="nav-portfolio-val gold-text">$86,000</div>
+    </div>
+    <div class="nav-avatar">J</div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Available strategies</div>
+    <div class="page-title">Browse &amp; invest in<br/><em>verified performance.</em></div>
+    <p class="page-subtitle">Every strategy below is sourced live from a verified MT5 account. Performance data is real, unfiltered, and updated continuously.</p>
+  </div>
+  <div class="header-stats">
+    <div class="hstat">
+      <div class="hstat-val gold-text">12</div>
+      <div class="hstat-label">Active strategies</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val silver-text">+21.4%</div>
+      <div class="hstat-label">Platform avg YTD</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val gold-text">3</div>
+      <div class="hstat-label">In your portfolio</div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-chips">
+    <button class="filter-chip active"         onclick="setFilter(this,'all')">All</button>
+    <button class="filter-chip f-metals"       onclick="setFilter(this,'metals')">Metals</button>
+    <button class="filter-chip f-forex"        onclick="setFilter(this,'forex')">Forex</button>
+    <button class="filter-chip f-indices"      onclick="setFilter(this,'indices')">Indices</button>
+    <button class="filter-chip f-commodities"  onclick="setFilter(this,'commodities')">Commodities</button>
+    <button class="filter-chip f-invested"     onclick="setFilter(this,'invested')">Invested</button>
+  </div>
+  <div class="filter-right">
+    <span class="sort-label">Sort by</span>
+    <select class="sort-select" onchange="applyView()">
+      <option value="ytd">YTD Return ↓</option>
+      <option value="maxdd">Max Drawdown ↑</option>
+      <option value="sharpe">Sharpe Ratio ↓</option>
+      <option value="since">Inception Date</option>
+    </select>
+    <span class="count-tag"><strong id="count-num">12</strong> strategies</span>
+  </div>
+</div>
+
+<!-- STRATEGY GRID -->
+<div class="strat-grid" id="strat-grid"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo gold-text">Oroviax</div>
+  <div class="footer-disclaimer">
+    Past performance does not guarantee future results. All data sourced directly from verified MT5 accounts.
+  </div>
+</footer>
+
+<script>
+// ── STRATEGY DATA ────────────────────────────────────────────────
+const STRATS = [
+  {
+    id:'I', name:'Aurum Momentum', cls:'metals', tagCls:'tag-metals', tagLabel:'Metals',
+    risk:2, color:'#c9a44a', seed:101, trend:0.00080, vol:0.022, maxN:120,
+    desc:'Momentum-driven gold and silver futures strategy using systematic price-action signals with volume confirmation. Position sizing is strictly proportional to account equity, with no overnight exposure above defined thresholds. Delivers consistent performance across both trending and ranging precious metals market conditions.',
+    ytd:'+28.4%', ytdN:28.4, allTime:'+187.3%', monthAvg:'+2.1%',
+    maxDD:'−6.1%', maxDDN:6.1, curDD:'−1.2%', winRate:'63%',
+    sharpe:'1.84', sharpeN:1.84, pf:'2.14', trades:'18 / mo',
+    since:'Mar 2021', sinceMs: new Date('2021-03-01').getTime(),
+    invested:true,  alloc:'$28,400'
+  },
+  {
+    id:'II', name:'G10 Current', cls:'forex', tagCls:'tag-forex', tagLabel:'Forex',
+    risk:3, color:'#9ec8ff', seed:202, trend:0.00058, vol:0.018, maxN:130,
+    desc:'Multi-pair currency strategy targeting G10 major pairs with adaptive position sizing and cross-pair correlation filtering. Entry signals combine rate-differential momentum with short-term mean reversion. Daily portfolio risk is capped at 2%, ensuring stable performance across varying central bank policy cycles.',
+    ytd:'+15.2%', ytdN:15.2, allTime:'+241.8%', monthAvg:'+1.2%',
+    maxDD:'−9.4%', maxDDN:9.4, curDD:'−2.8%', winRate:'58%',
+    sharpe:'1.41', sharpeN:1.41, pf:'1.76', trades:'42 / mo',
+    since:'Jun 2020', sinceMs: new Date('2020-06-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'III', name:'Index Carry Alpha', cls:'indices', tagCls:'tag-indices', tagLabel:'Indices',
+    risk:1, color:'#c8b4ff', seed:303, trend:0.00040, vol:0.011, maxN:90,
+    desc:'Low-volatility carry strategy on major global equity indices, prioritising capital preservation over aggressive growth. Operates on daily timeframes with tight stop management and systematic exit rules. Risk-adjusted returns consistently outperform passive benchmark exposure with minimal correlation to other listed strategies.',
+    ytd:'+9.7%', ytdN:9.7, allTime:'+98.4%', monthAvg:'+0.8%',
+    maxDD:'−3.2%', maxDDN:3.2, curDD:'−0.6%', winRate:'71%',
+    sharpe:'2.31', sharpeN:2.31, pf:'2.88', trades:'9 / mo',
+    since:'Jan 2022', sinceMs: new Date('2022-01-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'IV', name:'Silver Sprint', cls:'metals', tagCls:'tag-metals', tagLabel:'Metals',
+    risk:4, color:'#c9a44a', seed:404, trend:0.00090, vol:0.034, maxN:130,
+    desc:'High-frequency silver and platinum spread trading with tight intraday stops and rapid position turnover. Higher volatility profile with correspondingly elevated return potential. Suited to risk-tolerant investors comfortable with short-term drawdown in exchange for above-average long-term compounding across precious metals spreads.',
+    ytd:'+38.1%', ytdN:38.1, allTime:'+312.4%', monthAvg:'+2.8%',
+    maxDD:'−18.6%', maxDDN:18.6, curDD:'−5.1%', winRate:'52%',
+    sharpe:'1.12', sharpeN:1.12, pf:'1.62', trades:'67 / mo',
+    since:'Sep 2019', sinceMs: new Date('2019-09-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'V', name:'EM Flow', cls:'forex', tagCls:'tag-forex', tagLabel:'Forex',
+    risk:2, color:'#9ec8ff', seed:505, trend:0.00072, vol:0.019, maxN:115,
+    desc:'Emerging market currency strategy using trend-following signals overlaid with a macro regime filter. Screens for carry, momentum, and fundamental alignment before any entry. Adaptive stop placement limits downside during regime transitions. Consistently profitable across multiple EM cycles since its April 2021 inception date.',
+    ytd:'+22.9%', ytdN:22.9, allTime:'+164.7%', monthAvg:'+1.7%',
+    maxDD:'−7.8%', maxDDN:7.8, curDD:'−1.9%', winRate:'61%',
+    sharpe:'1.67', sharpeN:1.67, pf:'2.02', trades:'31 / mo',
+    since:'Apr 2021', sinceMs: new Date('2021-04-01').getTime(),
+    invested:true,  alloc:'$15,000'
+  },
+  {
+    id:'VI', name:'Breakout Prime', cls:'indices', tagCls:'tag-indices', tagLabel:'Indices',
+    risk:2, color:'#c8b4ff', seed:606, trend:0.00060, vol:0.015, maxN:115,
+    desc:'Breakout strategy on major global indices capturing directional moves after consolidation phases. Volatility-adjusted sizing prevents overexposure during elevated VIX regimes, and strict stop rules cap per-trade loss. Performs best in trending macro environments with limited intraday mean-reversion pressure on index constituents.',
+    ytd:'+17.3%', ytdN:17.3, allTime:'+148.2%', monthAvg:'+1.3%',
+    maxDD:'−7.0%', maxDDN:7.0, curDD:'−2.3%', winRate:'59%',
+    sharpe:'1.55', sharpeN:1.55, pf:'1.91', trades:'22 / mo',
+    since:'May 2021', sinceMs: new Date('2021-05-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'VII', name:'Harvest Cycle', cls:'commodities', tagCls:'tag-commodities', tagLabel:'Commodities',
+    risk:3, color:'#7effa8', seed:707, trend:0.00078, vol:0.026, maxN:120,
+    desc:'Energy and agricultural commodity strategy driven by seasonal pattern recognition combined with macro regime triggers. Positions held over days to weeks with active drawdown controls. Diversification across multiple commodity markets reduces single-asset concentration risk and smooths returns across calendar year seasonality.',
+    ytd:'+31.6%', ytdN:31.6, allTime:'+198.6%', monthAvg:'+2.3%',
+    maxDD:'−12.4%', maxDDN:12.4, curDD:'−3.7%', winRate:'57%',
+    sharpe:'1.38', sharpeN:1.38, pf:'1.88', trades:'28 / mo',
+    since:'Nov 2020', sinceMs: new Date('2020-11-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'VIII', name:'FX Precision', cls:'forex', tagCls:'tag-forex', tagLabel:'Forex',
+    risk:1, color:'#9ec8ff', seed:808, trend:0.00030, vol:0.009, maxN:75,
+    desc:'Conservative mean-reversion strategy on major FX pairs using low-frequency, high-precision entry points. Prioritises win rate over trade frequency, with maximum two simultaneous positions at any time. The platform\'s lowest-drawdown strategy — ideal as a capital-preservation anchor alongside higher-risk portfolio allocations.',
+    ytd:'+8.1%', ytdN:8.1, allTime:'+72.3%', monthAvg:'+0.7%',
+    maxDD:'−2.6%', maxDDN:2.6, curDD:'−0.4%', winRate:'74%',
+    sharpe:'2.48', sharpeN:2.48, pf:'3.12', trades:'7 / mo',
+    since:'Feb 2023', sinceMs: new Date('2023-02-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'IX', name:'Gold Swing', cls:'metals', tagCls:'tag-metals', tagLabel:'Metals',
+    risk:3, color:'#c9a44a', seed:909, trend:0.00073, vol:0.024, maxN:125,
+    desc:'Multi-timeframe gold futures swing strategy combining higher-timeframe structural analysis with lower-timeframe entry precision. Volume confirmation is required on all entries. Positions held two to seven days, designed to capture sustained directional moves while avoiding noise-driven stop-outs common to shorter-timeframe approaches.',
+    ytd:'+24.7%', ytdN:24.7, allTime:'+204.1%', monthAvg:'+1.9%',
+    maxDD:'−10.2%', maxDDN:10.2, curDD:'−2.1%', winRate:'60%',
+    sharpe:'1.59', sharpeN:1.59, pf:'2.08', trades:'14 / mo',
+    since:'Jul 2020', sinceMs: new Date('2020-07-01').getTime(),
+    invested:true,  alloc:'$42,600'
+  },
+  {
+    id:'X', name:'Basket Blend', cls:'commodities', tagCls:'tag-commodities', tagLabel:'Commodities',
+    risk:2, color:'#7effa8', seed:1010, trend:0.00052, vol:0.016, maxN:90,
+    desc:'Diversified soft commodities basket with systematic rebalancing and active drawdown controls. Trades corn, wheat, coffee, and cocoa futures simultaneously. Cross-commodity correlation limits prevent overexposure to related moves. Designed for steady compounding with historically low correlation to both equity and fixed-income market returns.',
+    ytd:'+13.8%', ytdN:13.8, allTime:'+118.9%', monthAvg:'+1.1%',
+    maxDD:'−5.5%', maxDDN:5.5, curDD:'−1.7%', winRate:'66%',
+    sharpe:'1.92', sharpeN:1.92, pf:'2.34', trades:'11 / mo',
+    since:'Mar 2022', sinceMs: new Date('2022-03-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'XI', name:'Palladium Edge', cls:'metals', tagCls:'tag-metals', tagLabel:'Metals',
+    risk:3, color:'#c9a44a', seed:1111, trend:0.00068, vol:0.021, maxN:110,
+    desc:'Specialist palladium and platinum strategy exploiting supply-demand imbalances in the automotive sector cycle. Positions held medium-term with fundamental supply analysis overlaid on technical entry signals. Delivers high-conviction setups with strong risk-adjusted performance relative to broader precious metals peers since August 2021.',
+    ytd:'+19.4%', ytdN:19.4, allTime:'+156.4%', monthAvg:'+1.5%',
+    maxDD:'−8.3%', maxDDN:8.3, curDD:'−2.9%', winRate:'62%',
+    sharpe:'1.71', sharpeN:1.71, pf:'2.22', trades:'21 / mo',
+    since:'Aug 2021', sinceMs: new Date('2021-08-01').getTime(),
+    invested:false, alloc:null
+  },
+  {
+    id:'XII', name:'Carbon Trade', cls:'commodities', tagCls:'tag-commodities', tagLabel:'Commodities',
+    risk:2, color:'#7effa8', seed:1212, trend:0.00062, vol:0.017, maxN:80,
+    desc:'Carbon credit and emissions allowance strategy capturing regulatory-driven pricing cycles in European and global carbon markets. A growing asset class with strong structural tailwinds from climate policy. Position sizes are calibrated to liquidity profiles, and historical correlation to traditional asset classes remains very low.',
+    ytd:'+16.7%', ytdN:16.7, allTime:'+89.2%', monthAvg:'+1.3%',
+    maxDD:'−6.8%', maxDDN:6.8, curDD:'−1.5%', winRate:'64%',
+    sharpe:'1.78', sharpeN:1.78, pf:'2.15', trades:'15 / mo',
+    since:'Oct 2022', sinceMs: new Date('2022-10-01').getTime(),
+    invested:false, alloc:null
+  }
+];
+
+// ── SEEDED RNG ────────────────────────────────────────────────────
+function lcg(seed) {
+  let s = (seed ^ 0xABCD1234) >>> 0;
+  return () => {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    return s / 0x100000000;
+  };
+}
+
+function genPts(seed, n, trend, vol) {
+  const r = lcg(seed);
+  let v = 10000;
+  return Array.from({ length: Math.max(n, 2) }, () => {
+    v *= 1 + trend + (r() - 0.49) * vol;
+    return v;
+  });
+}
+
+// ── CHART DATA ────────────────────────────────────────────────────
+const PERIOD_N = { '1W': 7, '1M': 22, '3M': 66, '6M': 130, '1Y': 252, 'Max': null };
+const PERIOD_SM = { '1W': 1, '1M': 2, '3M': 3, '6M': 4, '1Y': 5, 'Max': 6 };
+
+const CHART_DATA = {};
+STRATS.forEach(s => {
+  CHART_DATA[s.id] = {};
+  Object.keys(PERIOD_N).forEach(p => {
+    const n = p === 'Max' ? s.maxN : PERIOD_N[p];
+    CHART_DATA[s.id][p] = genPts(s.seed * PERIOD_SM[p] + 13, n, s.trend, s.vol);
+  });
+});
+
+// ── SVG CHART ─────────────────────────────────────────────────────
+const CW = 600, CH = 150, CP = 8;
+
+function buildPath(pts) {
+  const mn = Math.min(...pts), mx = Math.max(...pts), rng = mx - mn || 1;
+  const xs = pts.map((_, i) => CP + (i / (pts.length - 1)) * (CW - 2 * CP));
+  const ys = pts.map(v => CP + (1 - (v - mn) / rng) * (CH - 2 * CP));
+  const linePath = xs.map((x, i) => (i ? 'L' : 'M') + x.toFixed(1) + ',' + ys[i].toFixed(1)).join('');
+  const fillPath = linePath + 'L' + xs[xs.length-1].toFixed(1) + ',' + CH + 'L' + xs[0].toFixed(1) + ',' + CH + 'Z';
+  return { xs, ys, linePath, fillPath, mn, mx };
+}
+
+function pctChg(pts) {
+  const p = ((pts[pts.length - 1] - pts[0]) / pts[0]) * 100;
+  return (p >= 0 ? '+' : '') + p.toFixed(1) + '%';
+}
+
+const _coords = {}; // stratId → { xs, ys, pts }
+
+function renderChart(stratId, period) {
+  const pts = CHART_DATA[stratId][period];
+  const { xs, ys, linePath, fillPath, mn, mx } = buildPath(pts);
+  _coords[stratId] = { xs, ys, pts };
+
+  document.getElementById('lp-' + stratId).setAttribute('d', linePath);
+  document.getElementById('ap-' + stratId).setAttribute('d', fillPath);
+
+  const rng = mx - mn;
+  ['g1','g2'].forEach((k, i) => {
+    const el = document.getElementById(k + '-' + stratId);
+    if (el) {
+      const val = mn + rng * (i === 0 ? 0.33 : 0.67);
+      el.textContent = val < 1000 ? val.toFixed(0) : (val / 1000).toFixed(1) + 'k';
+    }
+  });
+
+  const pct = pctChg(pts);
+  const isPos = !pct.startsWith('-');
+  const dEl = document.getElementById('delta-' + stratId);
+  dEl.textContent = (isPos ? '▲ ' : '▼ ') + pct;
+  dEl.className = 'chart-delta ' + (isPos ? 'delta-pos' : 'delta-neg');
+
+  const lEl = document.getElementById('lp-' + stratId);
+  try {
+    const len = lEl.getTotalLength();
+    lEl.style.strokeDasharray = len;
+    lEl.style.strokeDashoffset = len;
+    lEl.style.transition = 'none';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      lEl.style.transition = 'stroke-dashoffset 0.85s cubic-bezier(0.4,0,0.2,1)';
+      lEl.style.strokeDashoffset = 0;
+    }));
+  } catch(e) {}
+}
+
+function selectPeriod(el, id, period) {
+  el.closest('.strat-card').querySelectorAll('.period-pill').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const crRow = document.getElementById('cr-' + id);
+  if (period === 'Custom') {
+    if (crRow) crRow.classList.add('visible');
+    return;
+  }
+  if (crRow) crRow.classList.remove('visible');
+  renderChart(id, period);
+}
+
+function initCrosshair(s) {
+  const wrap  = document.getElementById('cw-' + s.id);
+  const cline = document.getElementById('cl-' + s.id);
+  const cdot  = document.getElementById('cd-' + s.id);
+  const hl    = document.getElementById('hl-' + s.id);
+  const hv    = document.getElementById('hv-' + s.id);
+  const hi    = document.getElementById('hi-' + s.id);
+
+  wrap.addEventListener('mousemove', e => {
+    const r = wrap.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const c = _coords[s.id];
+    if (!c) return;
+    const idx = Math.min(Math.max(Math.round((x / r.width) * (c.pts.length - 1)), 0), c.pts.length - 1);
+    const sx = c.xs[idx] * (r.width / CW);
+    const sy = c.ys[idx] * (r.height / CH);
+    cline.style.cssText = `display:block;left:${sx}px;background:linear-gradient(180deg,${s.color}99 0%,${s.color}22 100%)`;
+    cdot.style.cssText  = `display:block;left:${sx}px;top:${sy}px;background:${s.color};box-shadow:0 0 8px ${s.color}88`;
+    hl.style.opacity = '1';
+    hv.textContent = c.pts[idx].toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    hi.textContent = 'pt ' + (idx + 1) + ' of ' + c.pts.length;
+    hl.style.left = Math.min(Math.max(sx, 55), r.width - 55) + 'px';
+  });
+  wrap.addEventListener('mouseleave', () => {
+    cline.style.display = cdot.style.display = 'none';
+    hl.style.opacity = '0';
+  });
+}
+
+// ── RENDER CARD ───────────────────────────────────────────────────
+function renderCard(s, delay) {
+  const riskPips = [1,2,3,4].map(i =>
+    `<div class="risk-pip${i <= s.risk ? ' on' : ''}"></div>`).join('');
+
+  const periodHtml = ['1W','1M','3M','6M','1Y','Max','Custom'].map((p, i) =>
+    `<button class="period-pill${i === 1 ? ' active' : ''}" onclick="selectPeriod(this,'${s.id}','${p}')">${p}</button>`
+  ).join('');
+
+  const investedBadge = s.invested
+    ? `<div class="invested-badge"><div class="invested-dot"></div>Invested<span class="invested-amount">${s.alloc}</span></div>`
+    : '';
+
+  const footerBtn = s.invested
+    ? `<button class="btn-view">View details</button><button class="btn-manage">Manage investment</button>`
+    : `<button class="btn-invest">Invest in this strategy</button>`;
+
+  return `
+<div class="strat-card ${s.cls}${s.invested ? ' is-invested' : ''}"
+     data-cls="${s.cls}" data-invested="${s.invested}"
+     data-ytd="${s.ytdN}" data-maxdd="${s.maxDDN}" data-sharpe="${s.sharpeN}" data-since="${s.sinceMs}"
+     data-strat="${s.id}"
+     style="animation: cardIn 0.5s ease ${delay}s both">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="card-top-row">
+        <span class="strat-tag ${s.tagCls}">${s.tagLabel}</span>
+        <span class="strat-numeral">${s.id}</span>
+      </div>
+      <div class="strat-name">${s.name}</div>
+      <div class="strat-since">Live since ${s.since}</div>
+    </div>
+    <div class="card-header-right">
+      <div class="risk-row">
+        <span class="risk-label">Risk</span>
+        <div class="risk-pips">${riskPips}</div>
+      </div>
+      ${investedBadge}
+    </div>
+  </div>
+
+  <div class="card-desc">${s.desc}</div>
+
+  <div class="card-chart">
+    <div class="chart-top-row">
+      <div class="chart-left-meta">
+        <span class="chart-eq-label">Equity curve</span>
+        <span id="delta-${s.id}" class="chart-delta delta-pos">▲ +0.0%</span>
+      </div>
+      <div class="period-pills">${periodHtml}</div>
+    </div>
+    <div class="card-svg-wrap" id="cw-${s.id}">
+      <div class="card-cline" id="cl-${s.id}"></div>
+      <div class="card-cdot"  id="cd-${s.id}"></div>
+      <div class="card-hlabel" id="hl-${s.id}">
+        <div class="card-hlabel-val" id="hv-${s.id}"></div>
+        <div class="card-hlabel-idx" id="hi-${s.id}"></div>
+      </div>
+      <svg viewBox="0 0 ${CW} ${CH}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="lg-${s.id}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="${s.color}" stop-opacity="0.55"/>
+            <stop offset="50%"  stop-color="${s.color}"/>
+            <stop offset="100%" stop-color="${s.color}" stop-opacity="0.75"/>
+          </linearGradient>
+          <linearGradient id="fg-${s.id}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="${s.color}" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="${s.color}" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="cp-${s.id}"><rect x="0" y="0" width="${CW}" height="${CH}"/></clipPath>
+        </defs>
+        <g class="c-ygrid">
+          <line x1="0" y1="${CH * 0.33}" x2="${CW}" y2="${CH * 0.33}"/>
+          <line x1="0" y1="${CH * 0.67}" x2="${CW}" y2="${CH * 0.67}"/>
+          <text x="6" y="${CH * 0.33 - 3}" id="g2-${s.id}"></text>
+          <text x="6" y="${CH * 0.67 - 3}" id="g1-${s.id}"></text>
+        </g>
+        <path id="ap-${s.id}" clip-path="url(#cp-${s.id})" fill="url(#fg-${s.id})"/>
+        <path id="lp-${s.id}" fill="none" stroke="url(#lg-${s.id})" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" clip-path="url(#cp-${s.id})"/>
+      </svg>
+    </div>
+    <div class="custom-range-row" id="cr-${s.id}">
+      <span class="date-field-label">From</span>
+      <button class="date-btn" id="fb-${s.id}" onclick="openCal('${s.id}','from',this)">
+        <span id="fv-${s.id}" class="placeholder">Select date</span>
+      </button>
+      <span class="date-range-sep">—</span>
+      <span class="date-field-label">To</span>
+      <button class="date-btn" id="tb-${s.id}" onclick="openCal('${s.id}','to',this)">
+        <span id="tv-${s.id}" class="placeholder">Select date</span>
+      </button>
+      <button class="apply-btn" id="ab-${s.id}" onclick="applyRange('${s.id}')">Apply</button>
+    </div>
+  </div>
+
+  <div class="card-metrics">
+    <div class="metrics-col">
+      <div class="metrics-col-head">Returns</div>
+      <div class="metric-row"><span class="metric-label">YTD Return</span><span class="metric-val pos">${s.ytd}</span></div>
+      <div class="metric-row"><span class="metric-label">All-Time</span><span class="metric-val pos">${s.allTime}</span></div>
+      <div class="metric-row"><span class="metric-label">Monthly Avg</span><span class="metric-val pos">${s.monthAvg}</span></div>
+    </div>
+    <div class="metrics-col">
+      <div class="metrics-col-head">Risk</div>
+      <div class="metric-row"><span class="metric-label">Max Drawdown</span><span class="metric-val neg">${s.maxDD}</span></div>
+      <div class="metric-row"><span class="metric-label">Current DD</span><span class="metric-val neg">${s.curDD}</span></div>
+      <div class="metric-row"><span class="metric-label">Win Rate</span><span class="metric-val neu">${s.winRate}</span></div>
+    </div>
+    <div class="metrics-col">
+      <div class="metrics-col-head">Statistics</div>
+      <div class="metric-row"><span class="metric-label">Sharpe Ratio</span><span class="metric-val neu">${s.sharpe}</span></div>
+      <div class="metric-row"><span class="metric-label">Profit Factor</span><span class="metric-val neu">${s.pf}</span></div>
+      <div class="metric-row"><span class="metric-label">Avg Trades</span><span class="metric-val neu">${s.trades}</span></div>
+    </div>
+  </div>
+
+  <div class="card-footer">${footerBtn}</div>
+</div>`;
+}
+
+// ── FILTER + SORT ─────────────────────────────────────────────────
+let activeFilter = 'all';
+
+function setFilter(el, filter) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeFilter = filter;
+  applyView();
+}
+
+function applyView() {
+  const sortVal = document.querySelector('.sort-select').value;
+  const grid = document.getElementById('strat-grid');
+
+  const sortFn = {
+    'ytd':    c => -parseFloat(c.dataset.ytd),
+    'maxdd':  c => parseFloat(c.dataset.maxdd),
+    'sharpe': c => -parseFloat(c.dataset.sharpe),
+    'since':  c => parseFloat(c.dataset.since)
+  }[sortVal];
+
+  const cards = [...grid.querySelectorAll('.strat-card')];
+  cards.sort((a, b) => sortFn(a) - sortFn(b)).forEach(c => grid.appendChild(c));
+
+  let visible = 0;
+  cards.forEach(card => {
+    const show = activeFilter === 'all'
+      || activeFilter === card.dataset.cls
+      || (activeFilter === 'invested' && card.dataset.invested === 'true');
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('count-num').textContent = visible;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+const grid = document.getElementById('strat-grid');
+STRATS.forEach((s, i) => {
+  grid.insertAdjacentHTML('beforeend', renderCard(s, i * 0.06));
+  renderChart(s.id, '1M');
+  initCrosshair(s);
+});
+
+// ── CUSTOM DATE RANGE + CALENDAR ─────────────────────────────────
+const TODAY = new Date(2026, 3, 25); // Apr 25 2026
+
+const customRanges = {};
+STRATS.forEach(s => { customRanges[s.id] = { from: null, to: null }; });
+
+const calState = { stratId: null, field: null, year: TODAY.getFullYear(), month: TODAY.getMonth() };
+
+const MONTHS_LONG = ['January','February','March','April','May','June',
+                     'July','August','September','October','November','December'];
+
+function openCal(stratId, field, btnEl) {
+  const popup = document.getElementById('cal-popup');
+  // Toggle closed if same button clicked again
+  if (popup.style.display === 'block' && calState.stratId === stratId && calState.field === field) {
+    closeCal(); return;
+  }
+  calState.stratId = stratId;
+  calState.field   = field;
+
+  const cr = customRanges[stratId];
+  const ref = field === 'to' && cr.from ? cr.from : (cr[field] || TODAY);
+  calState.year  = ref.getFullYear();
+  calState.month = ref.getMonth();
+
+  document.querySelectorAll('.date-btn.cal-open').forEach(b => b.classList.remove('cal-open'));
+  btnEl.classList.add('cal-open');
+
+  popup.style.display = 'block';
+  positionCal(btnEl);
+  drawCal();
+}
+
+function positionCal(anchorEl) {
+  const popup = document.getElementById('cal-popup');
+  const r = anchorEl.getBoundingClientRect();
+  let top  = r.bottom + 6;
+  let left = r.left;
+  if (left + 264 > window.innerWidth - 8) left = window.innerWidth - 272;
+  if (top  + 360 > window.innerHeight - 8) top = r.top - 366;
+  popup.style.top  = top  + 'px';
+  popup.style.left = left + 'px';
+}
+
+function closeCal() {
+  document.getElementById('cal-popup').style.display = 'none';
+  document.querySelectorAll('.date-btn.cal-open').forEach(b => b.classList.remove('cal-open'));
+  calState.stratId = null;
+  calState.field   = null;
+}
+
+function calNav(dir) {
+  calState.month += dir;
+  if (calState.month < 0)  { calState.month = 11; calState.year--; }
+  if (calState.month > 11) { calState.month = 0;  calState.year++; }
+  drawCal();
+}
+
+function drawCal() {
+  document.getElementById('cal-my').textContent =
+    MONTHS_LONG[calState.month] + ' ' + calState.year;
+
+  const fi = document.getElementById('cal-fi');
+  fi.textContent  = calState.field === 'from' ? 'Selecting from date' : 'Selecting to date';
+  fi.className    = 'cal-field-ind for-' + calState.field;
+
+  const cgrid = document.getElementById('cal-grid');
+  cgrid.innerHTML = '';
+
+  const cr       = customRanges[calState.stratId] || {};
+  const s        = STRATS.find(x => x.id === calState.stratId);
+  const minDate  = s ? new Date(s.sinceMs) : new Date(2019, 0, 1);
+  const firstDow = new Date(calState.year, calState.month, 1).getDay();
+  const dInMonth = new Date(calState.year, calState.month + 1, 0).getDate();
+  const dInPrev  = new Date(calState.year, calState.month, 0).getDate();
+
+  for (let cell = 0; cell < 42; cell++) {
+    const btn = document.createElement('button');
+    btn.className = 'cal-day';
+    let d;
+
+    if (cell < firstDow) {
+      d = dInPrev - (firstDow - 1 - cell);
+      btn.textContent = d;
+      btn.classList.add('other-month');
+    } else if (cell - firstDow < dInMonth) {
+      d = cell - firstDow + 1;
+      btn.textContent = d;
+      const date = new Date(calState.year, calState.month, d);
+
+      if (sameDay(date, TODAY)) btn.classList.add('today');
+
+      if (date < minDate || date > TODAY) {
+        btn.classList.add('disabled');
+      } else {
+        btn.onclick = () => pickDay(new Date(calState.year, calState.month, d));
+      }
+
+      if (cr.from && sameDay(date, cr.from)) btn.classList.add('sel-from');
+      if (cr.to   && sameDay(date, cr.to))   btn.classList.add('sel-to');
+      if (cr.from && cr.to && date > cr.from && date < cr.to) btn.classList.add('in-range');
+    } else {
+      d = cell - firstDow - dInMonth + 1;
+      btn.textContent = d;
+      btn.classList.add('other-month');
+    }
+
+    cgrid.appendChild(btn);
+  }
+
+  // Hide 6th row if all other-month
+  const cells = [...cgrid.children];
+  if (cells.slice(35).every(b => b.classList.contains('other-month')))
+    cells.slice(35).forEach(b => b.style.display = 'none');
+}
+
+function sameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth()    === b.getMonth()    &&
+         a.getDate()     === b.getDate();
+}
+
+function fmtDate(d) {
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function pickDay(date) {
+  const id = calState.stratId;
+  const cr = customRanges[id];
+
+  if (calState.field === 'from') {
+    cr.from = date;
+    if (cr.to && cr.to < date) {
+      cr.to = null;
+      const tv = document.getElementById('tv-' + id);
+      if (tv) { tv.textContent = 'Select date'; tv.classList.add('placeholder'); }
+    }
+    const fv = document.getElementById('fv-' + id);
+    if (fv) { fv.textContent = fmtDate(date); fv.classList.remove('placeholder'); }
+    // Auto-switch to 'to' picking
+    closeCal();
+    const toBtn = document.getElementById('tb-' + id);
+    if (toBtn) openCal(id, 'to', toBtn);
+  } else {
+    if (cr.from && date < cr.from) date = new Date(cr.from); // clamp
+    cr.to = date;
+    const tv = document.getElementById('tv-' + id);
+    if (tv) { tv.textContent = fmtDate(date); tv.classList.remove('placeholder'); }
+    closeCal();
+  }
+
+  const ab = document.getElementById('ab-' + id);
+  if (ab) ab.classList.toggle('ready', !!(cr.from && cr.to));
+}
+
+function applyRange(stratId) {
+  const cr = customRanges[stratId];
+  if (!cr.from || !cr.to) return;
+
+  const s       = STRATS.find(x => x.id === stratId);
+  const maxPts  = CHART_DATA[stratId]['Max'];
+  const since   = new Date(s.sinceMs);
+  const totalMs = TODAY - since;
+
+  const startF  = Math.max(0, (cr.from - since) / totalMs);
+  const endF    = Math.min(1, (cr.to   - since) / totalMs);
+  const si      = Math.floor(startF * (maxPts.length - 1));
+  const ei      = Math.max(si + 1, Math.ceil(endF * (maxPts.length - 1)));
+
+  const sliced  = maxPts.slice(si, ei + 1);
+  if (sliced.length < 2) return;
+
+  // Reuse the same renderChart pipeline
+  const { xs, ys, linePath, fillPath, mn, mx } = buildPath(sliced);
+  _coords[stratId] = { xs, ys, pts: sliced };
+
+  document.getElementById('lp-' + stratId).setAttribute('d', linePath);
+  document.getElementById('ap-' + stratId).setAttribute('d', fillPath);
+
+  const rng = mx - mn;
+  ['g1','g2'].forEach((k, i) => {
+    const el = document.getElementById(k + '-' + stratId);
+    if (el) {
+      const v = mn + rng * (i === 0 ? 0.33 : 0.67);
+      el.textContent = v < 1000 ? v.toFixed(0) : (v / 1000).toFixed(1) + 'k';
+    }
+  });
+
+  const pct  = pctChg(sliced);
+  const isPos = !pct.startsWith('-');
+  const dEl  = document.getElementById('delta-' + stratId);
+  dEl.textContent = (isPos ? '▲ ' : '▼ ') + pct;
+  dEl.className   = 'chart-delta ' + (isPos ? 'delta-pos' : 'delta-neg');
+
+  const lEl = document.getElementById('lp-' + stratId);
+  try {
+    const len = lEl.getTotalLength();
+    lEl.style.strokeDasharray  = len;
+    lEl.style.strokeDashoffset = len;
+    lEl.style.transition = 'none';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      lEl.style.transition = 'stroke-dashoffset 0.85s cubic-bezier(0.4,0,0.2,1)';
+      lEl.style.strokeDashoffset = 0;
+    }));
+  } catch(e) {}
+}
+
+// Close calendar when clicking outside or scrolling
+document.addEventListener('click', e => {
+  const popup = document.getElementById('cal-popup');
+  if (!popup || popup.style.display !== 'block') return;
+  if (!popup.contains(e.target) && !e.target.closest('.date-btn')) closeCal();
+}, true);
+window.addEventListener('scroll', closeCal, { passive: true });
+</script>
+
+<!-- CALENDAR POPUP -->
+<div id="cal-popup">
+  <div class="cal-header">
+    <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+    <span class="cal-my" id="cal-my"></span>
+    <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+  </div>
+  <div class="cal-field-ind for-from" id="cal-fi">Selecting from date</div>
+  <div class="cal-dow-row">
+    <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div>
+    <div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div>
+    <div class="cal-dow">Sa</div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+</body>
+</html>
