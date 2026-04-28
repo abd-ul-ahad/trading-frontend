@@ -26,9 +26,9 @@ export default function PortfolioPage() {
 
   return (
     <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
-      <div className="flex items-baseline justify-between mb-8 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
+      <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-8 gap-4 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
         <div>
-          <div className="font-display text-[32px] font-light text-white tracking-[-0.01em]">
+          <div className="font-display text-[28px] md:text-[32px] font-light text-white tracking-[-0.01em]">
             Good morning, <em className="italic">Sarah.</em>
           </div>
           <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] mt-1">
@@ -46,7 +46,7 @@ export default function PortfolioPage() {
         Allocation breakdown
       </div>
 
-      <div className="grid grid-cols-3 gap-3 opacity-0 animate-[fadeUp_0.6s_ease_0.3s_both]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 opacity-0 animate-[fadeUp_0.6s_ease_0.3s_both]">
         <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
           <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[rgba(200,160,60,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>

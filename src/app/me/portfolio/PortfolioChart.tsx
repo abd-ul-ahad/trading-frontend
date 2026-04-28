@@ -121,36 +121,36 @@ export function PortfolioChart() {
     <div className="bg-[#0c0c0c] border border-[rgba(200,160,60,0.15)] rounded-[20px] overflow-hidden relative mb-5 opacity-0 animate-[fadeUp_0.6s_ease_0.1s_both] shadow-[0_0_0_1px_rgba(200,160,60,0.05)_inset,0_24px_60px_rgba(0,0,0,0.5)]">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,160,60,0.45)] to-transparent pointer-events-none" />
 
-      <div className="grid grid-cols-[1fr_auto] items-start gap-8 p-8 pb-6 border-b border-[rgba(255,255,255,0.05)]">
+      <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto] items-start gap-4 md:gap-8 p-6 md:p-8 pb-4 md:pb-6 border-b border-[rgba(255,255,255,0.05)]">
         <div>
           <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#c9a44a] mb-2.5 opacity-85">
             Total portfolio value · USD
           </div>
-          <div className="flex items-end gap-5 flex-wrap">
-            <div className="font-outfit text-[56px] font-bold text-white tracking-[-0.035em] leading-none">
+          <div className="flex flex-col md:flex-row md:items-end gap-3 md:gap-5">
+            <div className="font-outfit text-[40px] md:text-[56px] font-bold text-white tracking-[-0.035em] leading-none">
               {fmtUSD(currentVal)}
             </div>
-            <div className="flex items-center gap-2.5 pb-1.5">
-              <div className={`inline-flex items-center gap-1.5 font-outfit text-xl font-semibold tracking-[-0.02em] px-3.5 py-1.5 rounded-lg ${data.pos ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.08)] border border-[rgba(232,200,74,0.2)]' : 'text-[#ff9090] bg-[rgba(255,144,144,0.08)] border border-[rgba(255,144,144,0.2)]'}`}>
+            <div className="flex flex-wrap items-center gap-2 md:gap-2.5 md:pb-1.5">
+              <div className={`inline-flex items-center gap-1.5 font-outfit text-base md:text-xl font-semibold tracking-[-0.02em] px-3 md:px-3.5 py-1.5 rounded-lg ${data.pos ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.08)] border border-[rgba(232,200,74,0.2)]' : 'text-[#ff9090] bg-[rgba(255,144,144,0.08)] border border-[rgba(255,144,144,0.2)]'}`}>
                 {data.pos ? '▲' : '▼'} {data.usd}
               </div>
-              <div className={`inline-flex items-center gap-1 font-mono text-sm font-medium tracking-[0.04em] px-3 py-1.5 rounded-lg ${data.pos ? 'text-[rgba(232,200,74,0.85)] bg-[rgba(232,200,74,0.05)] border border-[rgba(232,200,74,0.15)]' : 'text-[rgba(255,144,144,0.85)] bg-[rgba(255,144,144,0.05)] border border-[rgba(255,144,144,0.15)]'}`}>
+              <div className={`inline-flex items-center gap-1 font-mono text-xs md:text-sm font-medium tracking-[0.04em] px-2.5 md:px-3 py-1.5 rounded-lg ${data.pos ? 'text-[rgba(232,200,74,0.85)] bg-[rgba(232,200,74,0.05)] border border-[rgba(232,200,74,0.15)]' : 'text-[rgba(255,144,144,0.85)] bg-[rgba(255,144,144,0.05)] border border-[rgba(255,144,144,0.15)]'}`}>
                 {data.pct}
               </div>
-              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] pb-1.5">
+              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] md:pb-1.5">
                 {data.lbl}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-3">
-          <div className="flex gap-0.5 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-[9px] p-1">
+        <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto">
+          <div className="flex gap-0.5 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-[9px] p-1 overflow-x-auto w-full md:w-auto">
             {(['1D', '1W', '1M', '1Q', 'YTD', '1Y', 'Max', 'Custom'] as Period[]).map((p) => (
               <button
                 key={p}
                 onClick={() => handlePeriodClick(p)}
-                className={`font-mono text-[11px] tracking-[0.08em] px-3 py-1.5 rounded-md transition-all whitespace-nowrap ${
+                className={`font-mono text-[10px] md:text-[11px] tracking-[0.08em] px-2 md:px-3 py-1.5 rounded-md transition-all whitespace-nowrap ${
                   period === p
                     ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.1)] shadow-[0_1px_4px_rgba(0,0,0,0.3)]'
                     : 'text-[#8a847c] hover:text-[#d8d3ca] hover:bg-[rgba(255,255,255,0.04)]'
@@ -160,10 +160,10 @@ export function PortfolioChart() {
               </button>
             ))}
           </div>
-          <div className={`flex items-center gap-2 transition-all ${showCustom ? 'opacity-100 max-h-11' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-            <input type="date" className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)] transition-colors" defaultValue="2026-01-01" />
-            <span className="font-mono text-[10px] text-[#8a847c]">→</span>
-            <input type="date" className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)] transition-colors" defaultValue="2026-04-23" />
+          <div className={`flex flex-col md:flex-row items-start md:items-center gap-2 transition-all w-full md:w-auto ${showCustom ? 'opacity-100 max-h-24 md:max-h-11' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+            <input type="date" className="w-full md:w-auto bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)] transition-colors" defaultValue="2026-01-01" />
+            <span className="font-mono text-[10px] text-[#8a847c] hidden md:inline">→</span>
+            <input type="date" className="w-full md:w-auto bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)] transition-colors" defaultValue="2026-04-23" />
           </div>
         </div>
       </div>
@@ -217,7 +217,7 @@ export function PortfolioChart() {
         </svg>
       </div>
 
-      <div className="grid grid-cols-5 gap-px bg-[rgba(255,255,255,0.05)] border-t border-[rgba(255,255,255,0.05)]">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[rgba(255,255,255,0.05)] border-t border-[rgba(255,255,255,0.05)]">
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
           <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">Total invested</div>
           <div className="font-outfit text-lg font-bold text-white tracking-[-0.02em]">$300,000</div>

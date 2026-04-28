@@ -15,9 +15,9 @@ export default function DiscoverPage() {
 
   return (
     <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
-      <div className="flex items-baseline justify-between mb-8 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
+      <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-6 md:mb-8 gap-4 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
         <div>
-          <div className="font-display text-[32px] font-light text-white tracking-[-0.01em]">
+          <div className="font-display text-[28px] md:text-[32px] font-light text-white tracking-[-0.01em]">
             Discover new <em className="italic">opportunities.</em>
           </div>
           <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] mt-1">
@@ -26,7 +26,7 @@ export default function DiscoverPage() {
         </div>
       </div>
 
-      <div className="flex gap-1.5 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both]">
+      <div className="flex gap-1.5 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both] overflow-x-auto pb-2">
         <button
           onClick={() => setFilter('all')}
           className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 transition-all whitespace-nowrap ${
@@ -79,7 +79,7 @@ export default function DiscoverPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-5 opacity-0 animate-[fadeUp_0.6s_ease_0.15s_both]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 opacity-0 animate-[fadeUp_0.6s_ease_0.15s_both]">
         {filteredStrategies.map((strategy, idx) => (
           <div
             key={strategy.id}
@@ -126,7 +126,7 @@ export default function DiscoverPage() {
               {strategy.desc}
             </p>
 
-            <div className="grid grid-cols-3 gap-4 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
               <div>
                 <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
                   YTD Return
