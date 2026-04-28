@@ -120,13 +120,15 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                 >
                   Sign in
                 </motion.button>
+                <Link href="/me/portfolio">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="w-full px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
+                  >
                   Open dashboard
                 </motion.button>
+                  </Link>
               </motion.div>
 
               {/* Theme Toggle with fade animation */}
