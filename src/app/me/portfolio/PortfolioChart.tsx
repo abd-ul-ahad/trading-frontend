@@ -123,21 +123,21 @@ export function PortfolioChart() {
 
       <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto] items-start gap-4 md:gap-8 p-6 md:p-8 pb-4 md:pb-6 border-b border-[rgba(255,255,255,0.05)]">
         <div>
-          <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#c9a44a] mb-2.5 opacity-85">
+          <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#d4af37] mb-2.5 opacity-85">
             Total portfolio value · USD
           </div>
           <div className="flex flex-col md:flex-row md:items-end gap-3 md:gap-5">
-            <div className="font-outfit text-[40px] md:text-[56px] font-bold text-white tracking-[-0.035em] leading-none">
+            <div className="font-outfit text-[46px] md:text-[58px] font-bold text-white tracking-[-0.035em] leading-none">
               {fmtUSD(currentVal)}
             </div>
             <div className="flex flex-wrap items-center gap-2 md:gap-2.5 md:pb-1.5">
-              <div className={`inline-flex items-center gap-1.5 font-outfit text-base md:text-xl font-semibold tracking-[-0.02em] px-3 md:px-3.5 py-1.5 rounded-lg ${data.pos ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.08)] border border-[rgba(232,200,74,0.2)]' : 'text-[#ff9090] bg-[rgba(255,144,144,0.08)] border border-[rgba(255,144,144,0.2)]'}`}>
+              <div className={`inline-flex items-center gap-1.5 font-outfit text-[17px] md:text-[21px] font-semibold tracking-[-0.02em] px-3 md:px-3.5 py-1.5 rounded-lg ${data.pos ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.08)] border border-[rgba(232,200,74,0.2)]' : 'text-[#ff9090] bg-[rgba(255,144,144,0.08)] border border-[rgba(255,144,144,0.2)]'}`}>
                 {data.pos ? '▲' : '▼'} {data.usd}
               </div>
-              <div className={`inline-flex items-center gap-1 font-mono text-xs md:text-sm font-medium tracking-[0.04em] px-2.5 md:px-3 py-1.5 rounded-lg ${data.pos ? 'text-[rgba(232,200,74,0.85)] bg-[rgba(232,200,74,0.05)] border border-[rgba(232,200,74,0.15)]' : 'text-[rgba(255,144,144,0.85)] bg-[rgba(255,144,144,0.05)] border border-[rgba(255,144,144,0.15)]'}`}>
+              <div className={`inline-flex items-center gap-1 font-mono text-[13px] md:text-[14px] font-medium tracking-[0.04em] px-2.5 md:px-3 py-1.5 rounded-lg ${data.pos ? 'text-[rgba(232,200,74,0.9)] bg-[rgba(232,200,74,0.05)] border border-[rgba(232,200,74,0.15)]' : 'text-[rgba(255,144,144,0.9)] bg-[rgba(255,144,144,0.05)] border border-[rgba(255,144,144,0.15)]'}`}>
                 {data.pct}
               </div>
-              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] md:pb-1.5">
+              <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#c8c3bb] md:pb-1.5">
                 {data.lbl}
               </div>
             </div>
@@ -219,29 +219,29 @@ export function PortfolioChart() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[rgba(255,255,255,0.05)] border-t border-[rgba(255,255,255,0.05)]">
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">Total invested</div>
-          <div className="font-outfit text-lg font-bold text-white tracking-[-0.02em]">$300,000</div>
-          <div className="font-mono text-[9px] text-[#8a847c] mt-0.5 tracking-[0.06em]">Initial allocation</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total invested</div>
+          <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em]">$300,000</div>
+          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Initial allocation</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">Total PnL</div>
-          <div className="font-outfit text-lg font-bold text-[#e8c84a] tracking-[-0.02em]">+$52,840</div>
-          <div className="font-mono text-[9px] text-[#8a847c] mt-0.5 tracking-[0.06em]">+17.6% all time</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total PnL</div>
+          <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.02em]">+$52,840</div>
+          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">+17.6% all time</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">YTD Return</div>
-          <div className="font-outfit text-lg font-bold text-[#e8c84a] tracking-[-0.02em]">+20.3%</div>
-          <div className="font-mono text-[9px] text-[#8a847c] mt-0.5 tracking-[0.06em]">vs. 9.2% benchmark</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">YTD Return</div>
+          <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.02em]">+20.3%</div>
+          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">vs. 9.2% benchmark</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">Max Drawdown</div>
-          <div className="font-outfit text-lg font-bold text-[#ff9090] tracking-[-0.02em]">−7.1%</div>
-          <div className="font-mono text-[9px] text-[#8a847c] mt-0.5 tracking-[0.06em]">Weighted portfolio</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Max Drawdown</div>
+          <div className="font-outfit text-[19px] font-bold text-[#ff9090] tracking-[-0.02em]">−7.1%</div>
+          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Weighted portfolio</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#8a847c] mb-1">Risk / Reward</div>
-          <div className="font-outfit text-lg font-bold text-[#9ec8ff] tracking-[-0.02em]">1 : 2.4</div>
-          <div className="font-mono text-[9px] text-[#8a847c] mt-0.5 tracking-[0.06em]">Across strategies</div>
+          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Risk / Reward</div>
+          <div className="font-outfit text-[19px] font-bold text-[#9ec8ff] tracking-[-0.02em]">1 : 2.4</div>
+          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Across strategies</div>
         </div>
       </div>
     </div>

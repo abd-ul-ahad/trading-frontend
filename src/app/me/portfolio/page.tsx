@@ -25,51 +25,51 @@ export default function PortfolioPage() {
   }, []);
 
   return (
-    <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
+    <main className="pt-[calc(68px+50px+44px)] pb-20 max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
       <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-8 gap-4 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
         <div>
-          <div className="font-display text-[28px] md:text-[32px] font-light text-white tracking-[-0.01em]">
+          <div className="font-display text-[32px] md:text-[36px] font-light text-white tracking-[-0.01em]">
             Good morning, <em className="italic">Sarah.</em>
           </div>
-          <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] mt-1">
+          <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
             Your portfolio is performing well across all 3 strategies.
           </div>
         </div>
-        <div className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#8a847c]">
+        <div className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#c8c3bb]">
           {timestamp}
         </div>
       </div>
 
       <PortfolioChart />
 
-      <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#8a847c] mb-3 opacity-0 animate-[fadeUp_0.55s_ease_0.25s_both]">
+      <div className="font-mono text-[12px] tracking-[0.18em] uppercase text-[#c8c3bb] mb-3 opacity-0 animate-[fadeUp_0.55s_ease_0.25s_both]">
         Allocation breakdown
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 opacity-0 animate-[fadeUp_0.6s_ease_0.3s_both]">
         <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[rgba(200,160,60,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,160,60,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <span className="font-mono text-[8.5px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(200,160,60,0.1)] text-[#c9a44a] border border-[rgba(200,160,60,0.2)]">
+              <span className="font-mono text-[9px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(200,160,60,0.1)] text-[#d4af37] border border-[rgba(200,160,60,0.2)]">
                 Metals
               </span>
             </div>
-            <div className="font-display text-xl font-normal text-white leading-none mb-1">
+            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
               Strategy I
             </div>
-            <div className="font-mono text-[9.5px] tracking-widest text-[#8a847c] uppercase">
+            <div className="font-mono text-[11px] tracking-[0.1em] text-[#c8c3bb] uppercase">
               $120,000 · 40% of portfolio
             </div>
           </div>
           <div className="text-right">
-            <div className="font-outfit text-[17px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
+            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
               $142,480
             </div>
-            <div className="font-ui text-[13px] font-semibold text-[#e8c84a]">
+            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
               +$22,480
             </div>
-            <div className="font-mono text-[10px] text-[rgba(232,200,74,0.7)] mt-0.5">
+            <div className="font-mono text-[11px] text-[rgba(232,200,74,0.85)] mt-0.5">
               +18.7% total
             </div>
           </div>
@@ -88,28 +88,28 @@ export default function PortfolioPage() {
         </div>
 
         <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[rgba(200,180,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,180,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <span className="font-mono text-[8.5px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(200,180,255,0.08)] text-[#c8b4ff] border border-[rgba(200,180,255,0.18)]">
+              <span className="font-mono text-[9px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(200,180,255,0.08)] text-[#d4c4ff] border border-[rgba(200,180,255,0.18)]">
                 Indices
               </span>
             </div>
-            <div className="font-display text-xl font-normal text-white leading-none mb-1">
+            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
               Strategy III
             </div>
-            <div className="font-mono text-[9.5px] tracking-widest text-[#8a847c] uppercase">
+            <div className="font-mono text-[11px] tracking-[0.1em] text-[#c8c3bb] uppercase">
               $85,000 · 28% of portfolio
             </div>
           </div>
           <div className="text-right">
-            <div className="font-outfit text-[17px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
+            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
               $97,760
             </div>
-            <div className="font-ui text-[13px] font-semibold text-[#e8c84a]">
+            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
               +$12,760
             </div>
-            <div className="font-mono text-[10px] text-[rgba(232,200,74,0.7)] mt-0.5">
+            <div className="font-mono text-[11px] text-[rgba(232,200,74,0.85)] mt-0.5">
               +15.0% total
             </div>
           </div>
@@ -128,28 +128,28 @@ export default function PortfolioPage() {
         </div>
 
         <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[rgba(158,200,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(158,200,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <span className="font-mono text-[8.5px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(158,200,255,0.08)] text-[#9ec8ff] border border-[rgba(158,200,255,0.18)]">
+              <span className="font-mono text-[9px] tracking-[0.13em] uppercase px-2 py-0.5 rounded bg-[rgba(158,200,255,0.08)] text-[#aed8ff] border border-[rgba(158,200,255,0.18)]">
                 Forex
               </span>
             </div>
-            <div className="font-display text-xl font-normal text-white leading-none mb-1">
+            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
               Strategy V
             </div>
-            <div className="font-mono text-[9.5px] tracking-widest text-[#8a847c] uppercase">
+            <div className="font-mono text-[11px] tracking-[0.1em] text-[#c8c3bb] uppercase">
               $95,000 · 32% of portfolio
             </div>
           </div>
           <div className="text-right">
-            <div className="font-outfit text-[17px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
+            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
               $112,600
             </div>
-            <div className="font-ui text-[13px] font-semibold text-[#e8c84a]">
+            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
               +$17,600
             </div>
-            <div className="font-mono text-[10px] text-[rgba(232,200,74,0.7)] mt-0.5">
+            <div className="font-mono text-[11px] text-[rgba(232,200,74,0.85)] mt-0.5">
               +18.5% total
             </div>
           </div>

@@ -51,25 +51,25 @@ export function Navbar() {
     return (
       <nav className="fixed top-0 left-0 right-0 z-300 h-[68px] flex items-center justify-between px-4 md:px-8 lg:px-16 bg-[rgba(0,0,0,0.94)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)]">
         <Link href="/me/portfolio" className="flex flex-col shrink-0">
-          <span className="font-display text-[18px] md:text-[22px] font-medium tracking-[0.04em] leading-none gold-text">
+          <span className="font-display text-[20px] md:text-[24px] font-medium tracking-[0.04em] leading-none gold-text">
             Oroviax
           </span>
-          <span className="font-mono text-[7px] md:text-[8px] tracking-[0.22em] uppercase text-[#8a847c] block mt-0.5">
+          <span className="font-mono text-[8px] md:text-[9px] tracking-[0.22em] uppercase text-[#c8c3bb] block mt-0.5">
             Client Portal
           </span>
         </Link>
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="hidden sm:flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.14em] uppercase text-[#8a847c] px-2 md:px-3 py-1 border border-[rgba(255,255,255,0.05)] rounded-full bg-[rgba(126,255,168,0.03)]">
+          <div className="hidden sm:flex items-center gap-1.5 font-mono text-[10.5px] tracking-[0.14em] uppercase text-[#c8c3bb] px-2 md:px-3 py-1 border border-[rgba(255,255,255,0.05)] rounded-full bg-[rgba(126,255,168,0.03)]">
             <div className="w-1.5 h-1.5 rounded-full bg-[#7effa8] shadow-[0_0_7px_rgba(126,255,168,0.8)] animate-pulse shrink-0" />
             <span className="hidden md:inline">Live · MT5 verified</span>
             <span className="md:hidden">Live</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="hidden md:block text-right">
-              <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] block">
+              <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] block">
                 Signed in as
               </span>
-              <span className="font-ui text-[13px] font-semibold text-[#d8d3ca] block mt-0.5">
+              <span className="font-ui text-[14px] font-semibold text-[#d8d3ca] block mt-0.5">
                 Sarah Mitchell
               </span>
             </div>
@@ -96,8 +96,8 @@ export function Navbar() {
           <motion.div
           >
             <Link href="/" className="flex flex-col">
-              <span className="text-xl font-bold text-foreground">Oroviax</span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <span className="text-[22px] font-bold text-foreground">Oroviax</span>
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Verified performance
               </span>
             </Link>
@@ -116,7 +116,7 @@ export function Navbar() {
                 <Link
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  className="text-[15px] font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   {link.label}
                 </Link>
@@ -134,7 +134,7 @@ export function Navbar() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="text-[15px] font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Sign in
             </motion.button>
@@ -142,7 +142,7 @@ export function Navbar() {
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
+                className="px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 Open dashboard
               </motion.button>
@@ -160,8 +160,8 @@ export function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Link href="/" className="flex flex-col">
-              <span className="text-xl font-bold text-foreground">Oroviax</span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <span className="text-[22px] font-bold text-foreground">Oroviax</span>
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Verified performance
               </span>
             </Link>

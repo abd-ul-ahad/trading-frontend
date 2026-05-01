@@ -98,7 +98,7 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                     <Link
                       href={link.href}
                       onClick={onClose}
-                      className="text-base font-medium text-foreground hover:text-primary transition-colors py-2 block"
+                      className="text-[17px] font-medium text-foreground hover:text-primary transition-colors py-2 block"
                     >
                       {link.label}
                     </Link>
@@ -116,7 +116,7 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                 <motion.button
                   whileHover={{ x: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-2 text-sm font-medium text-foreground hover:text-primary transition-colors text-left"
+                  className="w-full py-2 text-[15px] font-medium text-foreground hover:text-primary transition-colors text-left"
                 >
                   Sign in
                 </motion.button>
@@ -124,7 +124,7 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  className="w-full px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                   >
                   Open dashboard
                 </motion.button>

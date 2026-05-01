@@ -7,7 +7,7 @@ export const Footer = memo(function Footer() {
   return (
     <footer className="w-full border-t border-border bg-background">
       <div className="container mx-auto px-6 py-6 md:px-12 lg:px-16">
-        <div className="flex flex-wrap items-center gap-4 text-xs md:gap-6">
+        <div className="flex flex-wrap items-center gap-4 text-[13px] md:gap-6">
           {/* Brand */}
           <span className="text-foreground">Oroviax</span>
           

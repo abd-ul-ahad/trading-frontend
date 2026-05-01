@@ -31,7 +31,7 @@ export default function StrategiesPage() {
           <h1 className="font-display text-[52px] font-light text-white leading-[1.05] tracking-[-0.015em] max-lg:text-[42px] max-md:text-[34px]">
             Browse & invest in<br/><em className="italic text-[#f2efe9]">verified performance.</em>
           </h1>
-          <p className="text-[15px] text-[#a39b93] leading-[1.75] max-w-[460px] mt-3.5">
+          <p className="text-[15px] text-[#c8c3bb] leading-[1.75] max-w-[460px] mt-3.5">
             Every strategy below is sourced live from a verified MT5 account. Performance data is real, unfiltered, and updated continuously.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function StrategiesPage() {
             <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-2xl">
               {strategies.length}
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#a39b93] mt-1.5">
+            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               Active strategies
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function StrategiesPage() {
             <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none silver-text max-lg:text-2xl">
               +21.4%
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#a39b93] mt-1.5">
+            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               Platform avg YTD
             </div>
           </div>
@@ -56,7 +56,7 @@ export default function StrategiesPage() {
             <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-2xl">
               3
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#a39b93] mt-1.5">
+            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               In your portfolio
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'all'
                 ? 'text-[#e8c84a] border-[rgba(232,200,74,0.4)] bg-[rgba(232,200,74,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             All
@@ -80,7 +80,7 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'metals'
                 ? 'text-[#c9a44a] border-[rgba(200,160,60,0.4)] bg-[rgba(200,160,60,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             Metals
@@ -90,7 +90,7 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'forex'
                 ? 'text-[#9ec8ff] border-[rgba(158,200,255,0.4)] bg-[rgba(158,200,255,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             Forex
@@ -100,7 +100,7 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'indices'
                 ? 'text-[#c8b4ff] border-[rgba(200,180,255,0.4)] bg-[rgba(200,180,255,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             Indices
@@ -110,7 +110,7 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'commodities'
                 ? 'text-[#7effa8] border-[rgba(126,255,168,0.4)] bg-[rgba(126,255,168,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             Commodities
@@ -120,14 +120,14 @@ export default function StrategiesPage() {
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'invested'
                 ? 'text-[#d4d5e0] border-[rgba(168,169,200,0.5)] bg-[rgba(168,169,200,0.06)]'
-                : 'text-[#a39b93] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
+                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
             Invested
           </button>
         </div>
         <div className="flex items-center gap-3.5 flex-shrink-0">
-          <span className="font-mono text-xs tracking-[0.14em] uppercase text-[#a39b93]">Sort by</span>
+          <span className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb]">Sort by</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -138,7 +138,7 @@ export default function StrategiesPage() {
             <option value="sharpe">Sharpe Ratio ↓</option>
             <option value="since">Inception Date</option>
           </select>
-          <span className="font-mono text-xs tracking-[0.12em] text-[#a39b93]">
+          <span className="font-mono text-xs tracking-[0.12em] text-[#c8c3bb]">
             <strong className="text-[#e8e2da] font-medium">{sortedStrategies.length}</strong> strategies
           </span>
         </div>

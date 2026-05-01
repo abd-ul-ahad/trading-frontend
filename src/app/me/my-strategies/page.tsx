@@ -40,10 +40,10 @@ export default function MyStrategiesPage() {
   return (
     <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
       <div className="mb-6 md:mb-8 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
-        <div className="font-display text-[28px] md:text-[32px] font-light text-white tracking-[-0.01em]">
+        <div className="font-display text-[32px] md:text-[40px] font-light text-white tracking-[-0.01em]">
           Your active <em className="italic">strategies.</em>
         </div>
-        <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8a847c] mt-1">
+        <div className="font-mono text-[12px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
           Currently invested in 3 strategies with total allocation of $300,000
         </div>
       </div>
@@ -65,51 +65,51 @@ export default function MyStrategiesPage() {
                   }`}>
                     {strategy.type}
                   </span>
-                  <span className="font-display text-[15px] text-[#8a847c] tracking-[0.06em]">
+                  <span className="font-display text-[15px] text-[#c8c3bb] tracking-[0.06em]">
                     Strategy {strategy.id}
                   </span>
                 </div>
-                <h3 className="font-display text-[24px] md:text-[32px] font-normal text-white leading-tight tracking-[-0.01em] mb-3">
+                <h3 className="font-display text-[28px] md:text-[36px] font-normal text-white leading-tight tracking-[-0.01em] mb-3">
                   {strategy.name}
                 </h3>
                 <div className="grid grid-cols-2 md:flex md:items-center gap-4 md:gap-6 text-sm">
                   <div>
-                    <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Invested
                     </div>
-                    <div className="font-outfit text-base md:text-lg font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
                       ${strategy.invested.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Current Value
                     </div>
-                    <div className="font-outfit text-base md:text-lg font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
                       ${strategy.current.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Total PnL
                     </div>
-                    <div className="font-outfit text-base md:text-lg font-bold text-[#e8c84a] tracking-[-0.02em]">
+                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-[#e8c84a] tracking-[-0.02em]">
                       +${strategy.pnl.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Return
                     </div>
-                    <div className="font-outfit text-base md:text-lg font-bold text-[#e8c84a] tracking-[-0.02em]">
+                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-[#e8c84a] tracking-[-0.02em]">
                       +{strategy.pnlPct}%
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-[#8a847c] mb-1">
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Allocation
                     </div>
-                    <div className="font-outfit text-base md:text-lg font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
                       {strategy.allocation}%
                     </div>
                   </div>
@@ -119,7 +119,7 @@ export default function MyStrategiesPage() {
                 <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-[#d4d5e0] bg-[rgba(168,169,200,0.07)] border border-[rgba(168,169,200,0.25)] rounded-lg px-6 py-3 transition-all hover:bg-[rgba(168,169,200,0.12)] hover:border-[rgba(168,169,200,0.42)] hover:-translate-y-px whitespace-nowrap">
                   Manage Position
                 </button>
-                <button className="font-outfit text-[13px] font-medium tracking-[0.02em] text-[#a39b93] border border-[rgba(255,255,255,0.08)] rounded-lg px-6 py-3 transition-all hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)] whitespace-nowrap">
+                <button className="font-outfit text-[13px] font-medium tracking-[0.02em] text-[#c8c3bb] border border-[rgba(255,255,255,0.08)] rounded-lg px-6 py-3 transition-all hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)] whitespace-nowrap">
                   View Details
                 </button>
               </div>
@@ -134,7 +134,7 @@ export default function MyStrategiesPage() {
             <div className="font-display text-lg md:text-xl font-normal text-white mb-1">
               Looking for more strategies?
             </div>
-            <div className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#8a847c]">
+            <div className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#c8c3bb]">
               Explore 9 additional verified strategies
             </div>
           </div>
