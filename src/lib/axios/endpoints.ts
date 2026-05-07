@@ -50,6 +50,12 @@ export const API_ENDPOINTS = {
     FILE: '/upload/file',
     AVATAR: '/upload/avatar',
   },
+
+  // Trading
+  TRADING: {
+    SYMBOLS: (accountId: string) => `/trading/accounts/${accountId}/symbols`,
+    PRICE: (accountId: string, symbol: string) => `/trading/accounts/${accountId}/symbols/${symbol}/price`,
+  },
 } as const
 
 // Type helper for endpoint paths

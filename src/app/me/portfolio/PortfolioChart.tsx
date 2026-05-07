@@ -150,7 +150,7 @@ export function PortfolioChart() {
               <button
                 key={p}
                 onClick={() => handlePeriodClick(p)}
-                className={`font-mono text-[10px] md:text-[11px] tracking-[0.08em] px-2 md:px-3 py-1.5 rounded-md transition-all whitespace-nowrap ${
+                className={`font-mono text-[12px] md:text-[13px] tracking-[0.08em] px-2 md:px-3 py-1.5 rounded-md transition-all whitespace-nowrap ${
                   period === p
                     ? 'text-[#e8c84a] bg-[rgba(232,200,74,0.1)] shadow-[0_1px_4px_rgba(0,0,0,0.3)]'
                     : 'text-[#8a847c] hover:text-[#d8d3ca] hover:bg-[rgba(255,255,255,0.04)]'
@@ -219,29 +219,29 @@ export function PortfolioChart() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[rgba(255,255,255,0.05)] border-t border-[rgba(255,255,255,0.05)]">
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total invested</div>
+          <div className="font-mono text-[12px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total invested</div>
           <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em]">$300,000</div>
-          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Initial allocation</div>
+          <div className="font-mono text-[12px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Initial allocation</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total PnL</div>
+          <div className="font-mono text-[12px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total PnL</div>
           <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.02em]">+$52,840</div>
-          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">+17.6% all time</div>
+          <div className="font-mono text-[12px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">+17.6% all time</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">YTD Return</div>
+          <div className="font-mono text-[12px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">YTD Return</div>
           <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.02em]">+20.3%</div>
-          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">vs. 9.2% benchmark</div>
+          <div className="font-mono text-[12px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">vs. 9.2% benchmark</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Max Drawdown</div>
+          <div className="font-mono text-[12px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Max Drawdown</div>
           <div className="font-outfit text-[19px] font-bold text-[#ff9090] tracking-[-0.02em]">−7.1%</div>
-          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Weighted portfolio</div>
+          <div className="font-mono text-[12px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Weighted portfolio</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
-          <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Risk / Reward</div>
+          <div className="font-mono text-[12px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Risk / Reward</div>
           <div className="font-outfit text-[19px] font-bold text-[#9ec8ff] tracking-[-0.02em]">1 : 2.4</div>
-          <div className="font-mono text-[10px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Across strategies</div>
+          <div className="font-mono text-[12px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Across strategies</div>
         </div>
       </div>
     </div>

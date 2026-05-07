@@ -29,5 +29,7 @@ export type {
   ChangePasswordData 
 } from './services/userService'
 
+export { tradingService } from './services/tradingService'
+
 // Axios instance for direct use
 export { default as axios } from './config'
