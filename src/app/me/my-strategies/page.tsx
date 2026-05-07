@@ -57,7 +57,7 @@ export default function MyStrategiesPage() {
           >
             <div className="grid grid-cols-[1fr_auto] gap-8 items-start">
               <div>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4">  
                   <span className="font-display text-[15px] text-[#c8c3bb] tracking-[0.06em]">
                     Strategy {strategy.id}
                   </span>
