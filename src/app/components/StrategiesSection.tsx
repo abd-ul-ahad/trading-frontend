@@ -79,7 +79,7 @@ const RiskBadge = memo(({ risk }: { risk: RiskLevel }) => {
   const cfg = riskConfig[risk]
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-semibold"
       style={{ background: cfg.bg, color: cfg.color }}
     >
       {Array.from({ length: cfg.dots }).map((_, i) => (
@@ -105,14 +105,11 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
     >
       {/* Card header */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-          {strategy.market}
-        </span>
         <RiskBadge risk={strategy.risk} />
       </div>
 
       {/* Strategy name */}
-      <p className="text-lg font-bold text-foreground">{strategy.name}</p>
+      <p className="text-[19px] font-bold text-foreground">{strategy.name}</p>
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2">
@@ -122,10 +119,10 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
           { label: 'Capital',  value: strategy.capital },
         ].map((s) => (
           <div key={s.label}>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+            <p className="text-[13  px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
               {s.label}
             </p>
-            <p className={`text-sm font-bold ${s.accent ? 'text-primary' : 'text-foreground'}`}>
+            <p className={`text-[17px] font-bold ${s.accent ? 'text-primary' : 'text-foreground'}`}>
               {s.value}
             </p>
           </div>
@@ -176,10 +173,10 @@ export const StrategiesSection = memo(function StrategiesSection() {
         <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
           Anonymous Performance
         </p>
-        <h2 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
+        <h2 className="mb-2 text-3xl font-bold text-foreground md:text-[42px]">
           Strategies in production
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-[15px] text-muted-foreground">
           Aggregated equity curves from real client capital. Names hidden, numbers live.
         </p>
       </motion.div>

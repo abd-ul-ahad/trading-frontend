@@ -51,8 +51,8 @@ export const TrustSection = memo(function TrustSection() {
             <div className="mb-4 inline-flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 p-2 text-primary">
               {item.icon}
             </div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">{item.title}</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+            <h3 className="mb-2 text-[18px] font-semibold text-foreground">{item.title}</h3>
+            <p className="text-[17px] leading-relaxed text-muted-foreground">{item.description}</p>
           </motion.div>
         ))}
       </div>

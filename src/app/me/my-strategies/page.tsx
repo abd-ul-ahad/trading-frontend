@@ -40,10 +40,10 @@ export default function MyStrategiesPage() {
   return (
     <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
       <div className="mb-6 md:mb-8 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
-        <div className="font-display text-[32px] md:text-[40px] font-light text-white tracking-[-0.01em]">
+        <div className="font-display text-[32px] md:text-[50px] font-light text-white tracking-[-0.01em]">
           Your active <em className="italic">strategies.</em>
         </div>
-        <div className="font-mono text-[12px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
+        <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
           Currently invested in 3 strategies with total allocation of $300,000
         </div>
       </div>
@@ -58,18 +58,11 @@ export default function MyStrategiesPage() {
             <div className="grid grid-cols-[1fr_auto] gap-8 items-start">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <span className={`font-mono text-[8.5px] tracking-[0.13em] uppercase px-2.5 py-1 rounded ${
-                    strategy.typeClass === 'tag-metals' ? 'bg-[rgba(200,160,60,0.1)] text-[#c9a44a] border border-[rgba(200,160,60,0.2)]' :
-                    strategy.typeClass === 'tag-indices' ? 'bg-[rgba(200,180,255,0.08)] text-[#c8b4ff] border border-[rgba(200,180,255,0.18)]' :
-                    'bg-[rgba(158,200,255,0.08)] text-[#9ec8ff] border border-[rgba(158,200,255,0.18)]'
-                  }`}>
-                    {strategy.type}
-                  </span>
                   <span className="font-display text-[15px] text-[#c8c3bb] tracking-[0.06em]">
                     Strategy {strategy.id}
                   </span>
                 </div>
-                <h3 className="font-display text-[28px] md:text-[36px] font-normal text-white leading-tight tracking-[-0.01em] mb-3">
+                <h3 className="font-display text-[32px] md:text-[40px] font-normal text-white leading-tight tracking-[-0.01em] mb-3">
                   {strategy.name}
                 </h3>
                 <div className="grid grid-cols-2 md:flex md:items-center gap-4 md:gap-6 text-sm">
@@ -77,7 +70,7 @@ export default function MyStrategiesPage() {
                     <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Invested
                     </div>
-                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[19px] md:text-[21px] font-bold text-white tracking-[-0.02em]">
                       ${strategy.invested.toLocaleString()}
                     </div>
                   </div>
@@ -85,7 +78,7 @@ export default function MyStrategiesPage() {
                     <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Current Value
                     </div>
-                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[19px] md:text-[21px] font-bold text-white tracking-[-0.02em]">
                       ${strategy.current.toLocaleString()}
                     </div>
                   </div>
@@ -93,7 +86,7 @@ export default function MyStrategiesPage() {
                     <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Total PnL
                     </div>
-                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-[#e8c84a] tracking-[-0.02em]">
+                    <div className="font-outfit text-[19px] md:text-[21px] font-bold text-[#e8c84a] tracking-[-0.02em]">
                       +${strategy.pnl.toLocaleString()}
                     </div>
                   </div>
@@ -101,7 +94,7 @@ export default function MyStrategiesPage() {
                     <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Return
                     </div>
-                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-[#e8c84a] tracking-[-0.02em]">
+                    <div className="font-outfit text-[19px] md:text-[21px] font-bold text-[#e8c84a] tracking-[-0.02em]">
                       +{strategy.pnlPct}%
                     </div>
                   </div>
@@ -109,7 +102,7 @@ export default function MyStrategiesPage() {
                     <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                       Allocation
                     </div>
-                    <div className="font-outfit text-[18px] md:text-[20px] font-bold text-white tracking-[-0.02em]">
+                    <div className="font-outfit text-[19px] md:text-[21px] font-bold text-white tracking-[-0.02em]">
                       {strategy.allocation}%
                     </div>
                   </div>

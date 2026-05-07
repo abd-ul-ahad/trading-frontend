@@ -68,15 +68,7 @@ const SymbolCard = memo(function SymbolCard({ symbolData, index, onRetryPrice }:
     >
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span 
-              className={`font-mono text-[8.5px] tracking-[0.13em] uppercase px-2.5 py-1 rounded ${categoryStyle.text} ${categoryStyle.bg}`}
-              aria-label={`Category: ${category}`}
-            >
-              {category}
-            </span>
-          </div>
-          <h3 className="font-display text-[26px] md:text-[28px] font-normal text-white leading-tight tracking-[-0.01em]">
+          <h3 className="font-display text-[28px] md:text-[32px] font-normal text-white leading-tight tracking-[-0.01em]">
             {symbol}
           </h3>
         </div>
@@ -117,7 +109,7 @@ const SymbolCard = memo(function SymbolCard({ symbolData, index, onRetryPrice }:
               <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                 Bid
               </div>
-              <div className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em]" aria-label={`Bid price: ${price.bid.toFixed(5)}`}>
+              <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.01em]" aria-label={`Bid price: ${price.bid.toFixed(5)}`}>
                 {price.bid.toFixed(5)}
               </div>
             </div>
@@ -125,7 +117,7 @@ const SymbolCard = memo(function SymbolCard({ symbolData, index, onRetryPrice }:
               <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                 Ask
               </div>
-              <div className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em]" aria-label={`Ask price: ${price.ask.toFixed(5)}`}>
+              <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.01em]" aria-label={`Ask price: ${price.ask.toFixed(5)}`}>
                 {price.ask.toFixed(5)}
               </div>
             </div>
@@ -133,7 +125,7 @@ const SymbolCard = memo(function SymbolCard({ symbolData, index, onRetryPrice }:
               <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
                 Spread
               </div>
-              <div className="font-outfit text-[18px] font-bold text-[#e8c84a] tracking-[-0.01em]" aria-label={`Spread: ${spread}`}>
+              <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.01em]" aria-label={`Spread: ${spread}`}>
                 {spread}
               </div>
             </div>
@@ -272,10 +264,10 @@ export default function DiscoverPage() {
       <div ref={contentRef} tabIndex={-1} className="outline-none">
         <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-6 md:mb-8 gap-4 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
           <div>
-            <div className="font-display text-[32px] md:text-[40px] font-light text-white tracking-[-0.01em]">
+            <div className="font-display text-[32px] md:text-[50px] font-light text-white tracking-[-0.01em]">
               Discover new <em className="italic">opportunities.</em>
             </div>
-            <div className="font-mono text-[12px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
+            <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
               {/* Task 5.9: Show appropriate count or empty state message */}
               {symbolsLoading ? (
                 'Loading symbols...'

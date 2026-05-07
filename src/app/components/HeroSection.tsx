@@ -59,7 +59,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+            className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-[19px]"
           >
             Oroviax connects serious investors with independently verified trading strategies — every equity curve sourced live from MT5, unfiltered and unadjusted. Choose your risk. Track your returns. No black boxes.
           </motion.p>

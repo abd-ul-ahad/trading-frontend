@@ -70,10 +70,10 @@ const CustomTooltip = memo(({ active, payload, label }: any) => {
     return (
       <div className="rounded-lg border border-[rgba(255,255,255,0.12)] bg-[#0a0a0a] px-3 py-2 text-xs shadow-lg">
         <p className="mb-1 text-[#a39b93]">{label}</p>
-        <p className="font-semibold text-[#e8e2da]">
+        <p className="font-semibold text-[#e8e2da] text-[14px]">
           ${value.toLocaleString()}
         </p>
-        <p className={`text-xs ${returnPct >= 0 ? 'text-[#e8c84a]' : 'text-[#ff7e7e]'}`}>
+        <p className={`text-[13px] ${returnPct >= 0 ? 'text-[#e8c84a]' : 'text-[#ff7e7e]'}`}>
           {returnPct >= 0 ? '+' : ''}{returnPct.toFixed(2)}%
         </p>
       </div>
@@ -136,14 +136,14 @@ export const StrategyChart = memo(function StrategyChart({
 
           <XAxis
             dataKey="date"
-            tick={{ fill: '#a3a3a3', fontSize: 10 }}
+            tick={{ fill: '#a3a3a3', fontSize: 14 }}
             axisLine={false}
             tickLine={false}
             hide
           />
 
           <YAxis
-            tick={{ fill: '#a3a3a3', fontSize: 10 }}
+            tick={{ fill: '#a3a3a3', fontSize: 14 }}
             axisLine={false}
             tickLine={false}
             hide

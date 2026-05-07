@@ -31,32 +31,32 @@ export default function StrategiesPage() {
           <h1 className="font-display text-[52px] font-light text-white leading-[1.05] tracking-[-0.015em] max-lg:text-[42px] max-md:text-[34px]">
             Browse & invest in<br/><em className="italic text-[#f2efe9]">verified performance.</em>
           </h1>
-          <p className="text-[15px] text-[#c8c3bb] leading-[1.75] max-w-[460px] mt-3.5">
+          <p className="text-[16px] text-[#c8c3bb] leading-[1.75] max-w-[460px] mt-3.5">
             Every strategy below is sourced live from a verified MT5 account. Performance data is real, unfiltered, and updated continuously.
           </p>
         </div>
         <div className="flex gap-9 flex-shrink-0 pb-1 max-md:flex-row max-md:gap-7">
           <div className="text-right max-md:text-left">
-            <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-2xl">
+            <div className="font-outfit text-[34px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-[28px]">
               {strategies.length}
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
+            <div className="font-mono text-[13px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               Active strategies
             </div>
           </div>
           <div className="text-right max-md:text-left">
-            <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none silver-text max-lg:text-2xl">
+            <div className="font-outfit text-[34px] font-bold tracking-[-0.03em] leading-none silver-text max-lg:text-[28px]">
               +21.4%
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
+            <div className="font-mono text-[13px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               Platform avg YTD
             </div>
           </div>
           <div className="text-right max-md:text-left">
-            <div className="font-outfit text-[30px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-2xl">
+            <div className="font-outfit text-[34px] font-bold tracking-[-0.03em] leading-none gold-text max-lg:text-[28px]">
               3
             </div>
-            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
+            <div className="font-mono text-[13px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1.5">
               In your portfolio
             </div>
           </div>

@@ -24,10 +24,10 @@ export const CtaSection = memo(function CtaSection() {
           </svg>
         </div>
 
-        <h2 className="mb-3 text-2xl font-bold text-foreground md:text-3xl">
+        <h2 className="mb-3 text-2xl font-bold text-foreground md:text-[32px]">
           Ready to track your portfolio?
         </h2>
-        <p className="mb-8 text-sm text-muted-foreground">
+        <p className="mb-8 text-[15px] text-muted-foreground">
           Sign in with your client credentials to access the live dashboard.
         </p>
 

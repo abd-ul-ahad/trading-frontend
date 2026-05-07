@@ -50,7 +50,7 @@ const FaqItem = memo(({ faq, index }: { faq: FaqItem; index: number }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between gap-4 py-6 text-left transition-colors hover:text-primary"
       >
-        <span className="text-base font-semibold text-foreground md:text-lg">
+        <span className="text-base font-semibold text-foreground md:text-[19px]">
           {faq.question}
         </span>
         <motion.span
@@ -70,7 +70,7 @@ const FaqItem = memo(({ faq, index }: { faq: FaqItem; index: number }) => {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-sm leading-relaxed text-muted-foreground md:text-base">
+            <p className="pb-6 text-sm leading-relaxed text-muted-foreground md:text-[15px]">
               {faq.answer}
             </p>
           </motion.div>
@@ -95,7 +95,7 @@ export const FaqSection = memo(function FaqSection() {
         <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
           FAQ
         </p>
-        <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
+        <h2 className="mb-4 text-3xl font-bold text-foreground md:text-[42px] lg:text-5xl">
           Questions,
           <br />
           <span className="text-primary">answered.</span>

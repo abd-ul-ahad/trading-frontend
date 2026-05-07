@@ -94,19 +94,19 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
           {/* Header row */}
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="mb-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              <p className="mb-1 text-lg font-medium uppercase tracking-widest text-muted-foreground">
                 Total Capital Under Copy
               </p>
-              <p className="text-3xl font-bold text-foreground md:text-4xl">
+              <p className="text-3xl font-bold text-foreground md:text-[42px]">
                 ${latestValue.toLocaleString()}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:justify-end">
-              <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+              <span className="rounded-full bg-primary/15 px-3 py-1 text-[13px] font-semibold text-primary">
                 +2.4% this week
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[13px] text-muted-foreground">
                 12 active strategies · 847 clients
               </span>
             </div>
@@ -133,7 +133,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                   dataKey="date"
                   ticks={tickDates}
                   tickFormatter={formatDate}
-                  tick={{ fill: '#a3a3a3', fontSize: 11 }}
+                  tick={{ fill: '#a3a3a3', fontSize: 13 }}
                   axisLine={false}
                   tickLine={false}
                   dy={8}
@@ -141,7 +141,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
 
                 <YAxis
                   tickFormatter={formatYAxis}
-                  tick={{ fill: '#a3a3a3', fontSize: 11 }}
+                  tick={{ fill: '#a3a3a3', fontSize: 16 }}
                   axisLine={false}
                   tickLine={false}
                   width={60}

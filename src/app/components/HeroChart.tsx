@@ -145,7 +145,7 @@ export const HeroChart = memo(function HeroChart() {
 
               <XAxis
                 dataKey="date"
-                tick={{ fill: '#a3a3a3', fontSize: 10 }}
+                tick={{ fill: '#a3a3a3', fontSize: 14 }}
                 axisLine={false}
                 tickLine={false}
                 hide
@@ -153,7 +153,7 @@ export const HeroChart = memo(function HeroChart() {
 
               <YAxis
                 tickFormatter={formatYAxis}
-                tick={{ fill: '#a3a3a3', fontSize: 10 }}
+                tick={{ fill: '#a3a3a3', fontSize: 14 }}
                 axisLine={false}
                 tickLine={false}
                 width={50}

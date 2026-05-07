@@ -23,11 +23,11 @@ export const StatsBar = memo(function StatsBar() {
             transition={{ duration: 0.5, delay: i * 0.08 }}
             className="rounded-xl border border-border bg-card px-5 py-5"
           >
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 text-[15px] font-semibold uppercase tracking-widest text-muted-foreground">
               {stat.label}
             </p>
             <p
-              className={`text-2xl font-bold md:text-3xl ${stat.accent ? "text-primary" : "text-foreground"}`}
+              className={`text-2xl font-bold md:text-[36px] ${stat.accent ? "text-primary" : "text-foreground"}`}
             >
               {stat.value}
             </p>

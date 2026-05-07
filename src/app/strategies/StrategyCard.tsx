@@ -37,10 +37,10 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               {strategy.id}
             </span>
           </div>
-          <h3 className="font-display text-[28px] font-normal text-white leading-[1.1] tracking-[-0.01em] max-md:text-[22px]">
+          <h3 className="font-display text-[32px] md:text-[36px] font-normal text-white leading-[1.1] tracking-[-0.01em] max-md:text-[26px]">
             {strategy.name}
           </h3>
-          <div className="font-mono text-xs tracking-[0.12em] uppercase text-[#a39b93]">
+          <div className="font-mono text-[13px] tracking-[0.12em] uppercase text-[#a39b93]">
             Since {strategy.since}
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
       </div>
 
       {/* Description */}
-      <div className="px-7 pb-5 text-[15px] text-[#a39b93] leading-[1.8] border-b border-[rgba(255,255,255,0.05)]">
+      <div className="px-7 pb-5 text-[16px] text-[#a39b93] leading-[1.8] border-b border-[rgba(255,255,255,0.05)]">
         {strategy.desc}
       </div>
 
@@ -137,7 +137,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 YTD
               </span>
-              <span className="font-outfit text-base font-bold text-[#e8c84a] tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-[#e8c84a] tracking-[-0.01em] whitespace-nowrap">
                 {strategy.ytd}
               </span>
             </div>
@@ -145,7 +145,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 All-Time
               </span>
-              <span className="font-outfit text-base font-bold text-white tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em] whitespace-nowrap">
                 {strategy.allTime}
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Avg/Month
               </span>
-              <span className="font-outfit text-base font-bold text-white tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em] whitespace-nowrap">
                 {strategy.monthAvg}
               </span>
             </div>
@@ -169,7 +169,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Max DD
               </span>
-              <span className="font-outfit text-base font-bold text-[#ff9090] tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-[#ff9090] tracking-[-0.01em] whitespace-nowrap">
                 {strategy.maxDD}%
               </span>
             </div>
@@ -177,7 +177,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Sharpe
               </span>
-              <span className="font-outfit text-base font-bold text-white tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em] whitespace-nowrap">
                 {strategy.sharpe}
               </span>
             </div>
@@ -185,7 +185,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Win Rate
               </span>
-              <span className="font-outfit text-base font-bold text-white tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em] whitespace-nowrap">
                 {strategy.winRate}%
               </span>
             </div>
@@ -201,7 +201,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Avg Win
               </span>
-              <span className="font-outfit text-base font-bold text-[#e8c84a] tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-[#e8c84a] tracking-[-0.01em] whitespace-nowrap">
                 {strategy.avgWin}
               </span>
             </div>
@@ -209,7 +209,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Avg Loss
               </span>
-              <span className="font-outfit text-base font-bold text-[#ff9090] tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-[#ff9090] tracking-[-0.01em] whitespace-nowrap">
                 {strategy.avgLoss}
               </span>
             </div>
@@ -217,7 +217,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
               <span className="font-mono text-xs tracking-[0.08em] uppercase text-[#a39b93] whitespace-nowrap">
                 Trades
               </span>
-              <span className="font-outfit text-base font-bold text-white tracking-[-0.01em] whitespace-nowrap">
+              <span className="font-outfit text-[18px] font-bold text-white tracking-[-0.01em] whitespace-nowrap">
                 {strategy.totalTrades}
               </span>
             </div>
