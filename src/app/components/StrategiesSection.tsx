@@ -39,17 +39,23 @@ interface Strategy {
   returnPct: string
   drawdown: string
   capital: string
+  ytdReturn: string
+  sinceInception: string
   seed: number
   trend: number
 }
 
 const strategies: Strategy[] = [
-  { id: 1, name: 'Strategy I',   market: 'Metals',      risk: 'Moderate',   returnPct: '+38.40%', drawdown: '-8.2%',  capital: '$4.2M', seed: 11, trend: 0.004 },
-  { id: 2, name: 'Strategy II',  market: 'Forex',       risk: 'Low',        returnPct: '+24.70%', drawdown: '-5.1%',  capital: '$6.1M', seed: 22, trend: 0.003 },
-  { id: 3, name: 'Strategy III', market: 'Indices',     risk: 'High',       returnPct: '+52.10%', drawdown: '-14.3%', capital: '$3.8M', seed: 33, trend: 0.006 },
-  { id: 4, name: 'Strategy IV',  market: 'Forex',       risk: 'Low',        returnPct: '+18.90%', drawdown: '-4.2%',  capital: '$2.4M', seed: 44, trend: 0.002 },
-  { id: 5, name: 'Strategy V',   market: 'Commodities', risk: 'Aggressive', returnPct: '+67.30%', drawdown: '-22.1%', capital: '$1.9M', seed: 55, trend: 0.008 },
-  { id: 6, name: 'Strategy VI',  market: 'Metals',      risk: 'Moderate',   returnPct: '+31.20%', drawdown: '-9.7%',  capital: '$2.8M', seed: 66, trend: 0.0035 },
+  { id: 1, name: 'Strategy I',   market: 'Metals',      risk: 'Moderate',   returnPct: '+38.40%', drawdown: '-8.2%',  capital: '$4.2M', ytdReturn: '+28.4%', sinceInception: '+187.3%', seed: 11, trend: 0.004 },
+  { id: 2, name: 'Strategy II',  market: 'Forex',       risk: 'Low',        returnPct: '+24.70%', drawdown: '-5.1%',  capital: '$6.1M', ytdReturn: '+19.6%', sinceInception: '+94.3%', seed: 22, trend: 0.003 },
+  { id: 3, name: 'Strategy III', market: 'Indices',     risk: 'High',       returnPct: '+52.10%', drawdown: '-14.3%', capital: '$3.8M', ytdReturn: '+42.8%', sinceInception: '+203.4%', seed: 33, trend: 0.006 },
+  { id: 4, name: 'Strategy IV',  market: 'Forex',       risk: 'Low',        returnPct: '+18.90%', drawdown: '-4.2%',  capital: '$2.4M', ytdReturn: '+14.2%', sinceInception: '+68.4%', seed: 44, trend: 0.002 },
+  { id: 5, name: 'Strategy V',   market: 'Commodities', risk: 'Aggressive', returnPct: '+67.30%', drawdown: '-22.1%', capital: '$1.9M', ytdReturn: '+38.6%', sinceInception: '+189.2%', seed: 55, trend: 0.008 },
+  { id: 6, name: 'Strategy VI',  market: 'Metals',      risk: 'Moderate',   returnPct: '+31.20%', drawdown: '-9.7%',  capital: '$2.8M', ytdReturn: '+26.8%', sinceInception: '+134.2%', seed: 66, trend: 0.0035 },
+  { id: 7, name: 'Strategy VII', market: 'Commodities', risk: 'High',       returnPct: '+41.80%', drawdown: '-11.8%', capital: '$3.5M', ytdReturn: '+21.4%', sinceInception: '+118.7%', seed: 77, trend: 0.005 },
+  { id: 8, name: 'Strategy VIII',market: 'Commodities', risk: 'Aggressive', returnPct: '+58.60%', drawdown: '-16.4%', capital: '$2.2M', ytdReturn: '+38.6%', sinceInception: '+189.2%', seed: 88, trend: 0.007 },
+  { id: 9, name: 'Strategy IX',  market: 'Metals',      risk: 'High',       returnPct: '+46.80%', drawdown: '-10.6%', capital: '$3.1M', ytdReturn: '+26.8%', sinceInception: '+134.2%', seed: 99, trend: 0.0055 },
+  { id: 10, name: 'Strategy X',  market: 'Forex',       risk: 'Moderate',   returnPct: '+28.40%', drawdown: '-7.2%',  capital: '$4.8M', ytdReturn: '+14.2%', sinceInception: '+68.4%', seed: 110, trend: 0.0038 },
 ]
 
 const riskConfig: Record<RiskLevel, { color: string; dots: number; bg: string }> = {
@@ -103,23 +109,18 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
       transition={{ duration: 0.5, delay: index * 0.07 }}
       className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3"
     >
-      {/* Card header */}
-      <div className="flex items-center justify-between">
-        <RiskBadge risk={strategy.risk} />
-      </div>
-
       {/* Strategy name */}
       <p className="text-[19px] font-bold text-foreground">{strategy.name}</p>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-2 mb-2">
         {[
           { label: 'Return',   value: strategy.returnPct, accent: true },
           { label: 'Drawdown', value: strategy.drawdown },
           { label: 'Capital',  value: strategy.capital },
         ].map((s) => (
           <div key={s.label}>
-            <p className="text-[13  px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+            <p className="text-[13px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
               {s.label}
             </p>
             <p className={`text-[17px] font-bold ${s.accent ? 'text-primary' : 'text-foreground'}`}>
@@ -127,6 +128,34 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Additional stats */}
+      <div className="grid grid-cols-3 gap-2 text-xs">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            YTD Return
+          </p>
+          <p className="text-[14px] font-semibold text-primary">
+            {strategy.ytdReturn}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            Since Inception
+          </p>
+          <p className="text-[14px] font-semibold text-primary">
+            {strategy.sinceInception}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            Max DD
+          </p>
+          <p className="text-[14px] font-semibold text-foreground">
+            {strategy.drawdown}
+          </p>
+        </div>
       </div>
 
       {/* Mini chart */}
@@ -152,6 +181,27 @@ const StrategyCard = memo(({ strategy, index }: { strategy: Strategy; index: num
             />
           </AreaChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Risk indicator at bottom */}
+      <div className="flex items-center gap-2 pt-2 border-t border-border">
+        <span className="text-[13px] font-medium text-muted-foreground">Risk:</span>
+        <div className="flex items-center gap-1">
+          {Array.from({ length: riskConfig[strategy.risk].dots }).map((_, i) => (
+            <div
+              key={i}
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: riskConfig[strategy.risk].color }}
+            />
+          ))}
+          {Array.from({ length: 4 - riskConfig[strategy.risk].dots }).map((_, i) => (
+            <div
+              key={`empty-${i}`}
+              className="w-3 h-3 rounded-full border-2"
+              style={{ borderColor: riskConfig[strategy.risk].color, backgroundColor: 'transparent' }}
+            />
+          ))}
+        </div>
       </div>
     </motion.div>
   )

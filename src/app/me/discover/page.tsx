@@ -1,402 +1,227 @@
 'use client';
 
-import { useEffect, useMemo, memo, useRef } from 'react';
-import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
+import { useMemo } from 'react';
 import {
-  fetchSymbols,
-  fetchVisibleSymbolsPrices,
-  setCategoryFilter,
-  setPage,
-  resetPagination,
-} from '@/lib/redux/features/trading/tradingSlice';
-import {
-  selectVisibleSymbolsWithPrices,
-  selectCategoryFilter,
-  selectPaginationMetadata,
-  selectSymbolsLoading,
-  selectSymbolsError,
-  selectIsLoading,
-} from '@/lib/redux/features/trading/tradingSelectors';
-import type { CategoryFilter, SymbolWithPrice } from '@/lib/trading-api/types';
+  AreaChart,
+  Area,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
-/**
- * Task 7.3: Performance Optimization - Memoized helper function
- * 
- * Returns category-specific styling (text color and background color).
- * This function is pure and can be safely used in useMemo.
- */
-function getCategoryColor(category: CategoryFilter) {
-  switch (category) {
-    case 'metals': return { text: 'text-[#c9a44a]', bg: 'bg-[rgba(200,160,60,0.15)]' };
-    case 'forex': return { text: 'text-[#9ec8ff]', bg: 'bg-[rgba(158,200,255,0.15)]' };
-    case 'indices': return { text: 'text-[#c8b4ff]', bg: 'bg-[rgba(200,180,255,0.15)]' };
-    case 'commodities': return { text: 'text-[#7effa8]', bg: 'bg-[rgba(126,255,168,0.15)]' };
-    default: return { text: 'text-[#e8c84a]', bg: 'bg-[rgba(232,200,74,0.15)]' };
+// Seeded random for SSR consistency
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function generateEquityCurve(seed: number, points = 60, startValue = 100000, trend = 0.003) {
+  const rand = seededRandom(seed);
+  const data = [];
+  let value = startValue;
+  for (let i = 0; i < points; i++) {
+    value = value * (1 + trend + (rand() - 0.48) * 0.015);
+    data.push({ i, equity: Math.round(value) });
   }
+  return data;
 }
 
-/**
- * Task 7.3: Performance Optimization - Memoized SymbolCard Component
- * 
- * Wrapped in React.memo to prevent unnecessary re-renders when parent component
- * updates but this card's props haven't changed. This is especially important
- * when dealing with lists of items where only one item might change at a time.
- */
-interface SymbolCardProps {
-  symbolData: SymbolWithPrice;
-  index: number;
-  onRetryPrice: (symbol: string) => void;
+type RiskLevel = 'Low' | 'Moderate' | 'High' | 'Aggressive';
+
+interface Strategy {
+  id: number;
+  name: string;
+  market: string;
+  risk: RiskLevel;
+  returnPct: string;
+  drawdown: string;
+  capital: string;
+  ytdReturn: string;
+  sinceInception: string;
+  seed: number;
+  trend: number;
 }
 
-const SymbolCard = memo(function SymbolCard({ symbolData, index, onRetryPrice }: SymbolCardProps) {
-  const { symbol, price, priceLoading, priceError, category } = symbolData;
-  
-  // Task 7.3: Use useMemo for expensive computations
-  // Calculate spread only when price changes
-  const spread = useMemo(() => {
-    return price ? (price.ask - price.bid).toFixed(5) : null;
-  }, [price]);
-  
-  // Task 7.3: Memoize category styling to avoid recalculation on every render
-  const categoryStyle = useMemo(() => getCategoryColor(category), [category]);
+const strategies: Strategy[] = [
+  { id: 1, name: 'Strategy I',   market: 'Metals',      risk: 'Moderate',   returnPct: '+38.40%', drawdown: '-8.2%',  capital: '$4.2M', ytdReturn: '+28.4%', sinceInception: '+187.3%', seed: 11, trend: 0.004 },
+  { id: 2, name: 'Strategy II',  market: 'Forex',       risk: 'Low',        returnPct: '+24.70%', drawdown: '-5.1%',  capital: '$6.1M', ytdReturn: '+19.6%', sinceInception: '+94.3%', seed: 22, trend: 0.003 },
+  { id: 3, name: 'Strategy III', market: 'Indices',     risk: 'High',       returnPct: '+52.10%', drawdown: '-14.3%', capital: '$3.8M', ytdReturn: '+42.8%', sinceInception: '+203.4%', seed: 33, trend: 0.006 },
+  { id: 4, name: 'Strategy IV',  market: 'Forex',       risk: 'Low',        returnPct: '+18.90%', drawdown: '-4.2%',  capital: '$2.4M', ytdReturn: '+14.2%', sinceInception: '+68.4%', seed: 44, trend: 0.002 },
+  { id: 5, name: 'Strategy V',   market: 'Commodities', risk: 'Aggressive', returnPct: '+67.30%', drawdown: '-22.1%', capital: '$1.9M', ytdReturn: '+38.6%', sinceInception: '+189.2%', seed: 55, trend: 0.008 },
+  { id: 6, name: 'Strategy VI',  market: 'Metals',      risk: 'Moderate',   returnPct: '+31.20%', drawdown: '-9.7%',  capital: '$2.8M', ytdReturn: '+26.8%', sinceInception: '+134.2%', seed: 66, trend: 0.0035 },
+  { id: 7, name: 'Strategy VII', market: 'Commodities', risk: 'High',       returnPct: '+41.80%', drawdown: '-11.8%', capital: '$3.5M', ytdReturn: '+21.4%', sinceInception: '+118.7%', seed: 77, trend: 0.005 },
+  { id: 8, name: 'Strategy VIII',market: 'Commodities', risk: 'Aggressive', returnPct: '+58.60%', drawdown: '-16.4%', capital: '$2.2M', ytdReturn: '+38.6%', sinceInception: '+189.2%', seed: 88, trend: 0.007 },
+  { id: 9, name: 'Strategy IX',  market: 'Metals',      risk: 'High',       returnPct: '+46.80%', drawdown: '-10.6%', capital: '$3.1M', ytdReturn: '+26.8%', sinceInception: '+134.2%', seed: 99, trend: 0.0055 },
+  { id: 10, name: 'Strategy X',  market: 'Forex',       risk: 'Moderate',   returnPct: '+28.40%', drawdown: '-7.2%',  capital: '$4.8M', ytdReturn: '+14.2%', sinceInception: '+68.4%', seed: 110, trend: 0.0038 },
+];
 
-  return (
-    <article
-      className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[18px] p-6 transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_12px_48px_rgba(0,0,0,0.5)]"
-      style={{ animation: `fadeUp 0.5s ease ${0.15 + index * 0.05}s both` }}
-      aria-label={`Trading symbol ${symbol}`}
-    >
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <h3 className="font-display text-[28px] md:text-[32px] font-normal text-white leading-tight tracking-[-0.01em]">
-            {symbol}
-          </h3>
-        </div>
-      </div>
+const riskConfig: Record<RiskLevel, { color: string; dots: number; bg: string }> = {
+  Low:        { color: '#2be6b6', dots: 1, bg: 'rgba(43,230,182,0.12)' },
+  Moderate:   { color: '#60a5fa', dots: 2, bg: 'rgba(96,165,250,0.12)' },
+  High:       { color: '#f59e0b', dots: 3, bg: 'rgba(245,158,11,0.12)' },
+  Aggressive: { color: '#ef4444', dots: 4, bg: 'rgba(239,68,68,0.12)'  },
+};
 
-      {/* Price display with loading and error states */}
-      {/* Task 7.4: Added aria-live region for price loading states */}
-      <div className="border-t border-[rgba(255,255,255,0.05)] pt-4 mb-4">
-        {priceLoading ? (
-          <div 
-            className="font-mono text-[12px] tracking-[0.12em] uppercase text-[#c8c3bb]"
-            role="status"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            Loading price...
-          </div>
-        ) : priceError ? (
-          <div className="flex items-center justify-between">
-            <div 
-              className="font-mono text-[12px] tracking-[0.12em] uppercase text-[#ff9090]"
-              role="alert"
-              aria-live="assertive"
-            >
-              Price unavailable
-            </div>
-            <button
-              onClick={() => onRetryPrice(symbol)}
-              className="font-mono text-[15px] tracking-[0.12em] uppercase text-[#c8c3bb] hover:text-[#e8e2da] transition-colors"
-              aria-label={`Retry loading price for ${symbol}`}
-            >
-              Retry
-            </button>
-          </div>
-        ) : price ? (
-          <div className="grid grid-cols-3 gap-4" role="group" aria-label="Price information">
-            <div>
-              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
-                Bid
-              </div>
-              <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.01em]" aria-label={`Bid price: ${price.bid.toFixed(5)}`}>
-                {price.bid.toFixed(5)}
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
-                Ask
-              </div>
-              <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.01em]" aria-label={`Ask price: ${price.ask.toFixed(5)}`}>
-                {price.ask.toFixed(5)}
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#c8c3bb] mb-1">
-                Spread
-              </div>
-              <div className="font-outfit text-[19px] font-bold text-[#e8c84a] tracking-[-0.01em]" aria-label={`Spread: ${spread}`}>
-                {spread}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div 
-            className="font-mono text-[12px] tracking-[0.12em] uppercase text-[#c8c3bb]"
-            role="status"
-          >
-            No price data
-          </div>
-        )}
-      </div>
-
-      <div className="flex items-center justify-end gap-3">
-        <button 
-          className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-linear-to-r from-[#c9a44a] via-[#e8c84a] to-[#f5e090] rounded-lg px-5 py-2.5 transition-all hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(200,160,60,0.35)] whitespace-nowrap"
-          aria-label={`Trade ${symbol}`}
-        >
-          Trade
-        </button>
-        <button 
-          className="font-outfit text-[13px] font-medium tracking-[0.02em] text-[#c8c3bb] border border-[rgba(255,255,255,0.08)] rounded-lg px-4 py-2.5 transition-all hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)] whitespace-nowrap"
-          aria-label={`View details for ${symbol}`}
-        >
-          Details
-        </button>
-      </div>
-    </article>
-  );
-});
-
-export default function DiscoverPage() {
-  const dispatch = useAppDispatch();
-  
-  // Task 7.4: Ref for focus management when pagination changes
-  const contentRef = useRef<HTMLDivElement>(null);
-  
-  // Redux selectors
-  const visibleSymbols = useAppSelector(selectVisibleSymbolsWithPrices);
-  const categoryFilter = useAppSelector(selectCategoryFilter);
-  const paginationMetadata = useAppSelector(selectPaginationMetadata);
-  const symbolsLoading = useAppSelector(selectSymbolsLoading);
-  const symbolsError = useAppSelector(selectSymbolsError);
-  const isLoading = useAppSelector(selectIsLoading);
-
-  // Task 5.3: Fetch data on component mount
-  useEffect(() => {
-    dispatch(fetchSymbols());
-  }, [dispatch]);
-
-  // Task 5.3: Fetch prices for visible symbols when they change
-  useEffect(() => {
-    if (visibleSymbols.length > 0) {
-      const symbolsToFetch = visibleSymbols.map(s => s.symbol);
-      dispatch(fetchVisibleSymbolsPrices({ symbols: symbolsToFetch }));
-    }
-  }, [dispatch, visibleSymbols.length]);
-
-  // Task 5.4: Handle filter changes
-  const handleFilterChange = (filter: CategoryFilter) => {
-    dispatch(setCategoryFilter(filter));
-    dispatch(resetPagination());
-  };
-
-  // Task 5.5: Handle pagination
-  const handlePreviousPage = () => {
-    if (paginationMetadata.hasPreviousPage) {
-      dispatch(setPage(paginationMetadata.currentPage - 1));
-      // Task 7.4: Focus management - scroll to top of content when page changes
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const handleNextPage = () => {
-    if (paginationMetadata.hasNextPage) {
-      dispatch(setPage(paginationMetadata.currentPage + 1));
-      // Task 7.4: Focus management - scroll to top of content when page changes
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  // Task 5.8: Handle retry for symbols fetch
-  const handleRetrySymbols = () => {
-    dispatch(fetchSymbols());
-  };
-
-  // Task 7.3: Memoize retry handler to prevent recreating on every render
-  const handleRetryPrice = useMemo(() => {
-    return (symbol: string) => {
-      dispatch(fetchVisibleSymbolsPrices({ symbols: [symbol] }));
-    };
-  }, [dispatch]);
-
-  // Task 7.3: Memoize filter buttons to avoid recreating on every render
-  const filterButtons = useMemo(() => {
-    const filters: Array<{ value: CategoryFilter; label: string; activeColor: string; activeBg: string }> = [
-      { value: 'all', label: 'All', activeColor: 'text-[#e8c84a]', activeBg: 'bg-[rgba(232,200,74,0.06)]' },
-      { value: 'metals', label: 'Metals', activeColor: 'text-[#c9a44a]', activeBg: 'bg-[rgba(200,160,60,0.06)]' },
-      { value: 'forex', label: 'Forex', activeColor: 'text-[#9ec8ff]', activeBg: 'bg-[rgba(158,200,255,0.06)]' },
-      { value: 'indices', label: 'Indices', activeColor: 'text-[#c8b4ff]', activeBg: 'bg-[rgba(200,180,255,0.06)]' },
-      { value: 'commodities', label: 'Commodities', activeColor: 'text-[#7effa8]', activeBg: 'bg-[rgba(126,255,168,0.06)]' },
-    ];
-
-    return filters.map(filter => ({
-      ...filter,
-      isActive: categoryFilter === filter.value,
-    }));
-  }, [categoryFilter]);
-
-  // Task 5.8: Show error state with retry
-  if (symbolsError) {
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
     return (
-      <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
-        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-          <div className="font-display text-[24px] text-white">
-            Unable to load trading symbols
-          </div>
-          <div className="font-mono text-[14px] text-[#c8c3bb]">
-            {symbolsError}
-          </div>
-          <button
-            onClick={handleRetrySymbols}
-            className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-linear-to-r from-[#c9a44a] via-[#e8c84a] to-[#f5e090] rounded-lg px-5 py-2.5 transition-all hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(200,160,60,0.35)]"
-          >
-            Retry
-          </button>
-        </div>
-      </main>
+      <div className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs shadow-lg">
+        <p className="text-muted-foreground">{payload[0].payload.i}</p>
+        <p className="font-semibold text-foreground">
+          Equity : ${payload[0].value.toLocaleString()}
+        </p>
+      </div>
     );
   }
+  return null;
+};
+
+const RiskBadge = ({ risk }: { risk: RiskLevel }) => {
+  const cfg = riskConfig[risk];
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-semibold"
+      style={{ background: cfg.bg, color: cfg.color }}
+    >
+      {Array.from({ length: cfg.dots }).map((_, i) => (
+        <span key={i} className="h-1.5 w-1.5 rounded-full" style={{ background: cfg.color }} />
+      ))}
+      {risk}
+    </span>
+  );
+};
+
+const StrategyCard = ({ strategy, index }: { strategy: Strategy; index: number }) => {
+  const data = useMemo(() => generateEquityCurve(strategy.seed, 60, 100000, strategy.trend), [strategy.seed, strategy.trend]);
 
   return (
-    <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
-      {/* Task 7.4: Content ref for focus management */}
-      <div ref={contentRef} tabIndex={-1} className="outline-none">
-        <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-6 md:mb-8 gap-4 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
-          <div>
-            <div className="font-display text-[32px] md:text-[50px] font-light text-white tracking-[-0.01em]">
-              Discover new <em className="italic">opportunities.</em>
-            </div>
-            <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
-              {/* Task 5.9: Show appropriate count or empty state message */}
-              {symbolsLoading ? (
-                'Loading symbols...'
-              ) : paginationMetadata.totalItems === 0 ? (
-                'No symbols available'
-              ) : (
-                `${paginationMetadata.totalItems} trading symbols available`
-              )}
-            </div>
-          </div>
-        </div>
+    <div
+      className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3 opacity-0"
+      style={{ animation: `fadeUp 0.5s ease ${0.15 + index * 0.05}s both` }}
+    >
+      {/* Strategy name */}
+      <p className="text-[19px] font-bold text-foreground">{strategy.name}</p>
 
-      {/* Task 5.4: Filter buttons connected to Redux */}
-      {/* Task 7.3: Using memoized filter buttons for better performance */}
-      {/* Task 7.4: Added ARIA labels and role for accessibility */}
-      <div 
-        className="flex gap-1.5 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both] overflow-x-auto pb-2"
-        role="group"
-        aria-label="Filter trading symbols by category"
-      >
-        {filterButtons.map(filter => (
-          <button
-            key={filter.value}
-            onClick={() => handleFilterChange(filter.value)}
-            className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 transition-all whitespace-nowrap ${
-              filter.isActive
-                ? `${filter.activeColor} border-[rgba(232,200,74,0.4)] ${filter.activeBg}`
-                : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
-            }`}
-            aria-label={`Filter by ${filter.label}`}
-            aria-pressed={filter.isActive}
-          >
-            {filter.label}
-          </button>
+      {/* Stats row */}
+      <div className="grid grid-cols-3 gap-2 mb-2">
+        {[
+          { label: 'Return',   value: strategy.returnPct, accent: true },
+          { label: 'Drawdown', value: strategy.drawdown },
+          { label: 'Capital',  value: strategy.capital },
+        ].map((s) => (
+          <div key={s.label}>
+            <p className="text-[13px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+              {s.label}
+            </p>
+            <p className={`text-[17px] font-bold ${s.accent ? 'text-primary' : 'text-foreground'}`}>
+              {s.value}
+            </p>
+          </div>
         ))}
       </div>
 
-      {/* Task 5.7: Loading state */}
-      {/* Task 7.4: Added aria-live region for loading state announcements */}
-      {isLoading && visibleSymbols.length === 0 ? (
-        <div 
-          className="flex items-center justify-center min-h-[400px]"
-          role="status"
-          aria-live="polite"
-          aria-busy="true"
-        >
-          <div className="font-mono text-[14px] tracking-[0.12em] uppercase text-[#c8c3bb]">
-            Loading symbols...
-          </div>
+      {/* Additional stats */}
+      <div className="grid grid-cols-3 gap-2 text-xs mb-3">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            YTD Return
+          </p>
+          <p className="text-[14px] font-semibold text-primary">
+            {strategy.ytdReturn}
+          </p>
         </div>
-      ) : visibleSymbols.length === 0 ? (
-        // Task 5.9: Empty state
-        <div 
-          className="flex flex-col items-center justify-center min-h-[400px] gap-2"
-          role="status"
-          aria-live="polite"
-        >
-          <div className="font-display text-[24px] text-white">
-            No symbols found
-          </div>
-          <div className="font-mono text-[14px] text-[#c8c3bb]">
-            {categoryFilter === 'all' 
-              ? 'No trading symbols are currently available'
-              : `No ${categoryFilter} symbols found. Try a different filter.`
-            }
-          </div>
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            Since Inception
+          </p>
+          <p className="text-[14px] font-semibold text-primary">
+            {strategy.sinceInception}
+          </p>
         </div>
-      ) : (
-        <>
-          {/* Task 5.6: Symbol cards with API data */}
-          {/* Task 7.3: Using memoized SymbolCard component for better performance */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 opacity-0 animate-[fadeUp_0.6s_ease_0.15s_both]">
-            {visibleSymbols.map((symbolData, idx) => (
-              <SymbolCard
-                key={symbolData.symbol}
-                symbolData={symbolData}
-                index={idx}
-                onRetryPrice={handleRetryPrice}
-              />
-            ))}
-          </div>
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-0.5">
+            Max DD
+          </p>
+          <p className="text-[14px] font-semibold text-foreground">
+            {strategy.drawdown}
+          </p>
+        </div>
+      </div>
 
-          {/* Task 5.5: Pagination controls */}
-          {/* Task 7.4: Added navigation role and improved ARIA labels for pagination */}
-          {paginationMetadata.totalPages > 1 && (
-            <nav 
-              className="flex items-center justify-center gap-4 mt-8"
-              role="navigation"
-              aria-label="Pagination navigation"
-            >
-              <button
-                onClick={handlePreviousPage}
-                disabled={!paginationMetadata.hasPreviousPage}
-                className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-lg px-4 py-2 transition-all ${
-                  paginationMetadata.hasPreviousPage
-                    ? 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
-                    : 'text-[rgba(200,195,187,0.3)] border-[rgba(255,255,255,0.03)] cursor-not-allowed'
-                }`}
-                aria-label={`Go to previous page, page ${paginationMetadata.currentPage - 1}`}
-                aria-disabled={!paginationMetadata.hasPreviousPage}
-              >
-                Previous
-              </button>
-              
-              <div 
-                className="font-mono text-[13px] tracking-[0.12em] uppercase text-[#c8c3bb]"
-                aria-current="page"
-                aria-live="polite"
-              >
-                Page {paginationMetadata.currentPage} of {paginationMetadata.totalPages}
-              </div>
-              
-              <button
-                onClick={handleNextPage}
-                disabled={!paginationMetadata.hasNextPage}
-                className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-lg px-4 py-2 transition-all ${
-                  paginationMetadata.hasNextPage
-                    ? 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
-                    : 'text-[rgba(200,195,187,0.3)] border-[rgba(255,255,255,0.03)] cursor-not-allowed'
-                }`}
-                aria-label={`Go to next page, page ${paginationMetadata.currentPage + 1}`}
-                aria-disabled={!paginationMetadata.hasNextPage}
-              >
-                Next
-              </button>
-            </nav>
-          )}
-        </>
-      )}
+      {/* Mini chart */}
+      <div className="h-16 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id={`grad-${strategy.id}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#d4af37" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#d4af37" stopOpacity={0.01} />
+              </linearGradient>
+            </defs>
+            <Tooltip content={<CustomTooltip />} cursor={false} />
+            <Area
+              type="monotone"
+              dataKey="equity"
+              stroke="#d4af37"
+              strokeWidth={1.5}
+              fill={`url(#grad-${strategy.id})`}
+              dot={false}
+              activeDot={{ r: 4, fill: '#d4af37', stroke: '#0a0a0a', strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Risk indicator at bottom */}
+      <div className="flex items-center gap-2 pt-2 border-t border-border">
+        <span className="text-[13px] font-medium text-muted-foreground">Risk:</span>
+        <div className="flex items-center gap-1">
+          {Array.from({ length: riskConfig[strategy.risk].dots }).map((_, i) => (
+            <div
+              key={i}
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: riskConfig[strategy.risk].color }}
+            />
+          ))}
+          {Array.from({ length: 4 - riskConfig[strategy.risk].dots }).map((_, i) => (
+            <div
+              key={`empty-${i}`}
+              className="w-3 h-3 rounded-full border-2"
+              style={{ borderColor: riskConfig[strategy.risk].color, backgroundColor: 'transparent' }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Join button */}
+      <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-gradient-to-r from-[#c9a44a] via-[#e8c84a] to-[#f5e090] rounded-lg px-5 py-2.5 transition-all hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(200,160,60,0.35)] w-full">
+        Join this strategy
+      </button>
+    </div>
+  );
+};
+
+export default function DiscoverPage() {
+  return (
+    <main className="pt-[calc(68px+50px+44px)] pb-20 px-4 md:px-8 lg:px-24">
+      {/* Header */}
+      <div className="mb-6 md:mb-8 opacity-0 animate-[fadeUp_0.55s_ease_0.05s_both]">
+        <div className="font-display text-[32px] md:text-[50px] font-light text-white tracking-[-0.01em]">
+          Discover new <em className="italic">strategies.</em>
+        </div>
+        <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
+          10 verified strategies available for investment
+        </div>
+      </div>
+
+      {/* Grid - 2 columns, 5 rows */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {strategies.map((strategy, i) => (
+          <StrategyCard key={strategy.id} strategy={strategy} index={i} />
+        ))}
       </div>
     </main>
   );

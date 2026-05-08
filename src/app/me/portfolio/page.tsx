@@ -3,6 +3,26 @@
 import { useState, useEffect } from "react";
 import { PortfolioChart } from "./PortfolioChart";
 
+// Customer's strategies data
+const myStrategies = [
+  { id: 'I', name: 'Aurum Momentum', invested: 120000, current: 142480, pnl: 22480, pnlPct: 18.7 },
+  { id: 'II', name: 'Argentum Scalper', invested: 75000, current: 88650, pnl: 13650, pnlPct: 18.2 },
+  { id: 'III', name: 'EUR/USD Precision', invested: 85000, current: 97760, pnl: 12760, pnlPct: 15.0 },
+  { id: 'IV', name: 'GBP/JPY Volatility', invested: 65000, current: 78650, pnl: 13650, pnlPct: 21.0 },
+  { id: 'V', name: 'S&P 500 Trend', invested: 95000, current: 112600, pnl: 17600, pnlPct: 18.5 },
+  { id: 'VI', name: 'NASDAQ Momentum', invested: 80000, current: 94400, pnl: 14400, pnlPct: 18.0 },
+  { id: 'VII', name: 'Crude Oil Range', invested: 70000, current: 82600, pnl: 12600, pnlPct: 18.0 },
+  { id: 'VIII', name: 'Natural Gas Breakout', invested: 55000, current: 67100, pnl: 12100, pnlPct: 22.0 },
+  { id: 'IX', name: 'Palladium Swing', invested: 72000, current: 85680, pnl: 13680, pnlPct: 19.0 },
+  { id: 'X', name: 'AUD/USD Carry', invested: 68000, current: 77520, pnl: 9520, pnlPct: 14.0 },
+];
+
+// Calculate totals
+const totalInvested = myStrategies.reduce((sum, s) => sum + s.invested, 0);
+const totalCurrent = myStrategies.reduce((sum, s) => sum + s.current, 0);
+const totalPnl = totalCurrent - totalInvested;
+const totalPnlPct = ((totalPnl / totalInvested) * 100).toFixed(1);
+
 export default function PortfolioPage() {
   const [timestamp, setTimestamp] = useState("");
 
@@ -32,7 +52,7 @@ export default function PortfolioPage() {
             Good morning, <em className="italic">Sarah.</em>
           </div>
           <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
-            Your portfolio is performing well across all 3 strategies.
+            Your portfolio is performing well across all 10 strategies.
           </div>
         </div>
         <div className="font-mono text-[15px] tracking-[0.12em] uppercase text-[#c8c3bb]">
@@ -40,148 +60,12 @@ export default function PortfolioPage() {
         </div>
       </div>
 
-      <PortfolioChart />
-
-      <div className="font-mono text-[15px] tracking-[0.18em] uppercase text-[#c8c3bb] mb-3 opacity-0 animate-[fadeUp_0.55s_ease_0.25s_both]">
-        Allocation breakdown
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 opacity-0 animate-[fadeUp_0.6s_ease_0.3s_both]">
-        <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[rgba(200,160,60,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div>
-            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
-              Strategy I
-            </div>
-            <div className="font-mono text-[13px] tracking-widest text-[#c8c3bb] uppercase">
-              $120,000 · 40% of portfolio
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
-              $142,480
-            </div>
-            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
-              +$22,480
-            </div>
-            <div className="font-mono text-[13px] text-[rgba(232,200,74,0.85)] mt-0.5">
-              +18.7% total
-            </div>
-          </div>
-          <div className="col-span-2 mt-3">
-            <svg viewBox="0 0 340 44" fill="none" className="w-full">
-              <defs>
-                <linearGradient id="sp1f" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#c9a44a" stopOpacity=".18" />
-                  <stop offset="100%" stopColor="#c9a44a" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M0,36 L28,30 L57,32 L85,20 L113,14 L142,18 L170,10 L198,8 L227,12 L255,6 L283,4 L311,2 L340,1 L340,44 L0,44 Z"
-                fill="url(#sp1f)"
-              />
-              <polyline
-                points="0,36 28,30 57,32 85,20 113,14 142,18 170,10 198,8 227,12 255,6 283,4 311,2 340,1"
-                stroke="#c9a44a"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,180,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div>
-            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
-              Strategy III
-            </div>
-            <div className="font-mono text-[13px] tracking-[0.1em] text-[#c8c3bb] uppercase">
-              $85,000 · 28% of portfolio
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
-              $97,760
-            </div>
-            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
-              +$12,760
-            </div>
-            <div className="font-mono text-[13px] text-[rgba(232,200,74,0.85)] mt-0.5">
-              +15.0% total
-            </div>
-          </div>
-          <div className="col-span-2 mt-3">
-            <svg viewBox="0 0 340 44" fill="none" className="w-full">
-              <defs>
-                <linearGradient id="sp3f" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#c8b4ff" stopOpacity=".15" />
-                  <stop offset="100%" stopColor="#c8b4ff" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M0,30 L28,32 L57,28 L85,26 L113,27 L142,22 L170,24 L198,18 L227,20 L255,16 L283,14 L311,12 L340,10 L340,44 L0,44 Z"
-                fill="url(#sp3f)"
-              />
-              <polyline
-                points="0,30 28,32 57,28 85,26 113,27 142,22 170,24 198,18 227,20 255,16 283,14 311,12 340,10"
-                stroke="#c8b4ff"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <div className="bg-[#0c0c0c] border border-[rgba(255,255,255,0.08)] rounded-[14px] p-5 grid grid-cols-[1fr_auto] gap-3 items-start transition-all hover:border-[rgba(200,160,60,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(158,200,255,0.5)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div>
-            <div className="font-display text-[21px] font-normal text-white leading-none mb-1">
-              Strategy V
-            </div>
-            <div className="font-mono text-[13px] tracking-[0.1em] text-[#c8c3bb] uppercase">
-              $95,000 · 32% of portfolio
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="font-outfit text-[19px] font-bold text-white tracking-[-0.02em] leading-none mb-1">
-              $112,600
-            </div>
-            <div className="font-ui text-[14px] font-semibold text-[#e8c84a]">
-              +$17,600
-            </div>
-            <div className="font-mono text-[13px] text-[rgba(232,200,74,0.85)] mt-0.5">
-              +18.5% total
-            </div>
-          </div>
-          <div className="col-span-2 mt-3">
-            <svg viewBox="0 0 340 44" fill="none" className="w-full">
-              <defs>
-                <linearGradient id="sp5f" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#9ec8ff" stopOpacity=".13" />
-                  <stop offset="100%" stopColor="#9ec8ff" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M0,32 L28,26 L57,30 L85,22 L113,16 L142,20 L170,12 L198,10 L227,14 L255,8 L283,6 L311,4 L340,2 L340,44 L0,44 Z"
-                fill="url(#sp5f)"
-              />
-              <polyline
-                points="0,32 28,26 57,30 85,22 113,16 142,20 170,12 198,10 227,14 255,8 283,6 311,4 340,2"
-                stroke="#9ec8ff"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
+      <PortfolioChart 
+        totalCurrent={totalCurrent}
+        totalInvested={totalInvested}
+        totalPnl={totalPnl}
+        totalPnlPct={Number(totalPnlPct)}
+      />
     </main>
   );
 }

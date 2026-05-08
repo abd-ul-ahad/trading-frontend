@@ -4,43 +4,12 @@ import { useState, useRef, useEffect } from 'react';
 
 type Period = '1D' | '1W' | '1M' | '1Q' | 'YTD' | '1Y' | 'Max' | 'Custom';
 
-const periods = {
-  '1D': {
-    usd: '+$1,240', pct: '+0.35%', lbl: 'today', pos: true,
-    pts: [344200,344800,344100,345200,344900,345800,345600,346200,345900,346600,346300,347100,346800,347500,347200,348100,347800,348600,348300,349000,348700,349400,349100,349800,349500,350200,349900,350600,350300,351000,350700,351400,351100,351800,351500,352200,351900,352840],
-    dates: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00','Now'],
-  },
-  '1W': {
-    usd: '+$8,200', pct: '+2.38%', lbl: 'this week', pos: true,
-    pts: [344640,343800,345200,344100,346500,345400,347200,346300,348100,347200,349300,348000,350100,349200,351400,350100,352840],
-    dates: ['Mon 9am','Mon 5pm','Tue 9am','Tue 5pm','Wed 9am','Wed 5pm','Thu 9am','Thu 5pm','Fri 9am','Fri 5pm','Sat','Sat','Sun','Sun','Mon','Mon','Now'],
-  },
-  '1M': {
-    usd: '+$24,100', pct: '+7.34%', lbl: 'this month', pos: true,
-    pts: [328740,330200,329100,332500,331000,334800,333200,337100,335600,339400,337800,341600,340000,343800,342200,345600,344100,347200,345900,349100,347800,350600,349300,352840],
-    dates: ['1 Apr','2 Apr','3 Apr','4 Apr','5 Apr','7 Apr','8 Apr','9 Apr','10 Apr','11 Apr','12 Apr','13 Apr','14 Apr','15 Apr','16 Apr','17 Apr','18 Apr','19 Apr','20 Apr','21 Apr','22 Apr','23 Apr','Today','Now'],
-  },
-  '1Q': {
-    usd: '+$42,300', pct: '+13.6%', lbl: 'this quarter', pos: true,
-    pts: [310540,312000,311200,314800,313200,317400,315800,319600,318000,322000,320400,324200,322600,326800,325000,329200,327800,331600,330000,334200,332600,336400,335000,339200,337600,341400,340000,344200,342600,346400,345000,348800,347400,350600,349200,352840],
-    dates: ['1 Jan','8 Jan','15 Jan','22 Jan','29 Jan','5 Feb','12 Feb','19 Feb','26 Feb','5 Mar','12 Mar','19 Mar','26 Mar','1 Apr','8 Apr','15 Apr','23 Apr'],
-  },
-  'YTD': {
-    usd: '+$59,700', pct: '+20.3%', lbl: 'year to date', pos: true,
-    pts: [293140,295000,297200,299800,302400,305200,303600,307800,306000,310400,308600,313000,311200,316000,314400,319200,317600,322400,320800,325800,324200,329200,327600,332800,331200,336200,334600,339600,337800,342800,341200,346000,344400,349200,347600,352840],
-    dates: ['Jan','Jan','Jan','Jan','Feb','Feb','Feb','Feb','Mar','Mar','Mar','Mar','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Now'],
-  },
-  '1Y': {
-    usd: '+$68,200', pct: '+24.0%', lbl: 'past year', pos: true,
-    pts: [284640,286400,288600,291200,294000,292400,296600,294800,299200,297600,302200,300600,305400,303800,308600,307000,312000,310400,315400,313800,318800,317200,322400,320600,325800,324000,329400,327600,332800,331200,336400,334800,339800,338000,343400,341600,346000,344400,348800,347200,350800,349200,352840],
-    dates: ['Apr 25','May 25','May 25','Jun 25','Jun 25','Jul 25','Jul 25','Aug 25','Aug 25','Sep 25','Sep 25','Oct 25','Oct 25','Nov 25','Nov 25','Dec 25','Dec 25','Jan 26','Jan 26','Feb 26','Feb 26','Mar 26','Mar 26','Apr 26','Now'],
-  },
-  'Max': {
-    usd: '+$52,840', pct: '+17.6%', lbl: 'since start', pos: true,
-    pts: [300000,301200,299800,303400,302000,305800,304200,308000,306600,310400,309000,313000,311400,315400,313800,318000,316400,320600,319000,323400,321800,326200,324600,329200,327600,332200,330600,335400,333800,338400,336800,341600,340000,345000,343400,348000,346600,350800,349200,352840],
-    dates: ['Start','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','Now'],
-  },
-};
+interface PortfolioChartProps {
+  totalCurrent: number;
+  totalInvested: number;
+  totalPnl: number;
+  totalPnlPct: number;
+}
 
 const W = 1180, H = 240, PAD = 20;
 
@@ -71,13 +40,88 @@ function fmtK(v: number) {
   return '$' + v;
 }
 
-export function PortfolioChart() {
+export function PortfolioChart({ totalCurrent, totalInvested, totalPnl, totalPnlPct }: PortfolioChartProps) {
   const [period, setPeriod] = useState<Period>('1W');
   const [showCustom, setShowCustom] = useState(false);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const data = periods[period === 'Custom' ? '1W' : period];
+  // Generate chart data based on totalCurrent
+  const generatePeriodData = (periodKey: Period) => {
+    const baseValue = totalInvested;
+    const currentValue = totalCurrent;
+    
+    const periods: Record<Period, any> = {
+      '1D': {
+        usd: `+$${((currentValue - baseValue) * 0.02).toFixed(0)}`,
+        pct: '+0.35%',
+        lbl: 'today',
+        pos: true,
+        pts: Array.from({ length: 38 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 37)) + (Math.sin(i) * 2000)),
+        dates: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00','Now'],
+      },
+      '1W': {
+        usd: `+$${((currentValue - baseValue) * 0.15).toFixed(0)}`,
+        pct: '+2.38%',
+        lbl: 'this week',
+        pos: true,
+        pts: Array.from({ length: 17 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 16)) + (Math.sin(i * 0.5) * 3000)),
+        dates: ['Mon 9am','Mon 5pm','Tue 9am','Tue 5pm','Wed 9am','Wed 5pm','Thu 9am','Thu 5pm','Fri 9am','Fri 5pm','Sat','Sat','Sun','Sun','Mon','Mon','Now'],
+      },
+      '1M': {
+        usd: `+$${((currentValue - baseValue) * 0.45).toFixed(0)}`,
+        pct: '+7.34%',
+        lbl: 'this month',
+        pos: true,
+        pts: Array.from({ length: 24 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 23)) + (Math.sin(i * 0.3) * 4000)),
+        dates: ['1 Apr','2 Apr','3 Apr','4 Apr','5 Apr','7 Apr','8 Apr','9 Apr','10 Apr','11 Apr','12 Apr','13 Apr','14 Apr','15 Apr','16 Apr','17 Apr','18 Apr','19 Apr','20 Apr','21 Apr','22 Apr','23 Apr','Today','Now'],
+      },
+      '1Q': {
+        usd: `+$${((currentValue - baseValue) * 0.8).toFixed(0)}`,
+        pct: '+13.6%',
+        lbl: 'this quarter',
+        pos: true,
+        pts: Array.from({ length: 36 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 35)) + (Math.sin(i * 0.2) * 5000)),
+        dates: ['1 Jan','8 Jan','15 Jan','22 Jan','29 Jan','5 Feb','12 Feb','19 Feb','26 Feb','5 Mar','12 Mar','19 Mar','26 Mar','1 Apr','8 Apr','15 Apr','23 Apr'],
+      },
+      'YTD': {
+        usd: `+$${(totalPnl * 0.9).toFixed(0)}`,
+        pct: `+${(totalPnlPct * 0.9).toFixed(1)}%`,
+        lbl: 'year to date',
+        pos: true,
+        pts: Array.from({ length: 36 }, (_, i) => baseValue + ((currentValue - baseValue) * 0.9 * (i / 35)) + (Math.sin(i * 0.15) * 6000)),
+        dates: ['Jan','Jan','Jan','Jan','Feb','Feb','Feb','Feb','Mar','Mar','Mar','Mar','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Apr','Now'],
+      },
+      '1Y': {
+        usd: `+$${(totalPnl * 0.95).toFixed(0)}`,
+        pct: `+${(totalPnlPct * 0.95).toFixed(1)}%`,
+        lbl: 'past year',
+        pos: true,
+        pts: Array.from({ length: 43 }, (_, i) => baseValue + ((currentValue - baseValue) * 0.95 * (i / 42)) + (Math.sin(i * 0.1) * 7000)),
+        dates: ['Apr 25','May 25','May 25','Jun 25','Jun 25','Jul 25','Jul 25','Aug 25','Aug 25','Sep 25','Sep 25','Oct 25','Oct 25','Nov 25','Nov 25','Dec 25','Dec 25','Jan 26','Jan 26','Feb 26','Feb 26','Mar 26','Mar 26','Apr 26','Now'],
+      },
+      'Max': {
+        usd: `+$${totalPnl.toFixed(0)}`,
+        pct: `+${totalPnlPct.toFixed(1)}%`,
+        lbl: 'since start',
+        pos: true,
+        pts: Array.from({ length: 40 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 39)) + (Math.sin(i * 0.12) * 8000)),
+        dates: ['Start','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','Now'],
+      },
+      'Custom': {
+        usd: `+$${((currentValue - baseValue) * 0.15).toFixed(0)}`,
+        pct: '+2.38%',
+        lbl: 'custom range',
+        pos: true,
+        pts: Array.from({ length: 17 }, (_, i) => baseValue + ((currentValue - baseValue) * (i / 16)) + (Math.sin(i * 0.5) * 3000)),
+        dates: ['Start','','','','','','','','','','','','','','','','Now'],
+      },
+    };
+    
+    return periods[periodKey];
+  };
+
+  const data = generatePeriodData(period);
   const { line, area, mn, mx } = buildSVGPath(data.pts);
   const startVal = data.pts[0];
   const currentVal = data.pts[data.pts.length - 1];
@@ -220,13 +264,13 @@ export function PortfolioChart() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[rgba(255,255,255,0.05)] border-t border-[rgba(255,255,255,0.05)]">
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
           <div className="font-mono text-[13px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total invested</div>
-          <div className="font-outfit text-[21px] font-bold text-white tracking-[-0.02em]">$300,000</div>
+          <div className="font-outfit text-[21px] font-bold text-white tracking-[-0.02em]">{fmtUSD(totalInvested)}</div>
           <div className="font-mono text-[13px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">Initial allocation</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
           <div className="font-mono text-[13px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">Total PnL</div>
-          <div className="font-outfit text-[21px] font-bold text-[#e8c84a] tracking-[-0.02em]">+$52,840</div>
-          <div className="font-mono text-[13px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">+17.6% all time</div>
+          <div className="font-outfit text-[21px] font-bold text-[#e8c84a] tracking-[-0.02em]">+{fmtUSD(totalPnl)}</div>
+          <div className="font-mono text-[13px] text-[#c8c3bb] mt-0.5 tracking-[0.06em]">+{totalPnlPct.toFixed(1)}% all time</div>
         </div>
         <div className="bg-[#0c0c0c] p-4 px-5 hover:bg-[#101010] transition-colors">
           <div className="font-mono text-[13px] tracking-[0.15em] uppercase text-[#c8c3bb] mb-1">YTD Return</div>
