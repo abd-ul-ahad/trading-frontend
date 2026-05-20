@@ -129,7 +129,7 @@ const response = await axiosInstance({
 Create `.env.local`:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
 NODE_ENV=development
 ```
 
