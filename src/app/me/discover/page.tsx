@@ -58,7 +58,7 @@ const strategies: Strategy[] = [
 ];
 
 const riskConfig: Record<RiskLevel, { color: string; dots: number; bg: string }> = {
-  Low:        { color: '#2be6b6', dots: 1, bg: 'rgba(43,230,182,0.12)' },
+  Low:        { color: '#d4af37', dots: 1, bg: 'rgba(212,175,55,0.12)' },
   Moderate:   { color: '#60a5fa', dots: 2, bg: 'rgba(96,165,250,0.12)' },
   High:       { color: '#f59e0b', dots: 3, bg: 'rgba(245,158,11,0.12)' },
   Aggressive: { color: '#ef4444', dots: 4, bg: 'rgba(239,68,68,0.12)'  },
@@ -197,7 +197,7 @@ const StrategyCard = ({ strategy, index }: { strategy: Strategy; index: number }
       </div>
 
       {/* Join button */}
-      <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-gradient-to-r from-[#c9a44a] via-[#e8c84a] to-[#f5e090] rounded-lg px-5 py-2.5 transition-all hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(200,160,60,0.35)] w-full">
+      <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-gradient-to-r from-[#d4af37] via-[#e8c84a] to-[#f5e090] rounded-lg px-5 py-2.5 transition-all hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(212,175,55,0.35)] w-full">
         Join this strategy
       </button>
     </div>

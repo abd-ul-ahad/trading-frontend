@@ -5,19 +5,19 @@
  */
 
 export const colors = {
-  // Primary Brand Colors - Bright Teal/Green Theme (from ApexCopy design)
+  // Primary Brand Colors - Gold/Amber Theme
   primary: {
-    50: '#e6fef9',
-    100: '#ccfdf3',
-    200: '#99fbe7',
-    300: '#66f9db',
-    400: '#33f7cf',
-    500: '#2be6b6',
-    600: '#22b891',
-    700: '#1a8a6d',
-    800: '#115c48',
-    900: '#092e24',
-    950: '#041712',
+    50: '#fefce8',
+    100: '#fef9c3',
+    200: '#fef08a',
+    300: '#fde047',
+    400: '#facc15',
+    500: '#d4af37',
+    600: '#ca9c2e',
+    700: '#ca9c2e',
+    800: '#854d0e',
+    900: '#713f12',
+    950: '#422006',
   },
 
   // Secondary Colors
@@ -35,19 +35,19 @@ export const colors = {
     950: '#020617',
   },
 
-  // Accent Colors - Bright Teal/Cyan Theme
+  // Accent Colors - Gold/Amber Theme
   accent: {
-    50: '#e6fef9',
-    100: '#ccfdf3',
-    200: '#99fbe7',
-    300: '#66f9db',
-    400: '#33f7cf',
-    500: '#2be6b6',
-    600: '#22b891',
-    700: '#1a8a6d',
-    800: '#115c48',
-    900: '#092e24',
-    950: '#041712',
+    50: '#fefce8',
+    100: '#fef9c3',
+    200: '#fef08a',
+    300: '#fde047',
+    400: '#facc15',
+    500: '#d4af37',
+    600: '#ca9c2e',
+    700: '#ca9c2e',
+    800: '#854d0e',
+    900: '#713f12',
+    950: '#422006',
   },
 
   // Success Colors
@@ -137,7 +137,7 @@ export const colors = {
     mutedForeground: '#64748b',
     border: '#e2e8f0',
     input: '#e2e8f0',
-    ring: '#3b82f6',
+    ring: '#d4af37',
   },
 
   // Semantic Colors (Dark Mode) - Extracted from ApexCopy design
@@ -152,7 +152,7 @@ export const colors = {
     mutedForeground: '#80cbc4', // Muted cyan-gray text
     border: '#1a1d26',          // Dark gray border
     input: '#1a1d26',           // Dark gray input border
-    ring: '#2be6b6',            // Bright teal accent for focus rings
+    ring: '#d4af37',            // Gold accent for focus rings
   },
 } as const
 

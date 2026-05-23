@@ -232,7 +232,7 @@ export default function StrategyCard({ strategy, index }: StrategyCardProps) {
             Manage
           </button>
         ) : (
-          <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-gradient-to-r from-[#c9a44a] via-[#e8c84a] to-[#f5e090] bg-[length:200%_auto] rounded-lg px-5 py-2.5 cursor-pointer transition-all hover:bg-right hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(200,160,60,0.35)] whitespace-nowrap">
+          <button className="font-outfit text-[13px] font-semibold tracking-[0.02em] text-black bg-gradient-to-r from-[#d4af37] via-[#e8c84a] to-[#f5e090] bg-[length:200%_auto] rounded-lg px-5 py-2.5 cursor-pointer transition-all hover:bg-right hover:-translate-y-px hover:shadow-[0_6px_24px_rgba(212,175,55,0.35)] whitespace-nowrap">
             Invest
           </button>
         )}

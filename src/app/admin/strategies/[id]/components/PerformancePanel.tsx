@@ -7,6 +7,11 @@ interface PerformancePanelProps {
   loading?: boolean;
 }
 
+const goldBorder =
+  'border-[rgba(200,160,60,0.28)] dark:border-[rgba(200,160,60,0.15)]';
+const cardClass = `p-4 rounded-[14px] bg-card ${goldBorder}`;
+const panelClass = `mb-6 p-6 rounded-[18px] bg-card ${goldBorder}`;
+
 export default function PerformancePanel({
   performance,
   loading = false,
@@ -37,17 +42,19 @@ export default function PerformancePanel({
       isPositive === undefined ? true : isPositive === (value > 0);
 
     return (
-      <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-        <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">
+      <div className={cardClass}>
+        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground mb-1.5">
           {label}
         </p>
         <p
-          className={`text-lg font-semibold ${
+          className={`font-outfit text-lg font-semibold tracking-[-0.02em] ${
             shouldHighlight
               ? value > 0
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-red-600 dark:text-red-400'
-              : 'text-slate-900 dark:text-white'
+                ? 'text-primary'
+                : value < 0
+                  ? 'text-red-600 dark:text-[#ff8a8a]'
+                  : 'text-foreground'
+              : 'text-foreground'
           }`}
         >
           {formattedValue}
@@ -57,85 +64,44 @@ export default function PerformancePanel({
   };
 
   return (
-    <div className="mb-6 p-6 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+    <div className={`${panelClass} opacity-0 animate-[fadeUp_0.55s_ease_0.12s_both]`}>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
-          Performance Metrics
+        <h2 className="font-display text-[24px] font-light text-foreground">
+          Performance metrics
         </h2>
         {loading && (
-          <span className="text-xs text-slate-500 dark:text-slate-400">
+          <span className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground">
             Updating...
           </span>
         )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        <MetricCard
-          label="Total Return"
-          value={performance.totalReturn}
-          isCurrency={false}
-        />
-        <MetricCard
-          label="Total P&L"
-          value={performance.totalPnL}
-          isCurrency={true}
-        />
-        <MetricCard
-          label="Unrealized P&L"
-          value={performance.unrealizedPnL}
-          isCurrency={true}
-        />
-        <MetricCard
-          label="Realized P&L"
-          value={performance.realizedPnL}
-          isCurrency={true}
-        />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+        <MetricCard label="Total Return" value={performance.totalReturn} />
+        <MetricCard label="Total P&L" value={performance.totalPnL} isCurrency />
+        <MetricCard label="Unrealized P&L" value={performance.unrealizedPnL} isCurrency />
+        <MetricCard label="Realized P&L" value={performance.realizedPnL} isCurrency />
         <MetricCard
           label="Win Rate"
           value={performance.winRate * 100}
-          isPositive={true}
-          isCurrency={false}
+          isPositive
         />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <MetricCard
-          label="Total Trades"
-          value={performance.totalTrades}
-          isPositive={true}
-          isCurrency={false}
-        />
-        <MetricCard
-          label="Winning Trades"
-          value={performance.winningTrades}
-          isPositive={true}
-          isCurrency={false}
-        />
-        <MetricCard
-          label="Losing Trades"
-          value={performance.losingTrades}
-          isPositive={false}
-          isCurrency={false}
-        />
-        <MetricCard
-          label="Max Drawdown"
-          value={performance.maxDrawdown}
-          isPositive={false}
-          isCurrency={false}
-        />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <MetricCard label="Total Trades" value={performance.totalTrades} isPositive />
+        <MetricCard label="Winning Trades" value={performance.winningTrades} isPositive />
+        <MetricCard label="Losing Trades" value={performance.losingTrades} isPositive={false} />
+        <MetricCard label="Max Drawdown" value={performance.maxDrawdown} isPositive={false} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard
-          label="Current Drawdown"
-          value={performance.currentDrawdown}
-          isCurrency={false}
-        />
-        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-          <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">
+        <MetricCard label="Current Drawdown" value={performance.currentDrawdown} />
+        <div className={cardClass}>
+          <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground mb-1.5">
             Last Updated
           </p>
-          <p className="text-sm text-slate-900 dark:text-white">
+          <p className="text-sm text-foreground">
             {new Date(performance.lastUpdated).toLocaleString()}
           </p>
         </div>

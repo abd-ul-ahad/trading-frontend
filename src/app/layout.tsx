@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${crimsonText.variable} ${inter.variable} h-full antialiased dark`}
+      className={`${crimsonText.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

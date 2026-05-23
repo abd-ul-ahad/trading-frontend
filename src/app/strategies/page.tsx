@@ -25,7 +25,7 @@ export default function StrategiesPage() {
     <div className="min-h-screen bg-black text-[#e8e2da]">      
       <div className="pt-[110px] px-4 md:px-8 lg:px-16 max-w-7xl mx-auto flex items-end justify-between gap-10 max-lg:px-8 max-md:flex-col max-md:items-start max-md:gap-7">
         <div>
-          <div className="font-mono text-[13px] tracking-[0.22em] uppercase text-[#c9a44a] mb-3.5 opacity-90">
+          <div className="font-mono text-[13px] tracking-[0.22em] uppercase text-primary mb-3.5 opacity-90">
             Available strategies
           </div>
           <h1 className="font-display text-[52px] font-light text-white leading-[1.05] tracking-[-0.015em] max-lg:text-[42px] max-md:text-[34px]">
@@ -79,7 +79,7 @@ export default function StrategiesPage() {
             onClick={() => setFilter('metals')}
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'metals'
-                ? 'text-[#c9a44a] border-[rgba(200,160,60,0.4)] bg-[rgba(200,160,60,0.06)]'
+                ? 'text-primary border-primary/35 bg-primary/10'
                 : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >
@@ -109,7 +109,7 @@ export default function StrategiesPage() {
             onClick={() => setFilter('commodities')}
             className={`font-mono text-[13px] tracking-[0.12em] uppercase border rounded-full px-4 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               filter === 'commodities'
-                ? 'text-[#7effa8] border-[rgba(126,255,168,0.4)] bg-[rgba(126,255,168,0.06)]'
+                ? 'text-primary border-primary/35 bg-primary/10'
                 : 'text-[#c8c3bb] border-[rgba(255,255,255,0.08)] hover:text-[#e8e2da] hover:border-[rgba(255,255,255,0.18)]'
             }`}
           >

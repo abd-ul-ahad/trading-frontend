@@ -9,7 +9,7 @@ interface TradeHistoryTableProps {
 export default function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
   if (trades.length === 0) {
     return (
-      <div className="p-6 text-center text-slate-600 dark:text-slate-400">
+      <div className="p-8 text-center font-mono text-[13px] tracking-[0.1em] uppercase text-muted-foreground">
         No trades available
       </div>
     );
@@ -18,102 +18,93 @@ export default function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+        <thead className="bg-muted border-b border-border">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Symbol
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Direction
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Entry Price
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Exit Price
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Quantity
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              P&L
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Entry Time
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Exit Time
-            </th>
-            <th className="px-6 py-3 text-center text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-              Status
-            </th>
+            {[
+              'Symbol',
+              'Direction',
+              'Entry Price',
+              'Exit Price',
+              'Quantity',
+              'P&L',
+              'Entry Time',
+              'Exit Time',
+              'Status',
+            ].map((col, i) => (
+              <th
+                key={col}
+                className={`px-6 py-3 font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground ${
+                  i >= 2 && i <= 5 ? 'text-right' : i === 8 ? 'text-center' : 'text-left'
+                }`}
+              >
+                {col}
+              </th>
+            ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+        <tbody className="divide-y divide-border">
           {trades.map((trade) => (
             <tr
               key={trade.trade_id}
-              className="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="hover:bg-muted/50 transition-colors"
             >
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className="font-semibold text-slate-900 dark:text-white">
-                  {trade.symbol}
-                </span>
+                <span className="font-medium text-foreground">{trade.symbol}</span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span
-                  className={`font-semibold ${
+                  className={`font-mono text-[12px] tracking-[0.08em] uppercase font-medium ${
                     trade.direction === 'long'
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-red-600 dark:text-red-400'
+                      ? 'text-primary'
+                      : 'text-red-600 dark:text-[#ff8a8a]'
                   }`}
                 >
-                  {trade.direction.toUpperCase()}
+                  {trade.direction}
                 </span>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-slate-900 dark:text-white">
+              <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
                 {trade.entry_price.toFixed(4)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-slate-900 dark:text-white">
+              <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
                 {trade.exit_price ? trade.exit_price.toFixed(4) : '-'}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-slate-900 dark:text-white">
+              <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
                 {trade.quantity}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right">
                 {trade.pnl !== null ? (
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-sm font-medium ${
                       trade.pnl > 0
-                        ? 'text-green-600 dark:text-green-400'
-                        : 'text-red-600 dark:text-red-400'
+                        ? 'text-primary'
+                        : 'text-red-600 dark:text-[#ff8a8a]'
                     }`}
                   >
                     ${trade.pnl.toFixed(2)}
                   </span>
                 ) : (
-                  <span className="text-slate-600 dark:text-slate-400">-</span>
+                  <span className="text-muted-foreground">-</span>
                 )}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground font-mono">
                 {new Date(trade.entry_time).toLocaleString()}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground font-mono">
                 {trade.exit_time
                   ? new Date(trade.exit_time).toLocaleString()
                   : '-'}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  className={`inline-flex items-center font-mono text-[10px] tracking-[0.08em] uppercase px-2.5 py-0.5 rounded-full border ${
                     trade.status === 'closed'
-                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                      ? 'text-primary border-primary/35 bg-primary/10'
                       : trade.status === 'open'
-                        ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
+                        ? 'text-primary border-primary/40 bg-primary/15'
+                        : 'text-muted-foreground border-border bg-muted'
                   }`}
                 >
-                  {trade.status.charAt(0).toUpperCase() + trade.status.slice(1)}
+                  {trade.status}
                 </span>
               </td>
             </tr>

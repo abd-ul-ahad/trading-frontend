@@ -234,16 +234,16 @@ export function PortfolioChart({ totalCurrent, totalInvested, totalPnl, totalPnl
         >
           <defs>
             <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#9a7b1a"/>
+              <stop offset="0%" stopColor="#d4af37"/>
               <stop offset="30%" stopColor="#d4a830"/>
               <stop offset="58%" stopColor="#e8c84a"/>
               <stop offset="80%" stopColor="#f0d868"/>
-              <stop offset="100%" stopColor="#c9a44a"/>
+              <stop offset="100%" stopColor="#d4af37"/>
             </linearGradient>
             <linearGradient id="goldFill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#d4a830" stopOpacity="0.20"/>
-              <stop offset="55%" stopColor="#c9a44a" stopOpacity="0.05"/>
-              <stop offset="100%" stopColor="#c9a44a" stopOpacity="0"/>
+              <stop offset="55%" stopColor="#d4af37" stopOpacity="0.05"/>
+              <stop offset="100%" stopColor="#d4af37" stopOpacity="0"/>
             </linearGradient>
           </defs>
           <g className="y-grid">

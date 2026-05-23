@@ -10,6 +10,7 @@ import {
   StrategyPerformance,
   EquityCurvePoint,
 } from '@/lib/api/strategyApi'
+import { formatCurrency } from '@/lib/formatCurrency'
 
 interface StrategyWithData extends Strategy {
   performance: StrategyPerformance | null
@@ -29,12 +30,12 @@ const StrategyCard = memo(
       >
         {/* Strategy name */}
         <div>
-          <p className="text-[19px] font-bold text-foreground">{strategy.name}</p>
+          <p className="text-[24px] font-bold text-foreground">{strategy.name}</p>
         </div>
 
         {/* Description */}
         {strategy.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-[19px] text-muted-foreground line-clamp-2">
             {strategy.description}
           </p>
         )}
@@ -42,9 +43,9 @@ const StrategyCard = memo(
         {/* Status badge */}
         <div>
           <span
-            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+            className={`inline-flex items-center px-3 py-1 rounded-full text-[17px] font-semibold ${
               strategy.status === 'active'
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                ? 'bg-primary/10 text-primary'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
             }`}
           >
@@ -56,11 +57,11 @@ const StrategyCard = memo(
         {strategy.performance ? (
           <div className="grid grid-cols-2 gap-2 py-2 border-y border-border">
             <div>
-              <p className="text-xs text-muted-foreground">Total Return</p>
+              <p className="text-[17px] text-muted-foreground">Total Return</p>
               <p
-                className={`text-sm font-bold ${
+                className={`text-[19px] font-bold ${
                   strategy.performance.totalReturn > 0
-                    ? 'text-green-600 dark:text-green-400'
+                    ? 'text-primary'
                     : 'text-red-600 dark:text-red-400'
                 }`}
               >
@@ -69,49 +70,49 @@ const StrategyCard = memo(
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Win Rate</p>
-              <p className="text-sm font-bold text-foreground">
+              <p className="text-[17px] text-muted-foreground">Win Rate</p>
+              <p className="text-[19px] font-bold text-foreground">
                 {(strategy.performance.winRate * 100).toFixed(1)}%
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Total Trades</p>
-              <p className="text-sm font-bold text-foreground">
+              <p className="text-[17px] text-muted-foreground">Total Trades</p>
+              <p className="text-[19px] font-bold text-foreground">
                 {strategy.performance.totalTrades}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Max Drawdown</p>
-              <p className="text-sm font-bold text-red-600 dark:text-red-400">
+              <p className="text-[17px] text-muted-foreground">Max Drawdown</p>
+              <p className="text-[19px] font-bold text-red-600 dark:text-red-400">
                 {strategy.performance.maxDrawdown.toFixed(2)}%
               </p>
             </div>
           </div>
         ) : strategy.loadingPerf ? (
           <div className="py-2 text-center">
-            <p className="text-xs text-muted-foreground">Loading metrics...</p>
+            <p className="text-[17px] text-muted-foreground">Loading metrics...</p>
           </div>
         ) : null}
 
         {/* Capital info */}
         <div className="pt-2">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-1">
+          <p className="text-[21px] font-medium uppercase tracking-wider text-muted-foreground mb-1">
             Initial Capital
           </p>
-          <p className="text-[17px] font-bold text-foreground">
-            ${strategy.initial_capital.toLocaleString()}
+          <p className="text-[22px] font-bold text-foreground">
+            {formatCurrency(strategy.initial_capital)}
           </p>
         </div>
 
         {/* Created date */}
-        <div className="text-xs text-muted-foreground">
+        <div className="text-[17px] text-muted-foreground">
           Created: {new Date(strategy.createdAt).toLocaleDateString()}
         </div>
 
         {/* View button */}
         <Link
           href={`/admin/strategies/${strategy.id}`}
-          className="mt-auto px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors text-sm font-medium text-center"
+          className="mt-auto px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors text-[19px] font-medium text-center"
         >
           View Details →
         </Link>
@@ -196,13 +197,13 @@ export const StrategiesSection = memo(function StrategiesSection() {
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+        <p className="mb-2 text-lg font-semibold uppercase tracking-widest text-primary">
           Trading Strategies
         </p>
         <h2 className="mb-2 text-3xl font-bold text-foreground md:text-[42px]">
           Available Strategies
         </h2>
-        <p className="text-[15px] text-muted-foreground">
+        <p className="text-[20px] text-muted-foreground">
           Browse our collection of active trading strategies.
         </p>
       </motion.div>

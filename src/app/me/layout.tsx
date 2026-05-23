@@ -31,7 +31,7 @@ export default function AdminLayout({
           >
             {tab.label}
             {tab.badge && (
-              <span className="font-mono text-[9px] tracking-[0.08em] px-1.5 py-0.5 rounded-[10px] bg-[rgba(232,200,74,0.08)] text-[#c9a44a] border border-[rgba(232,200,74,0.18)]">
+              <span className="font-mono text-[9px] tracking-[0.08em] px-1.5 py-0.5 rounded-[10px] bg-primary/10 text-primary border border-primary/25">
                 {tab.badge}
               </span>
             )}

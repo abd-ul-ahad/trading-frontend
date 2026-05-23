@@ -59,8 +59,8 @@ export function Navbar() {
           </span>
         </Link>
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="hidden sm:flex items-center gap-1.5 font-mono text-[10.5px] tracking-[0.14em] uppercase text-[#c8c3bb] px-2 md:px-3 py-1 border border-[rgba(255,255,255,0.05)] rounded-full bg-[rgba(126,255,168,0.03)]">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#7effa8] shadow-[0_0_7px_rgba(126,255,168,0.8)] animate-pulse shrink-0" />
+          <div className="hidden sm:flex items-center gap-1.5 font-mono text-[10.5px] tracking-[0.14em] uppercase text-[#c8c3bb] px-2 md:px-3 py-1 border border-[rgba(255,255,255,0.05)] rounded-full bg-[rgba(200,160,60,0.06)]">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] shadow-[0_0_7px_rgba(212,175,55,0.8)] animate-pulse shrink-0" />
             <span className="hidden md:inline">Live · MT5 verified</span>
             <span className="md:hidden">Live</span>
           </div>
@@ -73,7 +73,7 @@ export function Navbar() {
                 Sarah Mitchell
               </span>
             </div>
-            <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-[#9a7b1a] to-[#e8c84a] flex items-center justify-center text-[10px] md:text-xs font-bold text-black shrink-0">
+            <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-[#d4af37] to-[#e8c84a] flex items-center justify-center text-[10px] md:text-xs font-bold text-black shrink-0">
               SM
             </div>
           </div>

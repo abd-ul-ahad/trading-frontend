@@ -16,7 +16,7 @@ export const CtaSection = memo(function CtaSection() {
           background: 'radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.08) 0%, transparent 70%)',
         }}
       >
-        {/* Teal trending-up icon */}
+        {/* Trending-up icon */}
         <div className="mb-5 flex justify-center text-primary">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
@@ -27,7 +27,7 @@ export const CtaSection = memo(function CtaSection() {
         <h2 className="mb-3 text-2xl font-bold text-foreground md:text-[32px]">
           Ready to track your portfolio?
         </h2>
-        <p className="mb-8 text-[15px] text-muted-foreground">
+        <p className="mb-8 text-[20px] text-muted-foreground">
           Sign in with your client credentials to access the live dashboard.
         </p>
 

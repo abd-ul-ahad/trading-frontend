@@ -92,7 +92,7 @@ export const FaqSection = memo(function FaqSection() {
         transition={{ duration: 0.5 }}
         className="mb-12 text-center"
       >
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+        <p className="mb-2 text-lg font-semibold uppercase tracking-widest text-primary">
           FAQ
         </p>
         <h2 className="mb-4 text-3xl font-bold text-foreground md:text-[42px] lg:text-5xl">

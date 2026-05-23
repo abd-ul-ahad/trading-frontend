@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Light Mode Colors - From colors.ts */
   --background: 255 255 255;
@@ -8,8 +10,8 @@
   --card-foreground: 15 23 42;
   --popover: 255 255 255;
   --popover-foreground: 15 23 42;
-  --primary: 26 138 109;         /* #1a8a6d - Darker teal for light mode */
-  --primary-foreground: 255 255 255;
+  --primary: 212 175 55;            /* #d4af37 - same gold as dark mode */
+  --primary-foreground: 10 10 10;
   --secondary: 241 245 249;
   --secondary-foreground: 15 23 42;
   --muted: 241 245 249;
@@ -20,7 +22,7 @@
   --destructive-foreground: 255 255 255;
   --border: 226 232 240;
   --input: 226 232 240;
-  --ring: 26 138 109;            /* #1a8a6d - Darker teal ring for light mode */
+  --ring: 212 175 55;            /* #d4af37 - Gold focus ring */
   --radius: 0.5rem;
 
   /* Brand Colors - Gold/Amber Theme */
@@ -75,18 +77,18 @@
   --error-900: 127 29 29;
   --error-950: 69 10 10;
 
-  /* Accent Colors - Bright Teal/Cyan Theme */
-  --accent-50: 230 254 249;
-  --accent-100: 204 253 243;
-  --accent-200: 153 251 231;
-  --accent-300: 102 249 219;
-  --accent-400: 51 247 207;
-  --accent-500: 43 230 182;
-  --accent-600: 34 184 145;
-  --accent-700: 26 138 109;
-  --accent-800: 17 92 72;
-  --accent-900: 9 46 36;
-  --accent-950: 4 23 18;
+  /* Accent Colors - Gold/Amber (matches primary scale) */
+  --accent-50: 254 252 232;
+  --accent-100: 254 249 195;
+  --accent-200: 254 240 138;
+  --accent-300: 253 224 71;
+  --accent-400: 250 204 21;
+  --accent-500: 212 175 55;
+  --accent-600: 202 138 4;
+  --accent-700: 161 98 7;
+  --accent-800: 133 77 14;
+  --accent-900: 113 63 18;
+  --accent-950: 66 32 6;
 }
 
 .dark {
@@ -360,7 +362,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(126,255,168,0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(200,160,60,0.65), transparent);
   pointer-events: none;
   z-index: 1;
 }
@@ -402,8 +404,8 @@ body {
 /* Tag styles */
 .tag-metals {
   background: rgba(200,160,60,0.1);
-  color: #c9a44a;
-  border: 1px solid rgba(200,160,60,0.2);
+  color: #d4af37;
+  border: 1px solid rgba(212,175,55,0.25);
 }
 
 .tag-forex {
@@ -419,7 +421,7 @@ body {
 }
 
 .tag-commodities {
-  background: rgba(126,255,168,0.08);
-  color: #7effa8;
-  border: 1px solid rgba(126,255,168,0.18);
+  background: rgba(212,175,55,0.1);
+  color: #d4af37;
+  border: 1px solid rgba(212,175,55,0.25);
 }

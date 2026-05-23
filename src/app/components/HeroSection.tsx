@@ -26,7 +26,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs text-muted-foreground"
+            className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xl text-muted-foreground"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             Live performance data · Verified on MT5
