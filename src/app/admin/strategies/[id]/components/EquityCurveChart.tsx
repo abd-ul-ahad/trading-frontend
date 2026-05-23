@@ -70,11 +70,10 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
               fontSize: '12px',
             }}
             labelStyle={{ color: '#d4af37' }}
-            formatter={(value: number | string) => {
-              if (typeof value === 'number') {
-                return value.toFixed(2);
-              }
-              return value;
+            formatter={(value) => {
+              if (value == null) return '-';
+              if (typeof value === 'number') return value.toFixed(2);
+              return String(value);
             }}
           />
           <Legend
