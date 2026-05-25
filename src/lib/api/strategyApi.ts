@@ -3,26 +3,22 @@ import axiosInstance from '@/lib/axios/config';
 export interface Strategy {
   id: string;
   name: string;
-  description: string;
-  account_id: string;
   status: 'active' | 'inactive';
-  initial_capital: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface StrategyPerformance {
   strategyId: string;
-  totalReturn: number;
   totalPnL: number;
   unrealizedPnL: number;
   realizedPnL: number;
-  winRate: number;
-  totalTrades: number;
-  winningTrades: number;
-  losingTrades: number;
-  maxDrawdown: number;
-  currentDrawdown: number;
+  winRate: number;          // 0..1, denominator = closed trades only
+  totalTrades: number;      // count since day 1 (any status)
+  winningTrades: number;    // closed trades with pnl > 0, since day 1
+  losingTrades: number;     // closed trades with pnl < 0, since day 1
+  maxDrawdown: number;      // USD, non-negative, peak-to-trough since day 1
+  currentDrawdown: number;  // USD, non-negative, peak - latest snapshot
   lastUpdated: string;
 }
 
@@ -48,7 +44,6 @@ export interface TradesResponse {
 
 export interface EquityCurvePoint {
   timestamp: string;
-  equity: number;
   totalPnL: number;
   drawdown: number;
 }
@@ -56,10 +51,9 @@ export interface EquityCurvePoint {
 export interface PublicSummary {
   strategyId: string;
   name: string;
-  totalReturn: number;
-  winRate: number;
-  totalTrades: number;
-  maxDrawdown: number;
+  winRate: number;          // 0..1, denominator = closed trades only
+  totalTrades: number;      // count since day 1
+  maxDrawdown: number;      // USD, non-negative
   lastUpdated: string;
 }
 

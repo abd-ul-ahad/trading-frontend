@@ -1,15 +1,48 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
+import { strategyApi } from '@/lib/api/strategyApi'
 
-const stats = [
-  { label: 'Verified on', value: 'MT5', highlight: true },
-  { label: 'Avg YTD return', value: '+21.4%', highlight: true },
-  { label: '12 active strategies', value: '', highlight: false },
-  { label: '1,240 investors', value: '', highlight: false },
-]
+type StatItem = {
+  label: string
+  value: string
+  highlight: boolean
+}
 
 export const StatsMarquee = memo(function StatsMarquee() {
+  const [activeCount, setActiveCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    ;(async () => {
+      try {
+        const strategies = await strategyApi.getAllStrategies()
+        if (cancelled) return
+        setActiveCount(strategies.filter((s) => s.status === 'active').length)
+      } catch (err) {
+        console.error('Failed to load active strategies count:', err)
+        if (!cancelled) setActiveCount(null)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const activeLabel =
+    activeCount === null
+      ? '… active strategies'
+      : `${activeCount} active ${activeCount === 1 ? 'strategy' : 'strategies'}`
+
+  const stats: StatItem[] = [
+    { label: 'Verified on', value: 'MT5', highlight: true },
+    { label: 'Avg YTD return', value: '+21.4%', highlight: true },
+    { label: activeLabel, value: '', highlight: false },
+    { label: '1,240 investors', value: '', highlight: false },
+  ]
+
   return (
     <div className="relative w-full overflow-hidden border-y border-border bg-background py-4">
       <style jsx>{`

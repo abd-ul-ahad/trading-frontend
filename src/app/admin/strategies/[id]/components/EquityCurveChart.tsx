@@ -23,7 +23,6 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
 
   const chartData = data.map((point) => ({
     timestamp: new Date(point.timestamp).toLocaleDateString(),
-    equity: point.equity,
     totalPnL: point.totalPnL,
     drawdown: point.drawdown,
   }));
@@ -85,15 +84,6 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
               letterSpacing: '0.1em',
             }}
             iconType="line"
-          />
-          <Line
-            type="monotone"
-            dataKey="equity"
-            stroke="#d4af37"
-            dot={false}
-            strokeWidth={2}
-            name="Equity"
-            isAnimationActive={false}
           />
           <Line
             type="monotone"

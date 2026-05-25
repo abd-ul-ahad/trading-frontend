@@ -12,18 +12,54 @@ const goldBorder =
 const cardClass = `p-4 rounded-[14px] bg-card ${goldBorder}`;
 const panelClass = `mb-6 p-6 rounded-[18px] bg-card ${goldBorder}`;
 
+// Backend serializes numeric/decimal columns as JSON strings; coerce so
+// `.toFixed()` and numeric comparisons work regardless of arrival type.
+const toNum = (v: unknown): number => {
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
 export default function PerformancePanel({
   performance,
   loading = false,
 }: PerformancePanelProps) {
-  const formatCurrency = (value: number) => {
+  const formatCurrency = (raw: number) => {
+    const value = toNum(raw);
     const sign = value < 0 ? '-' : '';
     return `${sign}$${Math.abs(value).toFixed(2)}`;
   };
 
-  const formatPercent = (value: number) => {
+  const formatPercent = (raw: number) => {
+    const value = toNum(raw);
     const sign = value < 0 ? '-' : '';
     return `${sign}${Math.abs(value).toFixed(2)}%`;
+  };
+
+  // Drawdown values come from the backend as positive USD amounts (peak-to-trough).
+  // Render with a leading minus so the UI still communicates "down from peak".
+  const formatDrawdown = (raw: number) => {
+    const usd = toNum(raw);
+    return usd === 0 ? '$0.00' : `-$${Math.abs(usd).toFixed(2)}`;
+  };
+
+  const DrawdownCard = ({ label, value }: { label: string; value: number }) => {
+    const numeric = toNum(value);
+    return (
+      <div className={cardClass}>
+        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground mb-1.5">
+          {label}
+        </p>
+        <p
+          className={`font-outfit text-lg font-semibold tracking-[-0.02em] ${
+            numeric > 0
+              ? 'text-red-600 dark:text-[#ff8a8a]'
+              : 'text-foreground'
+          }`}
+        >
+          {formatDrawdown(numeric)}
+        </p>
+      </div>
+    );
   };
 
   const MetricCard = ({
@@ -37,9 +73,10 @@ export default function PerformancePanel({
     isPositive?: boolean;
     isCurrency?: boolean;
   }) => {
-    const formattedValue = isCurrency ? formatCurrency(value) : formatPercent(value);
+    const numeric = toNum(value);
+    const formattedValue = isCurrency ? formatCurrency(numeric) : formatPercent(numeric);
     const shouldHighlight =
-      isPositive === undefined ? true : isPositive === (value > 0);
+      isPositive === undefined ? true : isPositive === (numeric > 0);
 
     return (
       <div className={cardClass}>
@@ -49,9 +86,9 @@ export default function PerformancePanel({
         <p
           className={`font-outfit text-lg font-semibold tracking-[-0.02em] ${
             shouldHighlight
-              ? value > 0
+              ? numeric > 0
                 ? 'text-primary'
-                : value < 0
+                : numeric < 0
                   ? 'text-red-600 dark:text-[#ff8a8a]'
                   : 'text-foreground'
               : 'text-foreground'
@@ -76,8 +113,7 @@ export default function PerformancePanel({
         )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-        <MetricCard label="Total Return" value={performance.totalReturn} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <MetricCard label="Total P&L" value={performance.totalPnL} isCurrency />
         <MetricCard label="Unrealized P&L" value={performance.unrealizedPnL} isCurrency />
         <MetricCard label="Realized P&L" value={performance.realizedPnL} isCurrency />
@@ -92,11 +128,11 @@ export default function PerformancePanel({
         <MetricCard label="Total Trades" value={performance.totalTrades} isPositive />
         <MetricCard label="Winning Trades" value={performance.winningTrades} isPositive />
         <MetricCard label="Losing Trades" value={performance.losingTrades} isPositive={false} />
-        <MetricCard label="Max Drawdown" value={performance.maxDrawdown} isPositive={false} />
+        <DrawdownCard label="Max Drawdown" value={performance.maxDrawdown} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard label="Current Drawdown" value={performance.currentDrawdown} />
+        <DrawdownCard label="Current Drawdown" value={performance.currentDrawdown} />
         <div className={cardClass}>
           <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground mb-1.5">
             Last Updated

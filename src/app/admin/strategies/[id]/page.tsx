@@ -12,7 +12,6 @@ import {
 import PerformancePanel from './components/PerformancePanel';
 import TradeHistoryTable from './components/TradeHistoryTable';
 import EquityCurveChart from './components/EquityCurveChart';
-import { formatCurrency } from '@/lib/formatCurrency';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -177,20 +176,9 @@ export default function StrategyDetailsPage({ params }: Props) {
               {strategy.status.charAt(0).toUpperCase() + strategy.status.slice(1)}
             </span>
           </div>
-          {strategy.description && (
-            <p className="text-[16px] text-muted-foreground leading-[1.75] max-w-2xl">
-              {strategy.description}
-            </p>
-          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both]">
-          <div className={`p-5 ${cardClass}`}>
-            <p className={labelClass}>Initial Capital</p>
-            <p className="font-outfit text-xl font-semibold text-foreground tracking-[-0.02em]">
-              {formatCurrency(strategy.initial_capital)}
-            </p>
-          </div>
+        <div className="grid grid-cols-1 gap-4 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both]">
           <div className={`p-5 ${cardClass}`}>
             <p className={labelClass}>Created</p>
             <p className="text-foreground">

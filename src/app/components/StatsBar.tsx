@@ -1,16 +1,56 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
+import { strategyApi } from "@/lib/api/strategyApi";
 
-const stats = [
+type Stat = {
+  label: string;
+  value: string;
+  accent?: boolean;
+  loading?: boolean;
+};
+
+const baseStats: Stat[] = [
   { label: "Total Capital", value: "$18,420,000" },
   { label: "Weekly Growth", value: "+2.4%", accent: true },
-  { label: "Active Strategies", value: "12" },
+  { label: "Active Strategies", value: "—", loading: true },
   { label: "Clients Onboard", value: "847" },
 ];
 
 export const StatsBar = memo(function StatsBar() {
+  const [activeCount, setActiveCount] = useState<number | null>(null);
+  const [loadingActive, setLoadingActive] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const strategies = await strategyApi.getAllStrategies();
+        if (cancelled) return;
+        const count = strategies.filter((s) => s.status === "active").length;
+        setActiveCount(count);
+      } catch (err) {
+        console.error("Failed to load active strategies count:", err);
+        if (!cancelled) setActiveCount(null);
+      } finally {
+        if (!cancelled) setLoadingActive(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const stats: Stat[] = baseStats.map((stat) => {
+    if (stat.label !== "Active Strategies") return stat;
+    if (loadingActive) return { ...stat, value: "…", loading: true };
+    if (activeCount === null) return { ...stat, value: "—", loading: false };
+    return { ...stat, value: String(activeCount), loading: false };
+  });
+
   return (
     <section className="px-6 pb-24 md:px-12 lg:px-16">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -27,7 +67,9 @@ export const StatsBar = memo(function StatsBar() {
               {stat.label}
             </p>
             <p
-              className={`text-2xl font-bold md:text-[36px] ${stat.accent ? "text-primary" : "text-foreground"}`}
+              className={`text-2xl font-bold md:text-[36px] ${
+                stat.accent ? "text-primary" : "text-foreground"
+              } ${stat.loading ? "animate-pulse text-muted-foreground" : ""}`}
             >
               {stat.value}
             </p>

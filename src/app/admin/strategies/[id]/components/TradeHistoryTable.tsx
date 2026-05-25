@@ -6,6 +6,14 @@ interface TradeHistoryTableProps {
   trades: Trade[];
 }
 
+// Backend returns numeric/decimal columns as JSON strings; coerce defensively
+// so `.toFixed()` and comparisons work regardless of whether the value arrives
+// as a number or a numeric string.
+const toNum = (v: unknown): number => {
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
 export default function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
   if (trades.length === 0) {
     return (
@@ -63,25 +71,30 @@ export default function TradeHistoryTable({ trades }: TradeHistoryTableProps) {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
-                {trade.entry_price.toFixed(4)}
+                {toNum(trade.entry_price).toFixed(4)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
-                {trade.exit_price ? trade.exit_price.toFixed(4) : '-'}
+                {trade.exit_price != null ? toNum(trade.exit_price).toFixed(4) : '-'}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-foreground font-mono text-sm">
-                {trade.quantity}
+                {toNum(trade.quantity)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right">
-                {trade.pnl !== null ? (
-                  <span
-                    className={`font-mono text-sm font-medium ${
-                      trade.pnl > 0
-                        ? 'text-primary'
-                        : 'text-red-600 dark:text-[#ff8a8a]'
-                    }`}
-                  >
-                    ${trade.pnl.toFixed(2)}
-                  </span>
+                {trade.pnl != null ? (
+                  (() => {
+                    const pnl = toNum(trade.pnl);
+                    return (
+                      <span
+                        className={`font-mono text-sm font-medium ${
+                          pnl > 0
+                            ? 'text-primary'
+                            : 'text-red-600 dark:text-[#ff8a8a]'
+                        }`}
+                      >
+                        ${pnl.toFixed(2)}
+                      </span>
+                    );
+                  })()
                 ) : (
                   <span className="text-muted-foreground">-</span>
                 )}

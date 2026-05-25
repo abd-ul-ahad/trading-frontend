@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { HeroChart } from './HeroChart'
 
 export function HeroSection() {
   return (
@@ -98,12 +97,6 @@ export function HeroSection() {
             </motion.button>
           </motion.div>
         </div>
-
-        {/* Right Column - Chart */}
-        <div className="flex items-center justify-center">
-          <HeroChart />
-        </div>
-
       </div>
     </section>
   )

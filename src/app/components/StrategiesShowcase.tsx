@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react';
 import { strategyApi, PublicSummary } from '@/lib/api/strategyApi';
 
+// Backend serializes numeric/decimal columns as JSON strings; coerce defensively.
+const toNum = (v: unknown): number => {
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
 export function StrategiesShowcase() {
   const [summaries, setSummaries] = useState<PublicSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,50 +99,46 @@ export function StrategiesShowcase() {
             <div className="w-12 h-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"></div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600 dark:text-slate-400">
-                Total Return
-              </span>
-              <span
-                className={`text-lg font-semibold ${
-                  summary.totalReturn > 0
-                    ? 'text-primary'
-                    : 'text-red-600 dark:text-red-400'
-                }`}
-              >
-                {summary.totalReturn > 0 ? '+' : ''}
-                {summary.totalReturn.toFixed(2)}%
-              </span>
-            </div>
+          {(() => {
+            const winRate = toNum(summary.winRate);
+            const maxDd = toNum(summary.maxDrawdown);
+            return (
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                    Win Rate
+                  </span>
+                  <span className="text-lg font-semibold text-slate-900 dark:text-white">
+                    {(winRate * 100).toFixed(1)}%
+                  </span>
+                </div>
 
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600 dark:text-slate-400">
-                Win Rate
-              </span>
-              <span className="text-lg font-semibold text-slate-900 dark:text-white">
-                {(summary.winRate * 100).toFixed(1)}%
-              </span>
-            </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                    Total Trades
+                  </span>
+                  <span className="text-lg font-semibold text-slate-900 dark:text-white">
+                    {summary.totalTrades}
+                  </span>
+                </div>
 
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600 dark:text-slate-400">
-                Total Trades
-              </span>
-              <span className="text-lg font-semibold text-slate-900 dark:text-white">
-                {summary.totalTrades}
-              </span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600 dark:text-slate-400">
-                Max Drawdown
-              </span>
-              <span className="text-lg font-semibold text-red-600 dark:text-red-400">
-                {summary.maxDrawdown.toFixed(2)}%
-              </span>
-            </div>
-          </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                    Max Drawdown
+                  </span>
+                  <span
+                    className={`text-lg font-semibold ${
+                      maxDd > 0
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-slate-900 dark:text-white'
+                    }`}
+                  >
+                    {maxDd === 0 ? '$0.00' : `-$${maxDd.toFixed(2)}`}
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
 
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
             <p className="text-xs text-slate-500 dark:text-slate-500">

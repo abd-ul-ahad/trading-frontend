@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { strategyApi, Strategy } from '@/lib/api/strategyApi';
-import { formatCurrency } from '@/lib/formatCurrency';
 
 const goldBorder =
   'border-[rgba(200,160,60,0.28)] dark:border-[rgba(200,160,60,0.15)]';
@@ -109,21 +108,7 @@ export default function AdminDashboard() {
                     </span>
                   </div>
 
-                  {strategy.description && (
-                    <p className="text-[15px] text-muted-foreground line-clamp-2 leading-relaxed">
-                      {strategy.description}
-                    </p>
-                  )}
-
                   <div className="space-y-2 py-2 border-y border-border">
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground">
-                        Initial Capital
-                      </span>
-                      <span className="font-outfit text-[15px] font-semibold text-foreground">
-                        {formatCurrency(strategy.initial_capital)}
-                      </span>
-                    </div>
                     <div className="flex justify-between items-center gap-2">
                       <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground">
                         Created

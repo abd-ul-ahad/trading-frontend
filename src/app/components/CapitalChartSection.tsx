@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import {
   AreaChart,
   Area,
@@ -11,6 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import { strategyApi } from '@/lib/api/strategyApi'
 
 // Seeded pseudo-random for SSR/client consistency
 function seededRandom(seed: number) {
@@ -77,6 +78,32 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
   )
   const latestValue = data[data.length - 1]?.equity ?? 18420000
 
+  const [activeCount, setActiveCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    ;(async () => {
+      try {
+        const strategies = await strategyApi.getAllStrategies()
+        if (cancelled) return
+        setActiveCount(strategies.filter((s) => s.status === 'active').length)
+      } catch (err) {
+        console.error('Failed to load active strategies count:', err)
+        if (!cancelled) setActiveCount(null)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const activeLabel =
+    activeCount === null
+      ? '… active strategies'
+      : `${activeCount} active ${activeCount === 1 ? 'strategy' : 'strategies'}`
+
   return (
     <section id='performance'  className="relative px-6 pb-24 md:px-12 lg:px-16">
       {/* Outer glow shadow matching the design */}
@@ -107,7 +134,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                 +2.4% this week
               </span>
               <span className="text-[13px] text-muted-foreground">
-                12 active strategies · 847 clients
+                {activeLabel} · 847 clients
               </span>
             </div>
           </div>

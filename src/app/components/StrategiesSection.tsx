@@ -10,7 +10,12 @@ import {
   StrategyPerformance,
   EquityCurvePoint,
 } from '@/lib/api/strategyApi'
-import { formatCurrency } from '@/lib/formatCurrency'
+
+// Backend serializes numeric/decimal columns as JSON strings; coerce defensively.
+const toNum = (v: unknown): number => {
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
 
 interface StrategyWithData extends Strategy {
   performance: StrategyPerformance | null
@@ -33,13 +38,6 @@ const StrategyCard = memo(
           <p className="text-[24px] font-bold text-foreground">{strategy.name}</p>
         </div>
 
-        {/* Description */}
-        {strategy.description && (
-          <p className="text-[19px] text-muted-foreground line-clamp-2">
-            {strategy.description}
-          </p>
-        )}
-
         {/* Status badge */}
         <div>
           <span
@@ -55,54 +53,43 @@ const StrategyCard = memo(
 
         {/* Performance metrics */}
         {strategy.performance ? (
-          <div className="grid grid-cols-2 gap-2 py-2 border-y border-border">
-            <div>
-              <p className="text-[17px] text-muted-foreground">Total Return</p>
-              <p
-                className={`text-[19px] font-bold ${
-                  strategy.performance.totalReturn > 0
-                    ? 'text-primary'
-                    : 'text-red-600 dark:text-red-400'
-                }`}
-              >
-                {strategy.performance.totalReturn > 0 ? '+' : ''}
-                {strategy.performance.totalReturn.toFixed(2)}%
-              </p>
-            </div>
-            <div>
-              <p className="text-[17px] text-muted-foreground">Win Rate</p>
-              <p className="text-[19px] font-bold text-foreground">
-                {(strategy.performance.winRate * 100).toFixed(1)}%
-              </p>
-            </div>
-            <div>
-              <p className="text-[17px] text-muted-foreground">Total Trades</p>
-              <p className="text-[19px] font-bold text-foreground">
-                {strategy.performance.totalTrades}
-              </p>
-            </div>
-            <div>
-              <p className="text-[17px] text-muted-foreground">Max Drawdown</p>
-              <p className="text-[19px] font-bold text-red-600 dark:text-red-400">
-                {strategy.performance.maxDrawdown.toFixed(2)}%
-              </p>
-            </div>
-          </div>
+          (() => {
+            const winRate = toNum(strategy.performance.winRate);
+            const maxDd = toNum(strategy.performance.maxDrawdown);
+            return (
+              <div className="grid grid-cols-3 gap-2 py-2 border-y border-border">
+                <div>
+                  <p className="text-[17px] text-muted-foreground">Win Rate</p>
+                  <p className="text-[19px] font-bold text-foreground">
+                    {(winRate * 100).toFixed(1)}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[17px] text-muted-foreground">Total Trades</p>
+                  <p className="text-[19px] font-bold text-foreground">
+                    {strategy.performance.totalTrades}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[17px] text-muted-foreground">Max Drawdown</p>
+                  <p
+                    className={`text-[19px] font-bold ${
+                      maxDd > 0
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-foreground'
+                    }`}
+                  >
+                    {maxDd === 0 ? '$0.00' : `-$${maxDd.toFixed(2)}`}
+                  </p>
+                </div>
+              </div>
+            );
+          })()
         ) : strategy.loadingPerf ? (
           <div className="py-2 text-center">
             <p className="text-[17px] text-muted-foreground">Loading metrics...</p>
           </div>
         ) : null}
-
-        {/* Capital info */}
-        <div className="pt-2">
-          <p className="text-[21px] font-medium uppercase tracking-wider text-muted-foreground mb-1">
-            Initial Capital
-          </p>
-          <p className="text-[22px] font-bold text-foreground">
-            {formatCurrency(strategy.initial_capital)}
-          </p>
-        </div>
 
         {/* Created date */}
         <div className="text-[17px] text-muted-foreground">
