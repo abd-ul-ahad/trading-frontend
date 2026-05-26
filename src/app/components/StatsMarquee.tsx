@@ -44,7 +44,7 @@ export const StatsMarquee = memo(function StatsMarquee() {
   ]
 
   return (
-    <div className="relative w-full overflow-hidden border-y border-border bg-background py-4">
+    <div className="relative w-full overflow-hidden border-y border-border bg-background py-4 md-5 md:mb-10">
       <style jsx>{`
         @keyframes scroll {
           0% {

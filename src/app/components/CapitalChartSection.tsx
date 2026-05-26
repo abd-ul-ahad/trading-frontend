@@ -76,7 +76,6 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
     data.filter((_, i) => i % Math.floor(data.length / 9) === 0).map((d) => d.date),
     [data]
   )
-  const latestValue = data[data.length - 1]?.equity ?? 18420000
 
   const [activeCount, setActiveCount] = useState<number | null>(null)
 
@@ -119,24 +118,13 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
       >
         <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
           {/* Header row */}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="mb-1 text-lg font-medium uppercase tracking-widest text-muted-foreground">
-                Total Capital Under Copy
-              </p>
-              <p className="text-3xl font-bold text-foreground md:text-[42px]">
-                ${latestValue.toLocaleString()}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3 sm:justify-end">
-              <span className="rounded-full bg-primary/15 px-3 py-1 text-[13px] font-semibold text-primary">
-                +2.4% this week
-              </span>
-              <span className="text-[13px] text-muted-foreground">
-                {activeLabel} · 847 clients
-              </span>
-            </div>
+          <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
+            <span className="rounded-full bg-primary/15 px-3 py-1 text-[13px] font-semibold text-primary">
+              +2.4% this week
+            </span>
+            <span className="text-[13px] text-muted-foreground">
+              {activeLabel} · 847 clients
+            </span>
           </div>
 
           {/* Chart */}

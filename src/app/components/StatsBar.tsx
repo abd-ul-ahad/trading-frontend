@@ -12,7 +12,6 @@ type Stat = {
 };
 
 const baseStats: Stat[] = [
-  { label: "Total Capital", value: "$18,420,000" },
   { label: "Weekly Growth", value: "+2.4%", accent: true },
   { label: "Active Strategies", value: "—", loading: true },
   { label: "Clients Onboard", value: "847" },
@@ -53,7 +52,7 @@ export const StatsBar = memo(function StatsBar() {
 
   return (
     <section className="px-6 pb-24 md:px-12 lg:px-16">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}

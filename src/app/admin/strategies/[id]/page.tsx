@@ -6,11 +6,9 @@ import {
   strategyApi,
   Strategy,
   StrategyPerformance,
-  Trade,
   EquityCurvePoint,
 } from '@/lib/api/strategyApi';
 import PerformancePanel from './components/PerformancePanel';
-import TradeHistoryTable from './components/TradeHistoryTable';
 import EquityCurveChart from './components/EquityCurveChart';
 
 interface Props {
@@ -33,14 +31,10 @@ export default function StrategyDetailsPage({ params }: Props) {
   const [performance, setPerformance] = useState<StrategyPerformance | null>(
     null
   );
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [totalTrades, setTotalTrades] = useState(0);
   const [equityCurve, setEquityCurve] = useState<EquityCurvePoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [performanceLoading, setPerformanceLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tradesPage, setTradesPage] = useState(0);
-  const tradesPerPage = 50;
 
   useEffect(() => {
     if (id) {
@@ -56,12 +50,6 @@ export default function StrategyDetailsPage({ params }: Props) {
       return () => clearInterval(interval);
     }
   }, [id]);
-
-  useEffect(() => {
-    if (id) {
-      fetchTrades();
-    }
-  }, [id, tradesPage]);
 
   const loadData = async () => {
     try {
@@ -96,23 +84,6 @@ export default function StrategyDetailsPage({ params }: Props) {
       console.error('Failed to fetch performance:', err);
     } finally {
       setPerformanceLoading(false);
-    }
-  };
-
-  const fetchTrades = async () => {
-    if (!id) return;
-    try {
-      const offset = tradesPage * tradesPerPage;
-      const data = await strategyApi.getStrategyTrades(
-        id,
-        tradesPerPage,
-        offset,
-        'closed'
-      );
-      setTrades(data.trades);
-      setTotalTrades(data.total);
-    } catch (err) {
-      console.error('Failed to fetch trades:', err);
     }
   };
 
@@ -151,8 +122,6 @@ export default function StrategyDetailsPage({ params }: Props) {
       </div>
     );
   }
-
-  const totalPages = Math.ceil(totalTrades / tradesPerPage);
 
   return (
     <div className={`${pageShellClass} pb-20`}>
@@ -199,40 +168,6 @@ export default function StrategyDetailsPage({ params }: Props) {
             <EquityCurveChart data={equityCurve} />
           </div>
         )}
-
-        <div className={`${cardClass} overflow-hidden opacity-0 animate-[fadeUp_0.55s_ease_0.2s_both]`}>
-          <div className="p-6 border-b border-border">
-            <h2 className="font-display text-[24px] font-light text-foreground">
-              Trade history
-            </h2>
-          </div>
-
-          <TradeHistoryTable trades={trades} />
-
-          {totalPages > 1 && (
-            <div className="p-6 border-t border-border flex flex-wrap items-center justify-between gap-4">
-              <button
-                onClick={() => setTradesPage(Math.max(0, tradesPage - 1))}
-                disabled={tradesPage === 0}
-                className="px-4 py-2 font-mono text-[13px] tracking-[0.08em] uppercase border border-border text-foreground rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:border-primary/45 hover:text-primary transition-colors"
-              >
-                ← Previous
-              </button>
-              <span className="font-mono text-[12px] tracking-[0.1em] uppercase text-muted-foreground">
-                Page {tradesPage + 1} of {totalPages} · {totalTrades} trades
-              </span>
-              <button
-                onClick={() =>
-                  setTradesPage(Math.min(totalPages - 1, tradesPage + 1))
-                }
-                disabled={(tradesPage + 1) * tradesPerPage >= totalTrades}
-                className="px-4 py-2 font-mono text-[13px] tracking-[0.08em] uppercase border border-border text-foreground rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:border-primary/45 hover:text-primary transition-colors"
-              >
-                Next →
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
