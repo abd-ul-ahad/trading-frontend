@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
 } from 'recharts'
 import { strategyApi } from '@/lib/api/strategyApi'
@@ -53,22 +52,6 @@ const formatDate = (dateStr: string) => {
   const day = String(d.getDate()).padStart(2, '0')
   return `${d.getFullYear()}-${month}-${day}`
 }
-
-const CustomTooltip = memo(({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="rounded-lg border border-border bg-card px-4 py-2 text-xs shadow-lg">
-        <p className="mb-1 text-muted-foreground">{formatDate(label)}</p>
-        <p className="font-semibold text-foreground">
-          Equity : ${payload[0].value.toLocaleString()}
-        </p>
-      </div>
-    )
-  }
-  return null
-})
-
-CustomTooltip.displayName = 'CustomTooltip'
 
 export const CapitalChartSection = memo(function CapitalChartSection() {
   const data = useMemo(() => generateData(), [])
@@ -163,11 +146,6 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                   domain={[0, 'auto']}
                 />
 
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ stroke: 'rgba(212,175,55,0.3)', strokeWidth: 1 }}
-                />
-
                 <Area
                   type="monotone"
                   dataKey="equity"
@@ -175,12 +153,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                   strokeWidth={2}
                   fill="url(#equityGradient)"
                   dot={false}
-                  activeDot={{
-                    r: 5,
-                    fill: '#d4af37',
-                    stroke: '#0a0a0a',
-                    strokeWidth: 2,
-                  }}
+                  activeDot={false}
                   isAnimationActive={false}
                 />
               </AreaChart>

@@ -1,112 +1,395 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { memo } from 'react'
-import Link from 'next/link'
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+} from 'recharts'
 import {
   strategyApi,
   Strategy,
   StrategyPerformance,
   EquityCurvePoint,
+  Trade,
 } from '@/lib/api/strategyApi'
 
-// Backend serializes numeric/decimal columns as JSON strings; coerce defensively.
 const toNum = (v: unknown): number => {
-  const n = typeof v === 'number' ? v : Number(v);
-  return Number.isFinite(n) ? n : 0;
+  const n = typeof v === 'number' ? v : Number(v)
+  return Number.isFinite(n) ? n : 0
 }
+
+type ChartPoint = { i: number; equity: number }
+
+function normalizeEquityCurve(raw: unknown): EquityCurvePoint[] {
+  if (!Array.isArray(raw)) return []
+  return raw.map((p: Record<string, unknown>) => ({
+    timestamp: String(p.timestamp ?? p.Timestamp ?? ''),
+    totalPnL: toNum(p.totalPnL ?? p.total_pnl ?? p.TotalPnL),
+    drawdown: toNum(p.drawdown ?? p.Drawdown),
+  }))
+}
+
+function equitySeriesFromCurve(curve: EquityCurvePoint[]): ChartPoint[] {
+  return curve.map((p, i) => ({
+    i,
+    equity: toNum(p.totalPnL),
+  }))
+}
+
+function buildSeriesFromTrades(trades: Trade[]): ChartPoint[] {
+  const closed = trades
+    .filter((t) => t.status === 'closed' && t.exit_time)
+    .sort(
+      (a, b) =>
+        new Date(a.exit_time!).getTime() - new Date(b.exit_time!).getTime()
+    )
+
+  if (closed.length === 0) return []
+
+  let cumulative = 0
+  const series: ChartPoint[] = [{ i: 0, equity: 0 }]
+  closed.forEach((trade, idx) => {
+    cumulative += toNum(trade.pnl)
+    series.push({ i: idx + 1, equity: Math.round(cumulative) })
+  })
+  return series.length >= 2 ? series : []
+}
+
+/** Deterministic ramp from zero to current total P&L when no history exists. */
+function buildSeriesFromPerformance(
+  performance: StrategyPerformance,
+  points = 40
+): ChartPoint[] {
+  const total = toNum(performance.totalPnL)
+  if (points < 2) return []
+  return Array.from({ length: points }, (_, i) => ({
+    i,
+    equity: Math.round((total * i) / (points - 1)),
+  }))
+}
+
+function resolveChartSeries(
+  curve: EquityCurvePoint[] | null,
+  trades: Trade[],
+  performance: StrategyPerformance | null
+): ChartPoint[] {
+  if (curve && curve.length >= 2) {
+    return equitySeriesFromCurve(curve)
+  }
+  const fromTrades = buildSeriesFromTrades(trades)
+  if (fromTrades.length >= 2) return fromTrades
+  if (performance) {
+    const fromPerf = buildSeriesFromPerformance(performance)
+    if (fromPerf.length >= 2) return fromPerf
+  }
+  return []
+}
+
+function ytdFromPerformance(performance: StrategyPerformance): number {
+  const total = toNum(performance.totalPnL)
+  const maxDd = toNum(performance.maxDrawdown)
+  const basis = Math.max(Math.abs(total) + maxDd, maxDd * 5, 1)
+  return (total / basis) * 100
+}
+
+function resolveYtdReturn(
+  series: ChartPoint[],
+  performance: StrategyPerformance | null
+): number | null {
+  if (series.length >= 2) {
+    const fromSeries = calcReturnPctFromSeries(series)
+    if (fromSeries !== null) return fromSeries
+  }
+  if (performance) return ytdFromPerformance(performance)
+  return null
+}
+
+function calcReturnPctFromSeries(series: { equity: number }[]): number | null {
+  if (series.length < 2) return null
+  const first = series[0].equity
+  const last = series[series.length - 1].equity
+  if (first === 0) return last > 0 ? 100 : 0
+  return ((last - first) / Math.abs(first)) * 100
+}
+
+function calcMaxDrawdownPctFromSeries(series: { equity: number }[]): number {
+  if (series.length < 2) return 0
+  let peak = series[0].equity
+  let maxDd = 0
+  for (const { equity } of series) {
+    if (equity > peak) peak = equity
+    const base = Math.abs(peak) || 1
+    const dd = ((equity - peak) / base) * 100
+    if (dd < maxDd) maxDd = dd
+  }
+  return maxDd
+}
+
+function formatSince(dateStr: string): string {
+  const d = new Date(dateStr)
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const yyyy = d.getFullYear()
+  return `${mm}/${yyyy}`
+}
+
+function calcTradesPerMonth(totalTrades: number, createdAt: string): number {
+  const created = new Date(createdAt)
+  const now = new Date()
+  const months =
+    (now.getFullYear() - created.getFullYear()) * 12 +
+    (now.getMonth() - created.getMonth()) +
+    1
+  return Math.max(1, Math.round(totalTrades / Math.max(1, months)))
+}
+
+function formatPct(value: number | null): string {
+  if (value === null) return '—'
+  return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`
+}
+
+function formatMaxDd(
+  series: ChartPoint[],
+  curve: EquityCurvePoint[] | null,
+  performance: StrategyPerformance | null
+): string {
+  if (curve && curve.length >= 2 && series.length >= 2) {
+    const pct = calcMaxDrawdownPctFromSeries(series)
+    return `${pct.toFixed(1)}%`
+  }
+  if (series.length >= 2) {
+    const pct = calcMaxDrawdownPctFromSeries(series)
+    if (pct < 0) return `${pct.toFixed(1)}%`
+  }
+  if (performance) {
+    const dd = toNum(performance.maxDrawdown)
+    if (dd > 0) {
+      return `-$${dd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    }
+    return '0.0%'
+  }
+  return '—'
+}
+
+const STRATEGY_META = [
+  {
+    risk: 3,
+    desc: 'Momentum-driven approach to precious metals with systematic entry and exit signals.',
+  },
+  {
+    risk: 2,
+    desc: 'Systematic FX strategy targeting major pairs with defined risk parameters per trade.',
+  },
+  {
+    risk: 4,
+    desc: 'Trend-following index strategy with volatility-adjusted position sizing.',
+  },
+  {
+    risk: 3,
+    desc: 'Diversified commodities exposure using quantitative momentum and mean-reversion signals.',
+  },
+] as const
 
 interface StrategyWithData extends Strategy {
   performance: StrategyPerformance | null
   equityCurve: EquityCurvePoint[] | null
+  chartSeries: ChartPoint[]
   loadingPerf: boolean
 }
 
-const StrategyCard = memo(
-  ({ strategy, index }: { strategy: StrategyWithData; index: number }) => {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.5, delay: index * 0.07 }}
-        className="rounded-xl border border-border bg-card p-6 flex flex-col gap-4 hover:border-primary/50 transition-colors"
+const StatCell = memo(function StatCell({
+  label,
+  value,
+  valueClassName = 'text-white',
+}: {
+  label: string
+  value: string
+  valueClassName?: string
+}) {
+  return (
+    <div>
+      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-[#8a847c] mb-1.5">
+        {label}
+      </p>
+      <p
+        className={`font-outfit text-[22px] font-semibold leading-none tracking-normal ${valueClassName}`}
       >
-        {/* Strategy name */}
-        <div>
-          <p className="text-[24px] font-bold text-foreground">{strategy.name}</p>
-        </div>
+        {value}
+      </p>
+    </div>
+  )
+})
 
-        {/* Status badge */}
-        <div>
-          <span
-            className={`inline-flex items-center px-3 py-1 rounded-full text-[17px] font-semibold ${
-              strategy.status === 'active'
-                ? 'bg-primary/10 text-primary'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
-            }`}
-          >
-            {strategy.status.charAt(0).toUpperCase() + strategy.status.slice(1)}
-          </span>
-        </div>
+StatCell.displayName = 'StatCell'
 
-        {/* Performance metrics */}
-        {strategy.performance ? (
-          (() => {
-            const winRate = toNum(strategy.performance.winRate);
-            const maxDd = toNum(strategy.performance.maxDrawdown);
-            return (
-              <div className="grid grid-cols-3 gap-2 py-2 border-y border-border">
-                <div>
-                  <p className="text-[17px] text-muted-foreground">Win Rate</p>
-                  <p className="text-[19px] font-bold text-foreground">
-                    {(winRate * 100).toFixed(1)}%
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[17px] text-muted-foreground">Total Trades</p>
-                  <p className="text-[19px] font-bold text-foreground">
-                    {strategy.performance.totalTrades}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[17px] text-muted-foreground">Max Drawdown</p>
-                  <p
-                    className={`text-[19px] font-bold ${
-                      maxDd > 0
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-foreground'
-                    }`}
-                  >
-                    {maxDd === 0 ? '$0.00' : `-$${maxDd.toFixed(2)}`}
-                  </p>
-                </div>
-              </div>
-            );
-          })()
-        ) : strategy.loadingPerf ? (
-          <div className="py-2 text-center">
-            <p className="text-[17px] text-muted-foreground">Loading metrics...</p>
-          </div>
-        ) : null}
+const StrategyMiniChart = memo(function StrategyMiniChart({
+  strategyId,
+  chartData,
+}: {
+  strategyId: string
+  chartData: { i: number; equity: number }[]
+}) {
+  const gradientId = `strat-grad-${strategyId}`
 
-        {/* Created date */}
-        <div className="text-[17px] text-muted-foreground">
-          Created: {new Date(strategy.createdAt).toLocaleDateString()}
-        </div>
+  return (
+    <div className="h-[88px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={chartData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#d4af37" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="#d4af37" stopOpacity={0.01} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="equity"
+            stroke="#d4af37"
+            strokeWidth={1.5}
+            fill={`url(#${gradientId})`}
+            dot={false}
+            activeDot={false}
+            isAnimationActive={false}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  )
+})
 
-        {/* View button */}
-        <Link
-          href={`/admin/strategies/${strategy.id}`}
-          className="mt-auto px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors text-[19px] font-medium text-center"
-        >
-          View Details →
-        </Link>
-      </motion.div>
+StrategyMiniChart.displayName = 'StrategyMiniChart'
+
+const StrategyCard = memo(function StrategyCard({
+  strategy,
+  index,
+}: {
+  strategy: StrategyWithData
+  index: number
+}) {
+  const meta = STRATEGY_META[index % STRATEGY_META.length]
+
+  const chartData = strategy.chartSeries
+
+  const ytdReturn = useMemo(
+    () => resolveYtdReturn(chartData, strategy.performance),
+    [chartData, strategy.performance]
+  )
+
+  const maxDdLabel = useMemo(
+    () => formatMaxDd(chartData, strategy.equityCurve, strategy.performance),
+    [chartData, strategy.equityCurve, strategy.performance]
+  )
+
+  const tradesPerMonth = useMemo(() => {
+    if (!strategy.performance) return null
+    return calcTradesPerMonth(
+      strategy.performance.totalTrades,
+      strategy.createdAt
     )
-  }
-)
+  }, [strategy.performance, strategy.createdAt])
+
+  const winRatePct = useMemo(() => {
+    if (!strategy.performance) return null
+    return toNum(strategy.performance.winRate) * 100
+  }, [strategy.performance])
+
+  const ytdLabel = formatPct(ytdReturn)
+  const winRateLabel =
+    winRatePct === null ? '—' : `${winRatePct.toFixed(1)}%`
+  const maxDdIsNegative =
+    maxDdLabel.startsWith('-') && !maxDdLabel.startsWith('-$')
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, delay: index * 0.07 }}
+      className="relative flex flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0a0a0a] p-6 md:p-7 transition-colors hover:border-[rgba(255,255,255,0.13)]"
+    >
+      {/* Risk indicator */}
+      <div className="mb-4 flex justify-end gap-1">
+        {[1, 2, 3, 4].map((pip) => (
+          <div
+            key={pip}
+            className={`h-1.5 w-1.5 rounded-full ${
+              pip <= meta.risk
+                ? 'bg-[rgba(200,160,60,0.65)]'
+                : 'bg-[rgba(255,255,255,0.1)]'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Title */}
+      <h3 className="font-display mb-3 text-[28px] font-normal leading-[1.1] tracking-[-0.01em] text-white md:text-[30px]">
+        {strategy.name}
+      </h3>
+
+      {/* Description */}
+      <p className="font-outfit mb-5 text-[14px] leading-[1.75] text-[#a39b93]">
+        {meta.desc}
+      </p>
+
+      {/* Chart */}
+      <div className="mb-5 border-b border-[rgba(255,255,255,0.05)] pb-5">
+        {strategy.loadingPerf ? (
+          <div className="flex h-[88px] items-center justify-center">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#d4af37] border-t-transparent" />
+          </div>
+        ) : chartData.length > 0 ? (
+          <StrategyMiniChart strategyId={strategy.id} chartData={chartData} />
+        ) : (
+          <div className="flex h-[88px] items-center justify-center">
+            <p className="font-outfit text-[13px] text-[#8a847c]">No chart data yet</p>
+          </div>
+        )}
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-x-6 gap-y-5">
+        <StatCell
+          label="YTD Return"
+          value={strategy.loadingPerf ? '…' : ytdLabel}
+          valueClassName={
+            ytdReturn !== null && ytdReturn >= 0
+              ? 'text-[#e8c84a]'
+              : ytdReturn !== null
+                ? 'text-[#ff7e7e]'
+                : 'text-[#8a847c]'
+          }
+        />
+        <StatCell
+          label="Max DD"
+          value={strategy.loadingPerf ? '…' : maxDdLabel}
+          valueClassName={
+            maxDdIsNegative || maxDdLabel.startsWith('-$')
+              ? 'text-[#e89999]'
+              : 'text-white'
+          }
+        />
+        <StatCell
+          label="Win %"
+          value={strategy.loadingPerf ? '…' : winRateLabel}
+          valueClassName="text-white"
+        />
+        <StatCell label="Since" value={formatSince(strategy.createdAt)} />
+        <StatCell
+          label="Trades/Mo"
+          value={
+            strategy.loadingPerf
+              ? '…'
+              : tradesPerMonth !== null
+                ? String(tradesPerMonth)
+                : '—'
+          }
+        />
+      </div>
+    </motion.div>
+  )
+})
 
 StrategyCard.displayName = 'StrategyCard'
 
@@ -124,47 +407,67 @@ export const StrategiesSection = memo(function StrategiesSection() {
       setLoading(true)
       const data = await strategyApi.getAllStrategies()
 
-      // Initialize with loading states
       const strategiesWithData: StrategyWithData[] = data.map((strategy) => ({
         ...strategy,
         performance: null,
         equityCurve: null,
+        chartSeries: [],
         loadingPerf: true,
       }))
 
       setStrategies(strategiesWithData)
       setError(null)
 
-      // Fetch performance and equity curve for each strategy
-      strategiesWithData.forEach((strategy, index) => {
-        Promise.all([
-          strategyApi.getStrategyPerformance(strategy.id),
-          strategyApi.getEquityCurve(strategy.id, 60),
-        ])
-          .then(([performance, equityCurve]) => {
-            setStrategies((prev) => {
-              const updated = [...prev]
-              updated[index] = {
-                ...updated[index],
-                performance,
-                equityCurve,
-                loadingPerf: false,
-              }
-              return updated
-            })
-          })
-          .catch((err) => {
-            console.error(`Failed to load data for strategy ${strategy.id}:`, err)
-            setStrategies((prev) => {
-              const updated = [...prev]
-              updated[index] = {
-                ...updated[index],
-                loadingPerf: false,
-              }
-              return updated
-            })
-          })
-      })
+      const enriched = await Promise.all(
+        strategiesWithData.map(async (strategy) => {
+          const [perfResult, curveResult, tradesResult] =
+            await Promise.allSettled([
+              strategyApi.getStrategyPerformance(strategy.id),
+              strategyApi.getEquityCurve(strategy.id, 365),
+              strategyApi.getStrategyTrades(strategy.id, 300, 0),
+            ])
+
+          const performance =
+            perfResult.status === 'fulfilled' ? perfResult.value : null
+          const equityCurve =
+            curveResult.status === 'fulfilled'
+              ? normalizeEquityCurve(curveResult.value)
+              : []
+          const trades =
+            tradesResult.status === 'fulfilled'
+              ? tradesResult.value.trades
+              : []
+
+          if (perfResult.status === 'rejected') {
+            console.error(
+              `Performance failed for ${strategy.id}:`,
+              perfResult.reason
+            )
+          }
+          if (curveResult.status === 'rejected') {
+            console.error(
+              `Equity curve failed for ${strategy.id}:`,
+              curveResult.reason
+            )
+          }
+
+          const chartSeries = resolveChartSeries(
+            equityCurve.length > 0 ? equityCurve : null,
+            trades,
+            performance
+          )
+
+          return {
+            ...strategy,
+            performance,
+            equityCurve: equityCurve.length > 0 ? equityCurve : null,
+            chartSeries,
+            loadingPerf: false,
+          }
+        })
+      )
+
+      setStrategies(enriched)
     } catch (err) {
       console.error('Failed to fetch strategies:', err)
       setError(err instanceof Error ? err.message : 'Failed to load strategies')
@@ -176,7 +479,6 @@ export const StrategiesSection = memo(function StrategiesSection() {
 
   return (
     <section id="strategies" className="px-6 pb-24 md:px-12 lg:px-16">
-      {/* Section header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -195,39 +497,35 @@ export const StrategiesSection = memo(function StrategiesSection() {
         </p>
       </motion.div>
 
-      {/* Loading state */}
       {loading && (
-        <div className="text-center py-12">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+        <div className="py-12 text-center">
+          <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           <p className="text-muted-foreground">Loading strategies...</p>
         </div>
       )}
 
-      {/* Error state */}
       {error && (
-        <div className="text-center py-12 bg-destructive/10 rounded-lg border border-destructive/20">
-          <p className="text-destructive mb-3">{error}</p>
+        <div className="rounded-lg border border-destructive/20 bg-destructive/10 py-12 text-center">
+          <p className="mb-3 text-destructive">{error}</p>
           <button
             onClick={fetchStrategies}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            className="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Retry
           </button>
         </div>
       )}
 
-      {/* Grid */}
       {!loading && !error && strategies.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {strategies.map((strategy, i) => (
             <StrategyCard key={strategy.id} strategy={strategy} index={i} />
           ))}
         </div>
       )}
 
-      {/* Empty state */}
       {!loading && !error && strategies.length === 0 && (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-muted-foreground">No strategies available</p>
         </div>
       )}
