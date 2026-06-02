@@ -262,17 +262,23 @@ const StrategyMiniChart = memo(function StrategyMiniChart({
   strategyId,
   chartData,
   color,
+  chartKey,
 }: {
   strategyId: string
   chartData: { i: number; equity: number }[]
   color: string
+  chartKey: string
 }) {
   const gradientId = `strat-grad-${strategyId}`
 
   return (
     <div className="h-[88px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+        <AreaChart
+          key={chartKey}
+          data={chartData}
+          margin={{ top: 4, right: 0, left: 0, bottom: 0 }}
+        >
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={color} stopOpacity={0.35} />
@@ -334,6 +340,7 @@ const StrategyCard = memo(function StrategyCard({
   const ytdLabel = formatPct(ytdReturn)
   const winRateLabel = winRatePct === null ? '—' : `${winRatePct.toFixed(1)}%`
   const maxDdIsNegative = maxDdLabel.startsWith('-') && !maxDdLabel.startsWith('-$')
+  const chartKey = `${strategy.id}:${strategy.chartPeriod}:${chartData.length}`
 
   return (
     <motion.div
@@ -387,15 +394,39 @@ const StrategyCard = memo(function StrategyCard({
           </div>
         </div>
 
-        {strategy.loadingPerf ? (
+        {chartData.length > 0 ? (
+          <motion.div
+            key={chartKey}
+            initial={{ opacity: 0.0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22 }}
+            className="relative"
+          >
+            <div className={strategy.loadingPerf ? 'opacity-60' : 'opacity-100'}>
+              <StrategyMiniChart
+                strategyId={strategy.id}
+                chartData={chartData}
+                color={strategyColor}
+                chartKey={chartKey}
+              />
+            </div>
+
+            {strategy.loadingPerf && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                  style={{ borderColor: strategyColor }}
+                />
+              </div>
+            )}
+          </motion.div>
+        ) : strategy.loadingPerf ? (
           <div className="flex h-[88px] items-center justify-center">
             <div
-              className="h-5 w-5 animate-spin rounded-full border-2 border-t-transparent"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
               style={{ borderColor: strategyColor }}
             />
           </div>
-        ) : chartData.length > 0 ? (
-          <StrategyMiniChart strategyId={strategy.id} chartData={chartData} color={strategyColor} />
         ) : (
           <div className="flex h-[88px] items-center justify-center">
             <p className="font-outfit text-[13px] text-[#8a847c]">No chart data yet</p>
