@@ -18,7 +18,7 @@ const toNum = (v: unknown): number => {
 
 type ChartPoint = { i: number; equity: number }
 
-export type ChartPeriod = '1M' | '3M' | '6M' | 'YTD' | '1Y' | 'ALL'
+export type ChartPeriod = '1W' | '1M' | '3M' | '6M' | 'YTD' | '1Y' | 'ALL'
 
 function normalizeEquityCurve(raw: unknown): EquityCurvePoint[] {
   if (!Array.isArray(raw)) return []
@@ -53,6 +53,7 @@ function daysForPeriod(period: ChartPeriod, createdAt?: string): number {
   }
 
   const map: Record<Exclude<ChartPeriod, 'YTD' | 'ALL'>, number> = {
+    '1W': 7,
     '1M': 30,
     '3M': 90,
     '6M': 180,
@@ -223,7 +224,7 @@ const STRATEGY_COLORS = [
   '#fb923c', // orange
 ] as const
 
-const PERIODS: readonly ChartPeriod[] = ['1M', '3M', '6M', 'YTD', '1Y', 'ALL'] as const
+const PERIODS: readonly ChartPeriod[] = ['1W', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'] as const
 
 export interface StrategyWithData extends Strategy {
   performance: StrategyPerformance | null
