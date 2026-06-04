@@ -119,7 +119,7 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-2 text-[15px] font-medium text-foreground hover:text-primary transition-colors text-left"
                   >
-                    Open dashboard
+                    Sign in
                   </motion.button>
                 </Link>
                 <motion.button
@@ -127,7 +127,7 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                   whileTap={{ scale: 0.98 }}
                   className="w-full px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
-                  Sign in
+                  Register
                 </motion.button>
               </motion.div>
 

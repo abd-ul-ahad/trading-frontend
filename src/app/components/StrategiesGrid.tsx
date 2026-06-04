@@ -563,7 +563,7 @@ const StrategyCard = memo(function StrategyCard({
             maxDdIsNegative || maxDdLabel.startsWith('-$') ? 'text-[#e89999]' : 'text-white'
           }
         />
-        <StatCell label="Win %" value={strategy.loadingPerf ? '…' : winRateLabel} valueClassName="text-white" />
+        <StatCell label="Win rate %" value={strategy.loadingPerf ? '…' : winRateLabel} valueClassName="text-white" />
         <StatCell label="Since" value={formatSince(strategy.createdAt)} />
         <StatCell
           label="Trades/Mo"

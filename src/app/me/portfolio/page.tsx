@@ -51,7 +51,7 @@ export default function PortfolioPage() {
             Good morning, <em className="italic">Sarah.</em>
           </div>
           <div className="font-mono md:text-[14px] tracking-[0.14em] uppercase text-[#c8c3bb] mt-1">
-            Your portfolio is performing well across all 10 strategies.
+            Your portfolio is performing well across all 3 strategies.
           </div>
         </div>
         <div className="font-mono text-[15px] tracking-[0.12em] uppercase text-[#c8c3bb]">
