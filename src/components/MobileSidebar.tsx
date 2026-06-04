@@ -113,22 +113,22 @@ export function MobileSidebar({ isOpen, onClose, navLinks }: MobileSidebarProps)
                 transition={{ delay: 0.3 }}
                 className="flex flex-col gap-3 mb-6"
               >
-                <motion.button
-                  whileHover={{ x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-2 text-[15px] font-medium text-foreground hover:text-primary transition-colors text-left"
-                >
-                  Sign in
-                </motion.button>
                 <Link href="/me/portfolio">
+                  <motion.button
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full py-2 text-[15px] font-medium text-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Open dashboard
+                  </motion.button>
+                </Link>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="w-full px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                  >
-                  Open dashboard
+                >
+                  Sign in
                 </motion.button>
-                  </Link>
               </motion.div>
 
               {/* Theme Toggle with fade animation */}

@@ -13,7 +13,7 @@ export default function AdminLayout({
   const tabs = [
     { label: 'Portfolio', href: '/me/portfolio', badge: null },
     { label: 'My Strategies', href: '/me/my-strategies', badge: '3' },
-    { label: 'Discover', href: '/me/discover', badge: '9' },
+    { label: 'Discover', href: '/me/discover', badge: '10' },
   ];
 
   return (

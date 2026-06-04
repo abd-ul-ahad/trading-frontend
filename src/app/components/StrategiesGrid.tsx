@@ -18,7 +18,21 @@ const toNum = (v: unknown): number => {
 
 type ChartPoint = { i: number; equity: number }
 
-export type ChartPeriod = '1W' | '1M' | '3M' | '6M' | 'YTD' | '1Y' | 'ALL'
+export type ChartPeriod = '1D' | '1W' | '1M' | '3M' | '6M' | 'YTD' | '1Y' | 'ALL' | 'CUSTOM'
+
+export type CustomDateRange = {
+  from: string
+  to: string
+}
+
+function defaultCustomRange(): CustomDateRange {
+  const now = new Date()
+  const from = new Date(now.getFullYear(), 0, 1)
+  return {
+    from: from.toISOString().slice(0, 10),
+    to: now.toISOString().slice(0, 10),
+  }
+}
 
 function normalizeEquityCurve(raw: unknown): EquityCurvePoint[] {
   if (!Array.isArray(raw)) return []
@@ -36,8 +50,19 @@ function equitySeriesFromCurve(curve: EquityCurvePoint[]): ChartPoint[] {
   }))
 }
 
-function daysForPeriod(period: ChartPeriod, createdAt?: string): number {
+function daysForPeriod(
+  period: ChartPeriod,
+  createdAt?: string,
+  customRange?: CustomDateRange | null
+): number {
   const now = new Date()
+
+  if (period === 'CUSTOM' && customRange?.from) {
+    const from = new Date(customRange.from)
+    const to = customRange.to ? new Date(customRange.to) : now
+    const days = Math.ceil((to.getTime() - from.getTime()) / 86400000)
+    return Math.max(1, Math.min(2000, days))
+  }
 
   if (period === 'YTD') {
     const start = new Date(now.getFullYear(), 0, 1)
@@ -52,7 +77,11 @@ function daysForPeriod(period: ChartPeriod, createdAt?: string): number {
     return Math.max(30, Math.min(2000, days))
   }
 
-  const map: Record<Exclude<ChartPeriod, 'YTD' | 'ALL'>, number> = {
+  const presetDays: Record<
+    Exclude<ChartPeriod, 'YTD' | 'ALL' | 'CUSTOM'>,
+    number
+  > = {
+    '1D': 1,
     '1W': 7,
     '1M': 30,
     '3M': 90,
@@ -60,7 +89,21 @@ function daysForPeriod(period: ChartPeriod, createdAt?: string): number {
     '1Y': 365,
   }
 
-  return map[period]
+  return presetDays[period as keyof typeof presetDays]
+}
+
+function filterCurveByDateRange(
+  curve: EquityCurvePoint[],
+  from: string,
+  to: string
+): EquityCurvePoint[] {
+  const start = new Date(from).setHours(0, 0, 0, 0)
+  const end = new Date(to).setHours(23, 59, 59, 999)
+  const filtered = curve.filter((p) => {
+    const ts = new Date(p.timestamp).getTime()
+    return Number.isFinite(ts) && ts >= start && ts <= end
+  })
+  return filtered.length >= 2 ? filtered : curve
 }
 
 function buildSeriesFromTrades(trades: Trade[]): ChartPoint[] {
@@ -97,10 +140,16 @@ function buildSeriesFromPerformance(
 function resolveChartSeries(
   curve: EquityCurvePoint[] | null,
   trades: Trade[],
-  performance: StrategyPerformance | null
+  performance: StrategyPerformance | null,
+  period?: ChartPeriod,
+  customRange?: CustomDateRange | null
 ): ChartPoint[] {
   if (curve && curve.length >= 2) {
-    return equitySeriesFromCurve(curve)
+    const data =
+      period === 'CUSTOM' && customRange
+        ? filterCurveByDateRange(curve, customRange.from, customRange.to)
+        : curve
+    return equitySeriesFromCurve(data.length >= 2 ? data : curve)
   }
   const fromTrades = buildSeriesFromTrades(trades)
   if (fromTrades.length >= 2) return fromTrades
@@ -224,7 +273,29 @@ const STRATEGY_COLORS = [
   '#fb923c', // orange
 ] as const
 
-const PERIODS: readonly ChartPeriod[] = ['1W', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'] as const
+const PERIODS: readonly ChartPeriod[] = [
+  '1D',
+  '1W',
+  '1M',
+  '3M',
+  '6M',
+  'YTD',
+  '1Y',
+  'ALL',
+  'CUSTOM',
+] as const
+
+const PERIOD_LABEL: Record<ChartPeriod, string> = {
+  '1D': '1D',
+  '1W': '1W',
+  '1M': '1M',
+  '3M': '3M',
+  '6M': '6M',
+  YTD: 'YTD',
+  '1Y': '1Y',
+  ALL: 'ALL',
+  CUSTOM: 'Custom',
+}
 
 export interface StrategyWithData extends Strategy {
   performance: StrategyPerformance | null
@@ -232,6 +303,7 @@ export interface StrategyWithData extends Strategy {
   chartSeries: ChartPoint[]
   loadingPerf: boolean
   chartPeriod: ChartPeriod
+  customRange: CustomDateRange
 }
 
 const StatCell = memo(function StatCell({
@@ -308,10 +380,12 @@ const StrategyCard = memo(function StrategyCard({
   strategy,
   index,
   onPeriodChange,
+  onCustomRangeChange,
 }: {
   strategy: StrategyWithData
   index: number
   onPeriodChange: (strategyId: string, period: ChartPeriod) => void
+  onCustomRangeChange: (strategyId: string, range: CustomDateRange) => void
 }) {
   const meta = STRATEGY_META[index % STRATEGY_META.length]
   const strategyColor = STRATEGY_COLORS[index % STRATEGY_COLORS.length]
@@ -371,8 +445,8 @@ const StrategyCard = memo(function StrategyCard({
       </p>
 
       <div className="mb-5 border-b border-[rgba(255,255,255,0.05)] pb-5">
-        <div className="mb-3 flex items-center justify-end">
-          <div className="flex items-center gap-1 rounded-full border border-[rgba(255,255,255,0.10)] bg-[#0a0a0a] p-1">
+        <div className="mb-3 flex flex-col items-end gap-2">
+          <div className="flex max-w-full flex-wrap items-center justify-end gap-1 rounded-full border border-[rgba(255,255,255,0.10)] bg-[#0a0a0a] p-1">
             {PERIODS.map((p) => {
               const active = p === strategy.chartPeriod
               return (
@@ -381,17 +455,52 @@ const StrategyCard = memo(function StrategyCard({
                   type="button"
                   onClick={() => onPeriodChange(strategy.id, p)}
                   className={[
-                    'cursor-pointer rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-colors',
+                    'cursor-pointer rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide transition-colors sm:px-2.5 sm:text-[11px]',
                     active
                       ? 'bg-[rgba(255,255,255,0.10)] text-white'
                       : 'text-[#a39b93] hover:text-white',
                   ].join(' ')}
                   aria-pressed={active}
                 >
-                  {p}
+                  {PERIOD_LABEL[p]}
                 </button>
               )
             })}
+          </div>
+
+          <div
+            className={[
+              'flex w-full flex-wrap items-center justify-end gap-2 transition-all',
+              strategy.chartPeriod === 'CUSTOM'
+                ? 'max-h-20 opacity-100'
+                : 'max-h-0 overflow-hidden opacity-0',
+            ].join(' ')}
+          >
+            <input
+              type="date"
+              value={strategy.customRange.from}
+              max={strategy.customRange.to}
+              onChange={(e) =>
+                onCustomRangeChange(strategy.id, {
+                  ...strategy.customRange,
+                  from: e.target.value,
+                })
+              }
+              className="cursor-pointer rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)]"
+            />
+            <span className="font-mono text-[10px] text-[#8a847c]">→</span>
+            <input
+              type="date"
+              value={strategy.customRange.to}
+              min={strategy.customRange.from}
+              onChange={(e) =>
+                onCustomRangeChange(strategy.id, {
+                  ...strategy.customRange,
+                  to: e.target.value,
+                })
+              }
+              className="cursor-pointer rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] text-[#d8d3ca] outline-none focus:border-[rgba(200,160,60,0.4)]"
+            />
           </div>
         </div>
 
@@ -441,7 +550,7 @@ const StrategyCard = memo(function StrategyCard({
           value={strategy.loadingPerf ? '…' : ytdLabel}
           valueClassName={
             ytdReturn !== null && ytdReturn >= 0
-              ? 'text-[#e8c84a]'
+              ? 'text-[#7EFFA8]'
               : ytdReturn !== null
                 ? 'text-[#ff7e7e]'
                 : 'text-[#8a847c]'
@@ -471,8 +580,10 @@ StrategyCard.displayName = 'StrategyCard'
 
 export const StrategiesGrid = memo(function StrategiesGrid({
   gridClassName = 'grid grid-cols-1 gap-5 sm:grid-cols-2',
+  max,
 }: {
   gridClassName?: string
+  max?: number
 }) {
   const [strategies, setStrategies] = useState<StrategyWithData[]>([])
   const [loading, setLoading] = useState(true)
@@ -485,18 +596,31 @@ export const StrategiesGrid = memo(function StrategiesGrid({
 
   const enrichStrategy = async (
     strategy: StrategyWithData,
-    nextPeriod: ChartPeriod
+    nextPeriod: ChartPeriod,
+    customRange?: CustomDateRange
   ): Promise<StrategyWithData> => {
-    const curveDays = daysForPeriod(nextPeriod, strategy.createdAt)
+    const range = customRange ?? strategy.customRange
+    const curveDays = daysForPeriod(nextPeriod, strategy.createdAt, range)
+
+    let fetchDays = curveDays
+    if (nextPeriod === 'CUSTOM' && range.from) {
+      const from = new Date(range.from)
+      const now = new Date()
+      fetchDays = Math.max(
+        1,
+        Math.min(2000, Math.ceil((now.getTime() - from.getTime()) / 86400000))
+      )
+    }
+
     const [perfResult, curveResult, tradesResult] = await Promise.allSettled([
       strategyApi.getStrategyPerformance(strategy.id),
-      strategyApi.getEquityCurve(strategy.id, curveDays),
+      strategyApi.getEquityCurve(strategy.id, fetchDays),
       strategyApi.getStrategyTrades(strategy.id, 300, 0),
     ])
 
     const performance =
       perfResult.status === 'fulfilled' ? perfResult.value : null
-    const equityCurve =
+    let equityCurve =
       curveResult.status === 'fulfilled'
         ? normalizeEquityCurve(curveResult.value)
         : []
@@ -510,10 +634,16 @@ export const StrategiesGrid = memo(function StrategiesGrid({
       console.error(`Equity curve failed for ${strategy.id}:`, curveResult.reason)
     }
 
+    if (nextPeriod === 'CUSTOM' && equityCurve.length >= 2) {
+      equityCurve = filterCurveByDateRange(equityCurve, range.from, range.to)
+    }
+
     const chartSeries = resolveChartSeries(
       equityCurve.length > 0 ? equityCurve : null,
       trades,
-      performance
+      performance,
+      nextPeriod,
+      range
     )
 
     return {
@@ -523,6 +653,7 @@ export const StrategiesGrid = memo(function StrategiesGrid({
       chartSeries,
       loadingPerf: false,
       chartPeriod: nextPeriod,
+      customRange: range,
     }
   }
 
@@ -538,6 +669,7 @@ export const StrategiesGrid = memo(function StrategiesGrid({
         chartSeries: [],
         loadingPerf: true,
         chartPeriod: 'YTD',
+        customRange: defaultCustomRange(),
       }))
 
       setStrategies(strategiesWithData)
@@ -557,16 +689,23 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     }
   }
 
-  const handleCardPeriodChange = (strategyId: string, next: ChartPeriod) => {
+  const refreshStrategy = (
+    strategyId: string,
+    period: ChartPeriod,
+    customRange?: CustomDateRange
+  ) => {
     setStrategies((prev) => {
       const base = prev.find((s) => s.id === strategyId)
       if (!base) return prev
 
+      const range = customRange ?? base.customRange
       const nextState = prev.map((s) =>
-        s.id === strategyId ? { ...s, chartPeriod: next, loadingPerf: true } : s
+        s.id === strategyId
+          ? { ...s, chartPeriod: period, customRange: range, loadingPerf: true }
+          : s
       )
 
-      void enrichStrategy(base, next)
+      void enrichStrategy({ ...base, customRange: range }, period, range)
         .then((updated) => {
           setStrategies((p) => p.map((s) => (s.id === strategyId ? updated : s)))
         })
@@ -579,6 +718,15 @@ export const StrategiesGrid = memo(function StrategiesGrid({
 
       return nextState
     })
+  }
+
+  const handleCardPeriodChange = (strategyId: string, next: ChartPeriod) => {
+    refreshStrategy(strategyId, next)
+  }
+
+  const handleCustomRangeChange = (strategyId: string, range: CustomDateRange) => {
+    if (!range.from || !range.to || range.from > range.to) return
+    refreshStrategy(strategyId, 'CUSTOM', range)
   }
 
   if (loading) {
@@ -612,14 +760,17 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     )
   }
 
+  const shown = max ? strategies.slice(0, max) : strategies
+
   return (
     <div className={gridClassName}>
-      {strategies.map((strategy, i) => (
+      {shown.map((strategy, i) => (
         <StrategyCard
           key={strategy.id}
           strategy={strategy}
           index={i}
           onPeriodChange={handleCardPeriodChange}
+          onCustomRangeChange={handleCustomRangeChange}
         />
       ))}
     </div>

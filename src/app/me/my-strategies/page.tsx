@@ -15,7 +15,10 @@ export default function MyStrategiesPage() {
       </div>
 
       <div className="opacity-0 animate-[fadeUp_0.6s_ease_0.15s_both]">
-        <StrategiesGrid gridClassName="grid grid-cols-1 gap-5 sm:grid-cols-2" />
+        <StrategiesGrid
+          gridClassName="grid grid-cols-1 gap-5 sm:grid-cols-2"
+          max={3}
+        />
       </div>
     </main>
   )

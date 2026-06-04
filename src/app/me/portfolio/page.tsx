@@ -17,11 +17,10 @@ const myStrategies = [
   { id: 'X', name: 'AUD/USD Carry', invested: 68000, current: 77520, pnl: 9520, pnlPct: 14.0 },
 ];
 
-// Calculate totals
-const totalInvested = myStrategies.reduce((sum, s) => sum + s.invested, 0);
-const totalCurrent = myStrategies.reduce((sum, s) => sum + s.current, 0);
-const totalPnl = totalCurrent - totalInvested;
-const totalPnlPct = ((totalPnl / totalInvested) * 100).toFixed(1);
+const totalInvested = 4000
+const totalCurrent = 4286
+const totalPnl = totalCurrent - totalInvested
+const totalPnlPct = ((totalPnl / totalInvested) * 100).toFixed(1)
 
 export default function PortfolioPage() {
   const [timestamp, setTimestamp] = useState("");
