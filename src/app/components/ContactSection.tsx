@@ -1,29 +1,32 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { memo, useState } from 'react'
-import { Select, SelectOption } from '@/components/Select'
-
-const topicOptions: SelectOption[] = [
-  { value: 'how-it-works', label: 'How the platform works' },
-  { value: 'specific-strategy', label: 'A specific strategy' },
-  { value: 'getting-started', label: 'Getting started / onboarding' },
-  { value: 'risk-levels', label: 'Risk levels and drawdowns' },
-  { value: 'broker-verification', label: 'Broker verification' },
-  { value: 'something-else', label: 'Something else' },
-]
+import { memo, useState, useMemo } from 'react'
+import { countries } from 'countries-list'
 
 export const ContactSection = memo(function ContactSection() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
-  const [topic, setTopic] = useState('')
+  const [countryCode, setCountryCode] = useState('+1')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [question, setQuestion] = useState('')
+
+  const countriesList = useMemo(() => {
+    return Object.entries(countries)
+      .map(([code, country]) => ({
+        code,
+        name: country.name,
+        callingCode: typeof country.phone === 'number' ? `+${country.phone}` : (Array.isArray(country.phone) ? `+${country.phone[0]}` : `+${country.phone}`),
+      }))
+      .filter((c) => c.callingCode && c.callingCode !== '+undefined') // Filter out countries without phone codes
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission
-    console.log({ firstName, lastName, email, topic, question })
+    console.log({ firstName, lastName, email, countryCode, phoneNumber, question })
   }
 
   return (
@@ -85,7 +88,7 @@ export const ContactSection = memo(function ContactSection() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Jane"
-                  className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-border bg-background px-4 py-3  text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -99,7 +102,7 @@ export const ContactSection = memo(function ContactSection() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Smith"
-                  className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-border bg-background px-4 py-3  text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -116,22 +119,37 @@ export const ContactSection = memo(function ContactSection() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="jane@example.com"
-                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-border bg-background px-4 py-3  text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
 
-            {/* Topic */}
+            {/* Phone Number */}
             <div>
-              <label htmlFor="topic" className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                I'd like to ask about
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Phone number
               </label>
-              <Select
-                options={topicOptions}
-                value={topic}
-                onChange={setTopic}
-                placeholder="Select a topic..."
-              />
+              <div className="flex gap-3">
+                <select
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  className="rounded-lg border border-border bg-background px-3 py-3  text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary w-36"
+                >
+                  {countriesList.map(({ callingCode, name }) => (
+                    <option key={name} value={callingCode}>
+                      {callingCode} {name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="(555) 000-0000"
+                  className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+              </div>
             </div>
 
             {/* Question */}
@@ -145,7 +163,7 @@ export const ContactSection = memo(function ContactSection() {
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Tell us what's on your mind..."
                 rows={5}
-                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-border bg-background px-4 py-3  text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
@@ -153,7 +171,7 @@ export const ContactSection = memo(function ContactSection() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="w-full rounded-lg bg-primary px-6 py-3  font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               Send message
             </button>

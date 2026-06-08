@@ -2,7 +2,7 @@
  * Axios Configuration - Main Export
  * 
  * Usage:
- * import { api, authService, userService } from '@/lib/axios'
+ * import { api, tradingService } from '@/lib/axios'
  */
 
 // Core API
@@ -13,22 +13,6 @@ export type { ApiResponse, ApiError } from './api'
 export { API_ENDPOINTS } from './endpoints'
 
 // Services
-export { authService } from './services/authService'
-export type { 
-  LoginCredentials, 
-  RegisterData, 
-  AuthResponse,
-  ForgotPasswordData,
-  ResetPasswordData 
-} from './services/authService'
-
-export { userService } from './services/userService'
-export type { 
-  User, 
-  UpdateProfileData, 
-  ChangePasswordData 
-} from './services/userService'
-
 export { tradingService } from './services/tradingService'
 
 // Axios instance for direct use
