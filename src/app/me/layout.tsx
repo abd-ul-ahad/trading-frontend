@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { strategyApi } from '@/lib/api/strategyApi';
 
 export default function AdminLayout({
   children,
@@ -9,10 +11,33 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [strategyCount, setStrategyCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const strategies = await strategyApi.getAllStrategies();
+        if (!cancelled) setStrategyCount(strategies.length);
+      } catch (err) {
+        console.error('Failed to load strategy count:', err);
+        if (!cancelled) setStrategyCount(null);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const tabs = [
     { label: 'Portfolio', href: '/me/portfolio', badge: null },
-    { label: 'My Strategies', href: '/me/my-strategies', badge: '3' },
+    {
+      label: 'My Strategies',
+      href: '/me/my-strategies',
+      badge: strategyCount !== null ? String(strategyCount) : null,
+    },
     { label: 'Discover', href: '/me/discover', badge: '10' },
   ];
 
