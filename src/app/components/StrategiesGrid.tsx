@@ -1,24 +1,20 @@
 'use client'
 
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Area, AreaChart, ResponsiveContainer } from 'recharts'
 import {
-  EquityCurvePoint,
-  Strategy,
-  StrategyPerformance,
-  Trade,
+  PerformanceCurvePoint,
+  StrategyListItem,
+  StrategyMetrics,
+  StrategyTimeframe,
+  toNum,
   strategyApi,
 } from '@/lib/api/strategyApi'
 
-const toNum = (v: unknown): number => {
-  const n = typeof v === 'number' ? v : Number(v)
-  return Number.isFinite(n) ? n : 0
-}
-
 type ChartPoint = { i: number; equity: number }
 
-export type ChartPeriod = '1D' | '1W' | '1M' | '3M' | '6M' | 'YTD' | '1Y' | 'ALL' | 'CUSTOM'
+export type ChartPeriod = StrategyTimeframe
 
 export type CustomDateRange = {
   from: string
@@ -34,170 +30,26 @@ function defaultCustomRange(): CustomDateRange {
   }
 }
 
-function normalizeEquityCurve(raw: unknown): EquityCurvePoint[] {
-  if (!Array.isArray(raw)) return []
-  return raw.map((p: Record<string, unknown>) => ({
-    timestamp: String(p.timestamp ?? p.Timestamp ?? ''),
-    totalPnL: toNum(p.totalPnL ?? p.total_pnl ?? p.TotalPnL),
-    drawdown: toNum(p.drawdown ?? p.Drawdown),
-  }))
+function sparklineToSeries(sparkline: number[]): ChartPoint[] {
+  return sparkline.map((v, i) => ({ i, equity: toNum(v) }))
 }
 
-function equitySeriesFromCurve(curve: EquityCurvePoint[]): ChartPoint[] {
-  return curve.map((p, i) => ({
-    i,
-    equity: toNum(p.totalPnL),
-  }))
-}
-
-function daysForPeriod(
-  period: ChartPeriod,
-  createdAt?: string,
-  customRange?: CustomDateRange | null
-): number {
-  const now = new Date()
-
-  if (period === 'CUSTOM' && customRange?.from) {
-    const from = new Date(customRange.from)
-    const to = customRange.to ? new Date(customRange.to) : now
-    const days = Math.ceil((to.getTime() - from.getTime()) / 86400000)
-    return Math.max(1, Math.min(2000, days))
-  }
-
-  if (period === 'YTD') {
-    const start = new Date(now.getFullYear(), 0, 1)
-    const days = Math.ceil((now.getTime() - start.getTime()) / 86400000)
-    return Math.max(7, days)
-  }
-
-  if (period === 'ALL') {
-    if (!createdAt) return 730
-    const created = new Date(createdAt)
-    const days = Math.ceil((now.getTime() - created.getTime()) / 86400000)
-    return Math.max(30, Math.min(2000, days))
-  }
-
-  const presetDays: Record<
-    Exclude<ChartPeriod, 'YTD' | 'ALL' | 'CUSTOM'>,
-    number
-  > = {
-    '1D': 1,
-    '1W': 7,
-    '1M': 30,
-    '3M': 90,
-    '6M': 180,
-    '1Y': 365,
-  }
-
-  return presetDays[period as keyof typeof presetDays]
+function curveToSeries(curve: PerformanceCurvePoint[]): ChartPoint[] {
+  return curve.map((p, i) => ({ i, equity: toNum(p.v) }))
 }
 
 function filterCurveByDateRange(
-  curve: EquityCurvePoint[],
+  curve: PerformanceCurvePoint[],
   from: string,
   to: string
-): EquityCurvePoint[] {
+): PerformanceCurvePoint[] {
   const start = new Date(from).setHours(0, 0, 0, 0)
   const end = new Date(to).setHours(23, 59, 59, 999)
   const filtered = curve.filter((p) => {
-    const ts = new Date(p.timestamp).getTime()
+    const ts = new Date(p.t).getTime()
     return Number.isFinite(ts) && ts >= start && ts <= end
   })
   return filtered.length >= 2 ? filtered : curve
-}
-
-function buildSeriesFromTrades(trades: Trade[]): ChartPoint[] {
-  const closed = trades
-    .filter((t) => t.status === 'closed' && t.exit_time)
-    .sort(
-      (a, b) =>
-        new Date(a.exit_time!).getTime() - new Date(b.exit_time!).getTime()
-    )
-
-  if (closed.length === 0) return []
-
-  let cumulative = 0
-  const series: ChartPoint[] = [{ i: 0, equity: 0 }]
-  closed.forEach((trade, idx) => {
-    cumulative += toNum(trade.pnl)
-    series.push({ i: idx + 1, equity: Math.round(cumulative) })
-  })
-  return series.length >= 2 ? series : []
-}
-
-function buildSeriesFromPerformance(
-  performance: StrategyPerformance,
-  points = 40
-): ChartPoint[] {
-  const total = toNum(performance.totalPnL)
-  if (points < 2) return []
-  return Array.from({ length: points }, (_, i) => ({
-    i,
-    equity: Math.round((total * i) / (points - 1)),
-  }))
-}
-
-function resolveChartSeries(
-  curve: EquityCurvePoint[] | null,
-  trades: Trade[],
-  performance: StrategyPerformance | null,
-  period?: ChartPeriod,
-  customRange?: CustomDateRange | null
-): ChartPoint[] {
-  if (curve && curve.length >= 2) {
-    const data =
-      period === 'CUSTOM' && customRange
-        ? filterCurveByDateRange(curve, customRange.from, customRange.to)
-        : curve
-    return equitySeriesFromCurve(data.length >= 2 ? data : curve)
-  }
-  const fromTrades = buildSeriesFromTrades(trades)
-  if (fromTrades.length >= 2) return fromTrades
-  if (performance) {
-    const fromPerf = buildSeriesFromPerformance(performance)
-    if (fromPerf.length >= 2) return fromPerf
-  }
-  return []
-}
-
-function ytdFromPerformance(performance: StrategyPerformance): number {
-  const total = toNum(performance.totalPnL)
-  const maxDd = toNum(performance.maxDrawdown)
-  const basis = Math.max(Math.abs(total) + maxDd, maxDd * 5, 1)
-  return (total / basis) * 100
-}
-
-function calcReturnPctFromSeries(series: { equity: number }[]): number | null {
-  if (series.length < 2) return null
-  const first = series[0].equity
-  const last = series[series.length - 1].equity
-  if (first === 0) return last > 0 ? 100 : 0
-  return ((last - first) / Math.abs(first)) * 100
-}
-
-function resolveYtdReturn(
-  series: ChartPoint[],
-  performance: StrategyPerformance | null
-): number | null {
-  if (series.length >= 2) {
-    const fromSeries = calcReturnPctFromSeries(series)
-    if (fromSeries !== null) return fromSeries
-  }
-  if (performance) return ytdFromPerformance(performance)
-  return null
-}
-
-function calcMaxDrawdownPctFromSeries(series: { equity: number }[]): number {
-  if (series.length < 2) return 0
-  let peak = series[0].equity
-  let maxDd = 0
-  for (const { equity } of series) {
-    if (equity > peak) peak = equity
-    const base = Math.abs(peak) || 1
-    const dd = ((equity - peak) / base) * 100
-    if (dd < maxDd) maxDd = dd
-  }
-  return maxDd
 }
 
 function formatSince(dateStr: string): string {
@@ -207,70 +59,34 @@ function formatSince(dateStr: string): string {
   return `${mm}/${yyyy}`
 }
 
-function calcTradesPerMonth(totalTrades: number, createdAt: string): number {
-  const created = new Date(createdAt)
-  const now = new Date()
-  const months =
-    (now.getFullYear() - created.getFullYear()) * 12 +
-    (now.getMonth() - created.getMonth()) +
-    1
-  return Math.max(1, Math.round(totalTrades / Math.max(1, months)))
-}
-
 function formatPct(value: number | null): string {
   if (value === null) return '—'
   return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`
 }
 
-function formatMaxDd(
-  series: ChartPoint[],
-  curve: EquityCurvePoint[] | null,
-  performance: StrategyPerformance | null
-): string {
-  if (curve && curve.length >= 2 && series.length >= 2) {
-    const pct = calcMaxDrawdownPctFromSeries(series)
-    return `${pct.toFixed(1)}%`
-  }
-  if (series.length >= 2) {
-    const pct = calcMaxDrawdownPctFromSeries(series)
-    if (pct < 0) return `${pct.toFixed(1)}%`
-  }
-  if (performance) {
-    const dd = toNum(performance.maxDrawdown)
-    if (dd > 0) {
-      return `-$${dd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    }
-    return '0.0%'
-  }
-  return '—'
+function formatMaxDdPct(value: string | null): string {
+  if (value === null) return '—'
+  const n = toNum(value)
+  return `${n.toFixed(1)}%`
 }
 
-const STRATEGY_META = [
-  {
-    risk: 3,
-    desc: 'Momentum-driven approach to precious metals with systematic entry and exit signals.',
-  },
-  {
-    risk: 2,
-    desc: 'Systematic FX strategy targeting major pairs with defined risk parameters per trade.',
-  },
-  {
-    risk: 4,
-    desc: 'Trend-following index strategy with volatility-adjusted position sizing.',
-  },
-  {
-    risk: 3,
-    desc: 'Diversified commodities exposure using quantitative momentum and mean-reversion signals.',
-  },
-] as const
+function formatTradesPerMonth(value: string | null): string {
+  if (value === null) return '—'
+  return String(Math.round(toNum(value)))
+}
+
+function formatWinRate(value: string | null): string {
+  if (value === null) return '—'
+  return `${toNum(value).toFixed(1)}%`
+}
 
 const STRATEGY_COLORS = [
-  '#d4af37', // gold
-  '#6ee7b7', // mint
-  '#60a5fa', // blue
-  '#f472b6', // pink
-  '#a78bfa', // purple
-  '#fb923c', // orange
+  '#d4af37',
+  '#6ee7b7',
+  '#60a5fa',
+  '#f472b6',
+  '#a78bfa',
+  '#fb923c',
 ] as const
 
 const PERIODS: readonly ChartPeriod[] = [
@@ -297,13 +113,58 @@ const PERIOD_LABEL: Record<ChartPeriod, string> = {
   CUSTOM: 'Custom',
 }
 
-export interface StrategyWithData extends Strategy {
-  performance: StrategyPerformance | null
-  equityCurve: EquityCurvePoint[] | null
+const RETURN_LABEL: Record<ChartPeriod, string> = {
+  '1D': '1D Return',
+  '1W': '1W Return',
+  '1M': '1M Return',
+  '3M': '3M Return',
+  '6M': '6M Return',
+  YTD: 'YTD Return',
+  '1Y': '1Y Return',
+  ALL: 'Return',
+  CUSTOM: 'Return',
+}
+
+export interface StrategyWithData extends StrategyListItem {
   chartSeries: ChartPoint[]
   loadingPerf: boolean
   chartPeriod: ChartPeriod
   customRange: CustomDateRange
+  displayMetrics: {
+    returnPct: string
+    maxDrawdownPct: string
+    winRatePct: string
+    tradesPerMonth: string
+  }
+}
+
+function metricsFromList(item: StrategyListItem): StrategyWithData['displayMetrics'] {
+  return {
+    returnPct: item.returnPct,
+    maxDrawdownPct: item.maxDrawdownPct,
+    winRatePct: item.winRatePct,
+    tradesPerMonth: item.tradesPerMonth,
+  }
+}
+
+function metricsFromResponse(metrics: StrategyMetrics): StrategyWithData['displayMetrics'] {
+  return {
+    returnPct: metrics.returnPct,
+    maxDrawdownPct: metrics.maxDrawdownPct,
+    winRatePct: metrics.winRatePct,
+    tradesPerMonth: metrics.tradesPerMonth,
+  }
+}
+
+function listItemToStrategyWithData(item: StrategyListItem): StrategyWithData {
+  return {
+    ...item,
+    chartSeries: sparklineToSeries(item.sparkline),
+    loadingPerf: false,
+    chartPeriod: 'YTD',
+    customRange: defaultCustomRange(),
+    displayMetrics: metricsFromList(item),
+  }
 }
 
 const StatCell = memo(function StatCell({
@@ -384,38 +245,20 @@ const StrategyCard = memo(function StrategyCard({
 }: {
   strategy: StrategyWithData
   index: number
-  onPeriodChange: (strategyId: string, period: ChartPeriod) => void
-  onCustomRangeChange: (strategyId: string, range: CustomDateRange) => void
+  onPeriodChange: (publicCode: string, period: ChartPeriod) => void
+  onCustomRangeChange: (publicCode: string, range: CustomDateRange) => void
 }) {
-  const meta = STRATEGY_META[index % STRATEGY_META.length]
   const strategyColor = STRATEGY_COLORS[index % STRATEGY_COLORS.length]
-
   const chartData = strategy.chartSeries
+  const metrics = strategy.displayMetrics
 
-  const ytdReturn = useMemo(
-    () => resolveYtdReturn(chartData, strategy.performance),
-    [chartData, strategy.performance]
-  )
-
-  const maxDdLabel = useMemo(
-    () => formatMaxDd(chartData, strategy.equityCurve, strategy.performance),
-    [chartData, strategy.equityCurve, strategy.performance]
-  )
-
-  const tradesPerMonth = useMemo(() => {
-    if (!strategy.performance) return null
-    return calcTradesPerMonth(strategy.performance.totalTrades, strategy.createdAt)
-  }, [strategy.performance, strategy.createdAt])
-
-  const winRatePct = useMemo(() => {
-    if (!strategy.performance) return null
-    return toNum(strategy.performance.winRate) * 100
-  }, [strategy.performance])
-
-  const ytdLabel = formatPct(ytdReturn)
-  const winRateLabel = winRatePct === null ? '—' : `${winRatePct.toFixed(1)}%`
-  const maxDdIsNegative = maxDdLabel.startsWith('-') && !maxDdLabel.startsWith('-$')
-  const chartKey = `${strategy.id}:${strategy.chartPeriod}:${chartData.length}`
+  const returnPct = toNum(metrics.returnPct)
+  const returnLabel = formatPct(returnPct)
+  const maxDdLabel = formatMaxDdPct(metrics.maxDrawdownPct)
+  const winRateLabel = formatWinRate(metrics.winRatePct)
+  const tradesPerMonthLabel = formatTradesPerMonth(metrics.tradesPerMonth)
+  const maxDdIsNegative = toNum(metrics.maxDrawdownPct) < 0
+  const chartKey = `${strategy.publicCode}:${strategy.chartPeriod}:${chartData.length}`
 
   return (
     <motion.div
@@ -430,18 +273,20 @@ const StrategyCard = memo(function StrategyCard({
           <div
             key={pip}
             className={`h-1.5 w-1.5 rounded-full ${
-              pip <= meta.risk ? 'bg-[rgba(200,160,60,0.65)]' : 'bg-[rgba(255,255,255,0.1)]'
+              pip <= strategy.riskLevel
+                ? 'bg-[rgba(200,160,60,0.65)]'
+                : 'bg-[rgba(255,255,255,0.1)]'
             }`}
           />
         ))}
       </div>
 
       <h3 className="font-display mb-3 text-[28px] font-normal leading-[1.1] tracking-[-0.01em] text-white md:text-[30px]">
-        {strategy.name}
+        {strategy.displayName}
       </h3>
 
       <p className="font-outfit mb-5 text-[14px] leading-[1.75] text-[#a39b93]">
-        {meta.desc}
+        {strategy.description ?? 'No description available.'}
       </p>
 
       <div className="mb-5 border-b border-[rgba(255,255,255,0.05)] pb-5">
@@ -453,7 +298,7 @@ const StrategyCard = memo(function StrategyCard({
                 <button
                   key={p}
                   type="button"
-                  onClick={() => onPeriodChange(strategy.id, p)}
+                  onClick={() => onPeriodChange(strategy.publicCode, p)}
                   className={[
                     'cursor-pointer rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide transition-colors sm:px-2.5 sm:text-[11px]',
                     active
@@ -481,7 +326,7 @@ const StrategyCard = memo(function StrategyCard({
               value={strategy.customRange.from}
               max={strategy.customRange.to}
               onChange={(e) =>
-                onCustomRangeChange(strategy.id, {
+                onCustomRangeChange(strategy.publicCode, {
                   ...strategy.customRange,
                   from: e.target.value,
                 })
@@ -494,7 +339,7 @@ const StrategyCard = memo(function StrategyCard({
               value={strategy.customRange.to}
               min={strategy.customRange.from}
               onChange={(e) =>
-                onCustomRangeChange(strategy.id, {
+                onCustomRangeChange(strategy.publicCode, {
                   ...strategy.customRange,
                   to: e.target.value,
                 })
@@ -514,7 +359,7 @@ const StrategyCard = memo(function StrategyCard({
           >
             <div className={strategy.loadingPerf ? 'opacity-60' : 'opacity-100'}>
               <StrategyMiniChart
-                strategyId={strategy.id}
+                strategyId={strategy.publicCode}
                 chartData={chartData}
                 color={strategyColor}
                 chartKey={chartKey}
@@ -546,30 +391,26 @@ const StrategyCard = memo(function StrategyCard({
 
       <div className="grid grid-cols-3 gap-x-6 gap-y-5">
         <StatCell
-          label="YTD Return"
-          value={strategy.loadingPerf ? '…' : ytdLabel}
+          label={RETURN_LABEL[strategy.chartPeriod]}
+          value={strategy.loadingPerf ? '…' : returnLabel}
           valueClassName={
-            ytdReturn !== null && ytdReturn >= 0
-              ? 'text-[#7EFFA8]'
-              : ytdReturn !== null
-                ? 'text-[#ff7e7e]'
-                : 'text-[#8a847c]'
+            returnPct >= 0 ? 'text-[#7EFFA8]' : 'text-[#ff7e7e]'
           }
         />
         <StatCell
           label="Max DD"
           value={strategy.loadingPerf ? '…' : maxDdLabel}
-          valueClassName={
-            maxDdIsNegative || maxDdLabel.startsWith('-$') ? 'text-[#e89999]' : 'text-white'
-          }
+          valueClassName={maxDdIsNegative ? 'text-[#e89999]' : 'text-white'}
         />
-        <StatCell label="Win rate %" value={strategy.loadingPerf ? '…' : winRateLabel} valueClassName="text-white" />
-        <StatCell label="Since" value={formatSince(strategy.createdAt)} />
+        <StatCell
+          label="Win rate %"
+          value={strategy.loadingPerf ? '…' : winRateLabel}
+          valueClassName="text-white"
+        />
+        <StatCell label="Since" value={formatSince(strategy.activeSince)} />
         <StatCell
           label="Trades/Mo"
-          value={
-            strategy.loadingPerf ? '…' : tradesPerMonth !== null ? String(tradesPerMonth) : '—'
-          }
+          value={strategy.loadingPerf ? '…' : tradesPerMonthLabel}
         />
       </div>
     </motion.div>
@@ -594,65 +435,30 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const enrichStrategy = async (
+  const loadPerformance = async (
     strategy: StrategyWithData,
-    nextPeriod: ChartPeriod,
+    period: ChartPeriod,
     customRange?: CustomDateRange
   ): Promise<StrategyWithData> => {
     const range = customRange ?? strategy.customRange
-    const curveDays = daysForPeriod(nextPeriod, strategy.createdAt, range)
+    const timeframe: StrategyTimeframe = period === 'CUSTOM' ? 'ALL' : period
 
-    let fetchDays = curveDays
-    if (nextPeriod === 'CUSTOM' && range.from) {
-      const from = new Date(range.from)
-      const now = new Date()
-      fetchDays = Math.max(
-        1,
-        Math.min(2000, Math.ceil((now.getTime() - from.getTime()) / 86400000))
-      )
-    }
-
-    const [perfResult, curveResult, tradesResult] = await Promise.allSettled([
-      strategyApi.getStrategyPerformance(strategy.id),
-      strategyApi.getEquityCurve(strategy.id, fetchDays),
-      strategyApi.getStrategyTrades(strategy.id, 300, 0),
-    ])
-
-    const performance =
-      perfResult.status === 'fulfilled' ? perfResult.value : null
-    let equityCurve =
-      curveResult.status === 'fulfilled'
-        ? normalizeEquityCurve(curveResult.value)
-        : []
-    const trades =
-      tradesResult.status === 'fulfilled' ? tradesResult.value.trades : []
-
-    if (perfResult.status === 'rejected') {
-      console.error(`Performance failed for ${strategy.id}:`, perfResult.reason)
-    }
-    if (curveResult.status === 'rejected') {
-      console.error(`Equity curve failed for ${strategy.id}:`, curveResult.reason)
-    }
-
-    if (nextPeriod === 'CUSTOM' && equityCurve.length >= 2) {
-      equityCurve = filterCurveByDateRange(equityCurve, range.from, range.to)
-    }
-
-    const chartSeries = resolveChartSeries(
-      equityCurve.length > 0 ? equityCurve : null,
-      trades,
-      performance,
-      nextPeriod,
-      range
+    const response = await strategyApi.getStrategyPerformance(
+      strategy.publicCode,
+      timeframe
     )
+
+    let curve = response.curve
+    if (period === 'CUSTOM' && range.from && range.to) {
+      curve = filterCurveByDateRange(curve, range.from, range.to)
+    }
 
     return {
       ...strategy,
-      performance,
-      equityCurve: equityCurve.length > 0 ? equityCurve : null,
-      chartSeries,
+      chartSeries: curveToSeries(curve),
+      displayMetrics: metricsFromResponse(response.metrics),
       loadingPerf: false,
-      chartPeriod: nextPeriod,
+      chartPeriod: period,
       customRange: range,
     }
   }
@@ -661,25 +467,8 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     try {
       setLoading(true)
       const data = await strategyApi.getAllStrategies()
-
-      const strategiesWithData: StrategyWithData[] = data.map((strategy) => ({
-        ...strategy,
-        performance: null,
-        equityCurve: null,
-        chartSeries: [],
-        loadingPerf: true,
-        chartPeriod: 'YTD',
-        customRange: defaultCustomRange(),
-      }))
-
-      setStrategies(strategiesWithData)
+      setStrategies(data.map(listItemToStrategyWithData))
       setError(null)
-
-      const enriched = await Promise.all(
-        strategiesWithData.map((strategy) => enrichStrategy(strategy, 'YTD'))
-      )
-
-      setStrategies(enriched)
     } catch (err) {
       console.error('Failed to fetch strategies:', err)
       setError(err instanceof Error ? err.message : 'Failed to load strategies')
@@ -690,29 +479,33 @@ export const StrategiesGrid = memo(function StrategiesGrid({
   }
 
   const refreshStrategy = (
-    strategyId: string,
+    publicCode: string,
     period: ChartPeriod,
     customRange?: CustomDateRange
   ) => {
     setStrategies((prev) => {
-      const base = prev.find((s) => s.id === strategyId)
+      const base = prev.find((s) => s.publicCode === publicCode)
       if (!base) return prev
 
       const range = customRange ?? base.customRange
       const nextState = prev.map((s) =>
-        s.id === strategyId
+        s.publicCode === publicCode
           ? { ...s, chartPeriod: period, customRange: range, loadingPerf: true }
           : s
       )
 
-      void enrichStrategy({ ...base, customRange: range }, period, range)
+      void loadPerformance({ ...base, customRange: range }, period, range)
         .then((updated) => {
-          setStrategies((p) => p.map((s) => (s.id === strategyId ? updated : s)))
+          setStrategies((p) =>
+            p.map((s) => (s.publicCode === publicCode ? updated : s))
+          )
         })
         .catch((err) => {
           console.error('Failed to update strategy chart period:', err)
           setStrategies((p) =>
-            p.map((s) => (s.id === strategyId ? { ...s, loadingPerf: false } : s))
+            p.map((s) =>
+              s.publicCode === publicCode ? { ...s, loadingPerf: false } : s
+            )
           )
         })
 
@@ -720,13 +513,13 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     })
   }
 
-  const handleCardPeriodChange = (strategyId: string, next: ChartPeriod) => {
-    refreshStrategy(strategyId, next)
+  const handleCardPeriodChange = (publicCode: string, next: ChartPeriod) => {
+    refreshStrategy(publicCode, next)
   }
 
-  const handleCustomRangeChange = (strategyId: string, range: CustomDateRange) => {
+  const handleCustomRangeChange = (publicCode: string, range: CustomDateRange) => {
     if (!range.from || !range.to || range.from > range.to) return
-    refreshStrategy(strategyId, 'CUSTOM', range)
+    refreshStrategy(publicCode, 'CUSTOM', range)
   }
 
   if (loading) {
@@ -766,7 +559,7 @@ export const StrategiesGrid = memo(function StrategiesGrid({
     <div className={gridClassName}>
       {shown.map((strategy, i) => (
         <StrategyCard
-          key={strategy.id}
+          key={strategy.publicCode}
           strategy={strategy}
           index={i}
           onPeriodChange={handleCardPeriodChange}
@@ -778,4 +571,3 @@ export const StrategiesGrid = memo(function StrategiesGrid({
 })
 
 StrategiesGrid.displayName = 'StrategiesGrid'
-

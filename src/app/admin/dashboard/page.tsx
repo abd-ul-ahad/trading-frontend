@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { strategyApi, Strategy } from '@/lib/api/strategyApi';
+import { strategyApi, StrategyListItem } from '@/lib/api/strategyApi';
 
 const goldBorder =
   'border-[rgba(200,160,60,0.28)] dark:border-[rgba(200,160,60,0.15)]';
@@ -10,7 +10,7 @@ const cardClass = `h-full rounded-[18px] bg-card p-6 flex flex-col gap-4 ${goldB
 const pageShellClass = 'min-h-screen bg-background text-foreground p-6 pb-20';
 
 export default function AdminDashboard() {
-  const [strategies, setStrategies] = useState<Strategy[]>([]);
+  const [strategies, setStrategies] = useState<StrategyListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,8 +85,8 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {strategies.map((strategy) => (
               <Link
-                key={strategy.id}
-                href={`/admin/strategies/${strategy.id}`}
+                key={strategy.publicCode}
+                href={`/admin/strategies/${strategy.publicCode}`}
                 className="group block"
               >
                 <div
@@ -94,27 +94,20 @@ export default function AdminDashboard() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-display text-[22px] font-light text-foreground group-hover:text-primary transition-colors leading-tight">
-                      {strategy.name}
+                      {strategy.displayName}
                     </h3>
-                    <span
-                      className={`shrink-0 font-mono text-[11px] tracking-[0.1em] uppercase px-3 py-1 rounded-full border ${
-                        strategy.status === 'active'
-                          ? 'text-primary border-primary/35 bg-primary/10'
-                          : 'text-muted-foreground border-border bg-muted dark:text-[#c8c3bb] dark:border-[rgba(255,255,255,0.1)] dark:bg-[rgba(255,255,255,0.04)]'
-                      }`}
-                    >
-                      {strategy.status.charAt(0).toUpperCase() +
-                        strategy.status.slice(1)}
+                    <span className="shrink-0 font-mono text-[11px] tracking-[0.1em] uppercase px-3 py-1 rounded-full border text-primary border-primary/35 bg-primary/10">
+                      Risk {strategy.riskLevel}
                     </span>
                   </div>
 
                   <div className="space-y-2 py-2 border-y border-border">
                     <div className="flex justify-between items-center gap-2">
                       <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground">
-                        Created
+                        Active since
                       </span>
                       <span className="text-[15px] text-foreground">
-                        {new Date(strategy.createdAt).toLocaleDateString()}
+                        {new Date(strategy.activeSince).toLocaleDateString()}
                       </span>
                     </div>
                   </div>

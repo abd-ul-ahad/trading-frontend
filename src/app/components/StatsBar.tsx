@@ -28,7 +28,7 @@ export const StatsBar = memo(function StatsBar() {
       try {
         const strategies = await strategyApi.getAllStrategies();
         if (cancelled) return;
-        const count = strategies.filter((s) => s.status === "active").length;
+        const count = strategies.length;
         setActiveCount(count);
       } catch (err) {
         console.error("Failed to load active strategies count:", err);

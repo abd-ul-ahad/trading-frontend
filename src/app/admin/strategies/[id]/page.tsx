@@ -4,9 +4,9 @@ import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import {
   strategyApi,
-  Strategy,
-  StrategyPerformance,
-  EquityCurvePoint,
+  StrategyInfo,
+  StrategyMetrics,
+  PerformanceCurvePoint,
 } from '@/lib/api/strategyApi';
 import PerformancePanel from './components/PerformancePanel';
 import EquityCurveChart from './components/EquityCurveChart';
@@ -25,45 +25,41 @@ const backLinkClass =
 const pageShellClass = 'min-h-full bg-background text-foreground p-6';
 
 export default function StrategyDetailsPage({ params }: Props) {
-  const { id } = use(params);
+  const { id: publicCode } = use(params);
 
-  const [strategy, setStrategy] = useState<Strategy | null>(null);
-  const [performance, setPerformance] = useState<StrategyPerformance | null>(
-    null
-  );
-  const [equityCurve, setEquityCurve] = useState<EquityCurvePoint[]>([]);
+  const [strategy, setStrategy] = useState<StrategyInfo | null>(null);
+  const [metrics, setMetrics] = useState<StrategyMetrics | null>(null);
+  const [curve, setCurve] = useState<PerformanceCurvePoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [performanceLoading, setPerformanceLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
+    if (publicCode) {
       loadData();
     }
-  }, [id]);
+  }, [publicCode]);
 
   useEffect(() => {
-    if (id) {
+    if (publicCode) {
       const interval = setInterval(() => {
         fetchPerformance();
       }, 30000);
       return () => clearInterval(interval);
     }
-  }, [id]);
+  }, [publicCode]);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const [strategyData, performanceData, equityCurveData] =
-        await Promise.all([
-          strategyApi.getStrategyById(id),
-          strategyApi.getStrategyPerformance(id),
-          strategyApi.getEquityCurve(id, 60),
-        ]);
+      const [detailData, performanceData] = await Promise.all([
+        strategyApi.getStrategy(publicCode),
+        strategyApi.getStrategyPerformance(publicCode, 'ALL'),
+      ]);
 
-      setStrategy(strategyData);
-      setPerformance(performanceData);
-      setEquityCurve(equityCurveData);
+      setStrategy(detailData.strategy);
+      setMetrics(performanceData.metrics);
+      setCurve(performanceData.curve);
       setError(null);
     } catch (err) {
       setError(
@@ -75,11 +71,12 @@ export default function StrategyDetailsPage({ params }: Props) {
   };
 
   const fetchPerformance = async () => {
-    if (!id) return;
+    if (!publicCode) return;
     try {
       setPerformanceLoading(true);
-      const data = await strategyApi.getStrategyPerformance(id);
-      setPerformance(data);
+      const data = await strategyApi.getStrategyPerformance(publicCode, 'ALL');
+      setMetrics(data.metrics);
+      setCurve(data.curve);
     } catch (err) {
       console.error('Failed to fetch performance:', err);
     } finally {
@@ -133,39 +130,34 @@ export default function StrategyDetailsPage({ params }: Props) {
 
           <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
             <h1 className="font-display text-[36px] md:text-[44px] font-light text-foreground leading-[1.05] tracking-[-0.015em]">
-              {strategy.name}
+              {strategy.displayName}
             </h1>
-            <span
-              className={`font-mono text-xs tracking-[0.1em] uppercase px-3 py-1.5 rounded-full border ${
-                strategy.status === 'active'
-                  ? 'text-primary border-primary/35 bg-primary/10'
-                  : 'text-muted-foreground border-border bg-muted dark:text-[#c8c3bb] dark:border-[rgba(255,255,255,0.1)] dark:bg-[rgba(255,255,255,0.04)]'
-              }`}
-            >
-              {strategy.status.charAt(0).toUpperCase() + strategy.status.slice(1)}
+            <span className="font-mono text-xs tracking-[0.1em] uppercase px-3 py-1.5 rounded-full border text-primary border-primary/35 bg-primary/10">
+              Risk {strategy.riskLevel}
             </span>
           </div>
+
+          {strategy.description && (
+            <p className="text-muted-foreground max-w-2xl">{strategy.description}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 gap-4 mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.1s_both]">
           <div className={`p-5 ${cardClass}`}>
-            <p className={labelClass}>Created</p>
+            <p className={labelClass}>Active since</p>
             <p className="text-foreground">
-              {new Date(strategy.createdAt).toLocaleDateString()}
+              {new Date(strategy.activeSince).toLocaleDateString()}
             </p>
           </div>
         </div>
 
-        {performance && (
-          <PerformancePanel
-            performance={performance}
-            loading={performanceLoading}
-          />
+        {metrics && (
+          <PerformancePanel metrics={metrics} loading={performanceLoading} />
         )}
 
-        {equityCurve.length > 0 && (
+        {curve.length > 0 && (
           <div className="mb-6 opacity-0 animate-[fadeUp_0.55s_ease_0.15s_both]">
-            <EquityCurveChart data={equityCurve} />
+            <EquityCurveChart data={curve} />
           </div>
         )}
       </div>

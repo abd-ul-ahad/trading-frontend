@@ -11,10 +11,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { EquityCurvePoint } from '@/lib/api/strategyApi';
+import { PerformanceCurvePoint } from '@/lib/api/strategyApi';
 
 interface EquityCurveChartProps {
-  data: EquityCurvePoint[];
+  data: PerformanceCurvePoint[];
 }
 
 export default function EquityCurveChart({ data }: EquityCurveChartProps) {
@@ -22,9 +22,8 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
   const isDark = resolvedTheme === 'dark';
 
   const chartData = data.map((point) => ({
-    timestamp: new Date(point.timestamp).toLocaleDateString(),
-    totalPnL: point.totalPnL,
-    drawdown: point.drawdown,
+    timestamp: new Date(point.t).toLocaleDateString(),
+    index: point.v,
   }));
 
   const axisColor = isDark ? '#a39b93' : '#64748b';
@@ -34,9 +33,9 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
   return (
     <div className="p-6 rounded-[18px] bg-card border border-[rgba(200,160,60,0.28)] dark:border-[rgba(200,160,60,0.15)]">
       <h2 className="font-display text-[24px] font-light text-foreground mb-6">
-        Equity curve{' '}
+        Performance curve{' '}
         <span className="text-muted-foreground font-mono text-[13px] tracking-[0.1em] uppercase">
-          · 60 days
+          · normalized index
         </span>
       </h2>
 
@@ -59,49 +58,26 @@ export default function EquityCurveChart({ data }: EquityCurveChartProps) {
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: isDark ? '#121212' : '#ffffff',
-              border: isDark
-                ? '1px solid rgba(200,160,60,0.25)'
-                : '1px solid rgba(200,160,60,0.35)',
-              borderRadius: '12px',
-              color: isDark ? '#fafafa' : '#0f172a',
-              fontFamily: 'DM Mono, monospace',
-              fontSize: '12px',
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)'}`,
+              borderRadius: '8px',
+              color: isDark ? '#e8e4df' : '#0f172a',
             }}
-            labelStyle={{ color: '#d4af37' }}
             formatter={(value) => {
               if (value == null) return '-';
-              if (typeof value === 'number') return value.toFixed(2);
-              return String(value);
+              if (typeof value === 'number') return [value.toFixed(2), 'Index'];
+              return [String(value), 'Index'];
             }}
           />
-          <Legend
-            wrapperStyle={{
-              fontSize: '11px',
-              color: axisColor,
-              fontFamily: 'DM Mono, monospace',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-            iconType="line"
-          />
+          <Legend />
           <Line
             type="monotone"
-            dataKey="totalPnL"
+            dataKey="index"
+            name="Normalized index"
             stroke="#d4af37"
-            dot={false}
             strokeWidth={2}
-            name="Total P&L"
-            isAnimationActive={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="drawdown"
-            stroke={isDark ? '#ff8a8a' : '#dc2626'}
             dot={false}
-            strokeWidth={2}
-            name="Drawdown %"
-            isAnimationActive={false}
+            activeDot={{ r: 4 }}
           />
         </LineChart>
       </ResponsiveContainer>

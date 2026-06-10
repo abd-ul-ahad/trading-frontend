@@ -69,7 +69,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
       try {
         const strategies = await strategyApi.getAllStrategies()
         if (cancelled) return
-        setActiveCount(strategies.filter((s) => s.status === 'active').length)
+        setActiveCount(strategies.length)
       } catch (err) {
         console.error('Failed to load active strategies count:', err)
         if (!cancelled) setActiveCount(null)
