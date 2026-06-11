@@ -1,9 +1,18 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { memo } from 'react'
 
 export const Footer = memo(function Footer() {
+  const pathname = usePathname()
+  const isAuthPage =
+    pathname === '/sign-in' || pathname === '/register'
+
+  if (isAuthPage) {
+    return null
+  }
+
   return (
     <footer className="w-full border-t border-border bg-background">
       <div className="container mx-auto px-6 py-6 md:px-12 lg:px-16">

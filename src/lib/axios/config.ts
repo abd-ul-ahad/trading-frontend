@@ -1,4 +1,8 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import {
+  logoutAndRedirect,
+  refreshAccessToken,
+} from '@/lib/auth/refreshAccessToken'
 
 // API Configuration
 const API_CONFIG = {
@@ -7,6 +11,17 @@ const API_CONFIG = {
   headers: {
     'Content-Type': 'application/json',
   },
+}
+
+const AUTH_PATHS_NO_REFRESH = [
+  '/api/v1/auth/auth/login',
+  '/api/v1/auth/auth/register',
+  '/api/v1/auth/auth/refresh',
+]
+
+function isAuthPathNoRefresh(url: string | undefined): boolean {
+  if (!url) return false
+  return AUTH_PATHS_NO_REFRESH.some((path) => url.includes(path))
 }
 
 // Create axios instance
@@ -71,40 +86,29 @@ axiosInstance.interceptors.response.use(
       })
     }
 
-    // Handle 401 Unauthorized - Token refresh logic
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle 401 Unauthorized - token refresh (skip auth endpoints)
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !isAuthPathNoRefresh(originalRequest.url)
+    ) {
+      if (originalRequest._retry) {
+        logoutAndRedirect()
+        return Promise.reject(error)
+      }
+
       originalRequest._retry = true
 
       try {
-        const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null
+        const accessToken = await refreshAccessToken()
 
-        if (refreshToken) {
-          // Call refresh token endpoint
-          const response = await axios.post(`${API_CONFIG.baseURL}/auth/refresh`, {
-            refreshToken,
-          })
-
-          const { accessToken } = response.data
-
-          // Update tokens
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('accessToken', accessToken)
-          }
-
-          // Retry original request with new token
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`
-          }
-
-          return axiosInstance(originalRequest)
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`
         }
+
+        return axiosInstance(originalRequest)
       } catch (refreshError) {
-        // Refresh failed - redirect to login
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken')
-          localStorage.removeItem('refreshToken')
-          window.location.href = '/login'
-        }
+        logoutAndRedirect()
         return Promise.reject(refreshError)
       }
     }

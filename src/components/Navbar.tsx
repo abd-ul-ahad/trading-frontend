@@ -9,6 +9,7 @@ import { toggleSidebar } from '@/lib/redux/features/navbar/navbarSlice'
 import { ThemeToggle } from './ThemeToggle'
 import { MobileSidebar } from './MobileSidebar'
 import { HamburgerButton } from './HamburgerButton'
+import { clearSession } from '@/lib/auth/session'
 
 interface NavLink {
   label: string
@@ -30,6 +31,8 @@ export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
 
+  const isAuthPage =
+    pathname === '/sign-in' || pathname === '/register'
   const isAdminPortal = pathname?.startsWith('/me')
 
   useEffect(() => {
@@ -52,7 +55,8 @@ export function Navbar() {
   }
 
   const handleLogout = () => {
-    router.push('/')
+    clearSession()
+    router.push('/sign-in')
   }
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -68,6 +72,10 @@ export function Navbar() {
       }
       // If not on homepage, let the link navigate normally (will go to /#faq)
     }
+  }
+
+  if (isAuthPage) {
+    return null
   }
 
   if (isAdminPortal) {
@@ -178,7 +186,7 @@ export function Navbar() {
             transition={{ delay: 0.3 }}
             className="flex items-center gap-4"
           >
-            <Link href="/me/portfolio">
+            <Link href="/sign-in">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -187,13 +195,15 @@ export function Navbar() {
                 Sign in
               </motion.button>
             </Link>
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
-            >
-              Register
-            </motion.button>
+            <Link href="/register">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 text-[15px] font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                Register
+              </motion.button>
+            </Link>
             <ThemeToggle />
           </motion.div>
         </div>
