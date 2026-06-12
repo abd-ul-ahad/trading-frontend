@@ -6,7 +6,6 @@ import {
   AreaChart,
   Area,
   XAxis,
-  YAxis,
   CartesianGrid,
   ResponsiveContainer,
 } from 'recharts'
@@ -39,11 +38,6 @@ const generateData = () => {
     })
   }
   return data
-}
-
-const formatYAxis = (value: number) => {
-  if (value === 0) return '$0k'
-  return `${Math.round(value / 1000)}k`
 }
 
 const formatDate = (dateStr: string) => {
@@ -113,7 +107,7 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
           {/* Chart */}
           <div className="h-64 w-full md:h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 10, right: 0, left: 10, bottom: 0 }}>
+              <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#d4af37" stopOpacity={0.35} />
@@ -135,15 +129,6 @@ export const CapitalChartSection = memo(function CapitalChartSection() {
                   axisLine={false}
                   tickLine={false}
                   dy={8}
-                />
-
-                <YAxis
-                  tickFormatter={formatYAxis}
-                  tick={{ fill: '#a3a3a3', fontSize: 16 }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={60}
-                  domain={[0, 'auto']}
                 />
 
                 <Area

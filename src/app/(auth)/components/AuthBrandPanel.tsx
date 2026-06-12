@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const REGISTER_STEPS = [
   {
     num: 1,
@@ -107,12 +109,15 @@ export function AuthBrandPanel({
         }}
       />
 
-      <div className="relative z-10">
-        <div className="font-display text-2xl tracking-wide gold-text">Oroviax</div>
-        <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-          Verified Performance
-        </div>
-      </div>
+        <Link href="/"> 
+          <div className="relative z-10">
+            <div className="font-display text-2xl tracking-wide gold-text">Oroviax</div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+              Verified Performance
+            </div>
+          </div>  
+        </Link>
+
 
       <div className="relative z-10">
         {variant === 'register' ? (

@@ -40,7 +40,6 @@ export const StatsMarquee = memo(function StatsMarquee() {
     { label: 'Verified on', value: 'MT5', highlight: true },
     { label: 'Avg YTD return', value: '+21.4%', highlight: true },
     { label: activeLabel, value: '', highlight: false },
-    { label: '1,240 investors', value: '', highlight: false },
   ]
 
   return (

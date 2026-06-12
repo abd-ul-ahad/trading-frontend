@@ -38,7 +38,11 @@ export default function AdminLayout({
       href: '/me/my-strategies',
       badge: strategyCount !== null ? String(strategyCount) : null,
     },
-    { label: 'Discover', href: '/me/discover', badge: '10' },
+    {
+      label: 'Discover',
+      href: '/me/discover',
+      badge: strategyCount !== null ? String(strategyCount) : null,
+    },
   ];
 
   return (
