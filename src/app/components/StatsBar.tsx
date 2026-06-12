@@ -14,7 +14,7 @@ type Stat = {
 const baseStats: Stat[] = [
   { label: "Weekly Growth", value: "+2.4%", accent: true },
   { label: "Active Strategies", value: "—", loading: true },
-  { label: "Clients Onboard", value: "847" },
+  { label: "Invite Only Access", value: "By Invitation" },
 ];
 
 export const StatsBar = memo(function StatsBar() {
